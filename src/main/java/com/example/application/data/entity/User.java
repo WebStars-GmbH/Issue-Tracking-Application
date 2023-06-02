@@ -13,7 +13,7 @@ public class User {
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long user_id;
     @NotBlank
     private String username;
     @NotBlank
@@ -23,13 +23,14 @@ public class User {
     @NotBlank
     private String email;
 
+    @ManyToMany (mappedBy ="tickets")
     private List<Website> websites = new LinkedList<>();
     public Long getId() {
-        return id;
+        return user_id;
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.user_id = id;
     }
 
     public String getUsername() {
@@ -78,7 +79,7 @@ public class User {
     }
 
     public User(Long id, String name, String email, String password, String role) {
-        this.id = id;
+        this.user_id = id;
         this.username = name;
         this.email = email;
         this.password = password;

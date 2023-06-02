@@ -10,21 +10,25 @@ import java.util.List;
 @Table(name="Website")
 public class Website {
     @Id
-    @Column(name = "user_id")
+    @Column(name = "website_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long website_id;
     @NotBlank
     private String website_name;
     @NotBlank
     private String URL;
-    private List<Ticket> ticket = new LinkedList<>();
+    @ManyToMany
+    @JoinTable ( name ="User",
+            joinColumns ={ @JoinColumn ( name ="user_id")},
+            inverseJoinColumns ={ @JoinColumn ( name ="website_id")})
+    private List<Ticket> tickets = new LinkedList<>();
 
     public Long getId() {
-        return id;
+        return website_id;
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.website_id = id;
     }
 
     public String getWebsite_name() {
