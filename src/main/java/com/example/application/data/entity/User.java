@@ -14,6 +14,15 @@ public class User {
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long user_id;
+
+    @OneToMany(mappedBy="registered_by", fetch = FetchType.EAGER)
+    private List<Ticket> registered_by = new LinkedList<>();
+
+    @OneToMany(mappedBy="assigned_to", fetch = FetchType.EAGER)
+    private List<Ticket> assigned_to = new LinkedList<>();
+
+    @OneToMany(mappedBy="closed_by", fetch = FetchType.EAGER)
+    private List<Ticket> closed_by = new LinkedList<>();
     @NotBlank
     private String username;
     @NotBlank

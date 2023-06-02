@@ -12,6 +12,9 @@ public class Ticket {
     @Column(name = "ticket_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ticket_id;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "website_id")
+    private Website website;
     @NotBlank
     private Timestamp register_date;
     @NotBlank
@@ -22,11 +25,14 @@ public class Ticket {
     private Timestamp close_date;
     @NotBlank
     private Timestamp last_update;
-    @NotBlank
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
     private User registered_by;
-
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
     private User assigned_to;
-
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
     private User closed_by;
     @NotBlank
     private String description_text;

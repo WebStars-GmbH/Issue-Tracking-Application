@@ -17,10 +17,7 @@ public class Website {
     private String website_name;
     @NotBlank
     private String URL;
-    @ManyToMany
-    @JoinTable ( name ="User",
-            joinColumns ={ @JoinColumn ( name ="user_id")},
-            inverseJoinColumns ={ @JoinColumn ( name ="website_id")})
+    @OneToMany ( mappedBy ="website")
     private List<Ticket> tickets = new LinkedList<>();
 
     public Long getId() {
