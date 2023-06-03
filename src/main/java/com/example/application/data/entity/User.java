@@ -32,8 +32,12 @@ public class User {
     @NotBlank
     private String email;
 
-    @ManyToMany (mappedBy ="tickets")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Website> websites = new LinkedList<>();
+
+    @ManyToMany(mappedBy = "team_members")
+    private List<Team> teams = new LinkedList<>();
+
     public Long getId() {
         return user_id;
     }
@@ -82,13 +86,50 @@ public class User {
         this.websites = websites;
     }
 
+    public Long getUser_id() {
+        return user_id;
+    }
 
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
+    }
+
+    public List<Ticket> getRegistered_by() {
+        return registered_by;
+    }
+
+    public void setRegistered_by(List<Ticket> registered_by) {
+        this.registered_by = registered_by;
+    }
+
+    public List<Ticket> getAssigned_to() {
+        return assigned_to;
+    }
+
+    public void setAssigned_to(List<Ticket> assigned_to) {
+        this.assigned_to = assigned_to;
+    }
+
+    public List<Ticket> getClosed_by() {
+        return closed_by;
+    }
+
+    public void setClosed_by(List<Ticket> closed_by) {
+        this.closed_by = closed_by;
+    }
+
+    public List<Team> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(List<Team> teams) {
+        this.teams = teams;
+    }
 
     public User() {
     }
 
-    public User(Long id, String name, String email, String password, String role) {
-        this.user_id = id;
+    public User(String name, String email, String password, String role) {
         this.username = name;
         this.email = email;
         this.password = password;

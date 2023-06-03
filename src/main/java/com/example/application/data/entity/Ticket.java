@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 @Entity(name="entity_ticket")
 @Table(name="Ticket")
@@ -12,6 +13,7 @@ public class Ticket {
     @Column(name = "ticket_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ticket_id;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "website_id")
     private Website website;
@@ -42,6 +44,26 @@ public class Ticket {
     private int priority;
     @NotBlank
     private String history;
+
+    //Constructors
+    public Ticket(){}
+
+    public Ticket(User user, Website website, String description_text){
+        this.registered_by = user;
+        this.website = website;
+
+        this.description_text = description_text;
+        this.status = "Registered";
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        this.register_date = timestamp;
+        this.last_update = timestamp;
+        String timestampString = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(timestamp);
+        this.history = timestampString + ": Ticket created by " + user.toString();
+    }
+
+
+    //Getters and Setters
     public Long getTicket_id() {
         return ticket_id;
     }
@@ -145,7 +167,4 @@ public class Ticket {
     public void setHistory(String history) {
         this.history = history;
     }
-
-
-
 }

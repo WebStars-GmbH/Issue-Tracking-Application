@@ -16,19 +16,20 @@ public class MainLayout extends AppLayout {
     private final SecurityService securityService;
 
     public MainLayout(SecurityService securityService) {
+
         this.securityService = securityService;
         createHeader();
         createDrawer();
     }
 
     private void createHeader() {
-        H1 logo = new H1("Vaadin CRM");
+        H1 logo = new H1("Webst@rs Ticketing Application");
         logo.addClassNames(
             LumoUtility.FontSize.LARGE,
             LumoUtility.Margin.MEDIUM);
 
         String u = securityService.getAuthenticatedUser().getUsername();
-        Button logout = new Button("Log out " + u, e -> securityService.logout()); // <2>
+        Button logout = new Button("Log me out " + u, e -> securityService.logout()); // <2>
 
         var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
 
