@@ -28,13 +28,13 @@ public class Ticket {
     @NotBlank
     private Timestamp last_update;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id",insertable=false, updatable=false)
     private User registered_by;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id",insertable=false, updatable=false)
     private User assigned_to;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id",insertable=false, updatable=false)
     private User closed_by;
     @NotBlank
     private String description_text;
