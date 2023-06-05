@@ -1,77 +1,66 @@
 package com.example.application.data.entity;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
-@Entity(name="entity_ticket")
-@Table(name="Ticket")
-public class Ticket {
-    @Id
-    @Column(name = "ticket_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ticket_id;
+@Entity
+public class Ticket extends AbstractEntity{
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "website_id")
     private Website website;
-    @NotBlank
+    //@NotBlank
     private Timestamp register_date;
-    @NotBlank
-    private String status;
+    //@NotBlank
+
+    private String status = "registered";
 
     private Timestamp assign_date;
 
     private Timestamp close_date;
-    @NotBlank
+    //@NotBlank
     private Timestamp last_update;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id",insertable=false, updatable=false)
-    private User registered_by;
+    @JoinColumn(name = "tuser_id")
+    private TUser registered_by;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id",insertable=false, updatable=false)
-    private User assigned_to;
+    //@JoinColumn(name = "tuser_id")
+    private TUser assigned_to;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id",insertable=false, updatable=false)
-    private User closed_by;
-    @NotBlank
+    //@JoinColumn(name = "tuser_id")
+    private TUser closed_by;
+    //@NotBlank
     private String description_text;
 
     private String resolution_text;
-    @NotBlank
+    //@NotBlank
     private int priority;
-    @NotBlank
+    //@NotBlank
     private String history;
 
     //Constructors
     public Ticket(){}
 
-    public Ticket(User user, Website website, String description_text){
-        this.registered_by = user;
+    public Ticket(TUser tuser, Website website, String description_text){
+        this.registered_by = tuser;
         this.website = website;
 
         this.description_text = description_text;
-        this.status = "Registered";
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         this.register_date = timestamp;
         this.last_update = timestamp;
         String timestampString = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(timestamp);
-        this.history = timestampString + ": Ticket created by " + user.toString();
+        this.history = timestampString + ": Ticket created by " + tuser.getUsername();
     }
 
 
     //Getters and Setters
-    public Long getTicket_id() {
-        return ticket_id;
-    }
-
-    public void setTicket_id(Long ticket_id) {
-        this.ticket_id = ticket_id;
-    }
-
     public Timestamp getRegister_date() {
         return register_date;
     }
@@ -112,27 +101,27 @@ public class Ticket {
         this.last_update = last_update;
     }
 
-    public User getRegistered_by() {
+    public TUser getRegistered_by() {
         return registered_by;
     }
 
-    public void setRegistered_by(User registered_by) {
+    public void setRegistered_by(TUser registered_by) {
         this.registered_by = registered_by;
     }
 
-    public User getAssigned_to() {
+    public TUser getAssigned_to() {
         return assigned_to;
     }
 
-    public void setAssigned_to(User assigned_to) {
+    public void setAssigned_to(TUser assigned_to) {
         this.assigned_to = assigned_to;
     }
 
-    public User getClosed_by() {
+    public TUser getClosed_by() {
         return closed_by;
     }
 
-    public void setClosed_by(User closed_by) {
+    public void setClosed_by(TUser closed_by) {
         this.closed_by = closed_by;
     }
 
@@ -164,7 +153,16 @@ public class Ticket {
         return history;
     }
 
+    public Website getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(Website website) {
+        this.website = website;
+    }
+
     public void setHistory(String history) {
         this.history = history;
     }
 }
+

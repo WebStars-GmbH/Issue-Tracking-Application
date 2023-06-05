@@ -17,14 +17,14 @@ public class Team {
     @NotBlank
     private String name;
 
-    @OneToMany(mappedBy = "team")
+    @OneToMany//(mappedBy = "team")
     private List<Website> websites = new LinkedList<>();
 
     @ManyToMany
     @JoinTable(name = "TeamMembersTeams",
             joinColumns = {@JoinColumn(name="user_id")},
             inverseJoinColumns = {@JoinColumn(name="team_id")})
-    private List<User> team_members = new LinkedList<>();
+    private List<TUser> team_members = new LinkedList<>();
 
     public Team(){}
 
@@ -55,11 +55,11 @@ public class Team {
         this.websites = websites;
     }
 
-    public List<User> getTeam_members() {
+    public List<TUser> getTeam_members() {
         return team_members;
     }
 
-    public void setTeam_members(List<User> team_members) {
+    public void setTeam_members(List<TUser> team_members) {
         this.team_members = team_members;
     }
 }

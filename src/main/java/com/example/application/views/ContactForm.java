@@ -1,4 +1,4 @@
-package com.example.application.views.list;
+package com.example.application.views;
 
 import com.example.application.data.entity.Company;
 import com.example.application.data.entity.Contact;
@@ -120,7 +120,5 @@ public class ContactForm extends FormLayout {
   public Registration addCloseListener(ComponentEventListener<CloseEvent> listener) {
     return addListener(CloseEvent.class, listener);
   }
-
-
 }
 

@@ -2,46 +2,32 @@ package com.example.application.data.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-
-import java.util.LinkedList;
-import java.util.List;
 // Entity in Progress
-@Entity(name="entity_website")
-@Table(name="Website")
-public class Website {
-    @Id
-    @Column(name = "website_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long website_id;
+@Entity
+public class Website extends AbstractEntity{
     @NotBlank
     private String website_name;
     @NotBlank
     private String URL;
 
+    /*
     @OneToMany ( mappedBy ="website")
     private List<Ticket> tickets = new LinkedList<>();
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "tuser_id")
+    private TUser tuser;
 
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
+*/
 
     public Website(){}
 
     public Website(String name, String url){
         this.website_name = name;
         this.URL = url;
-    }
-
-    public Long getId() {
-        return website_id;
-    }
-
-    public void setId(Long id) {
-        this.website_id = id;
     }
 
     public String getWebsite_name() {
@@ -60,14 +46,7 @@ public class Website {
         this.URL = URL;
     }
 
-    public Long getWebsite_id() {
-        return website_id;
-    }
-
-    public void setWebsite_id(Long website_id) {
-        this.website_id = website_id;
-    }
-
+    /*
     public List<Ticket> getTickets() {
         return tickets;
     }
@@ -76,12 +55,12 @@ public class Website {
         this.tickets = tickets;
     }
 
-    public User getUser() {
-        return user;
+    public TUser getUser() {
+        return tuser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(TUser tuser) {
+        this.tuser = tuser;
     }
 
     public Team getTeam() {
@@ -91,4 +70,5 @@ public class Website {
     public void setTeam(Team team) {
         this.team = team;
     }
+    */
 }

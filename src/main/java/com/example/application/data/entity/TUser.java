@@ -6,12 +6,12 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.LinkedList;
 import java.util.List;
 
-
-@Entity(name="entity_user")
-@Table(name="User")
-public class User {
+// Entity in Progress
+@Entity(name="entity_tuser")
+@Table(name="TUser")
+public class TUser {
     @Id
-    @Column(name = "user_id")
+    @Column(name = "tuser_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long user_id;
 
@@ -32,7 +32,7 @@ public class User {
     @NotBlank
     private String email;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany//(mappedBy = "tuser", fetch = FetchType.EAGER)
     private List<Website> websites = new LinkedList<>();
 
     @ManyToMany(mappedBy = "team_members")
@@ -126,10 +126,10 @@ public class User {
         this.teams = teams;
     }
 
-    public User() {
+    public TUser() {
     }
 
-    public User(String name, String email, String password, String role) {
+    public TUser(String name, String email, String password, String role) {
         this.username = name;
         this.email = email;
         this.password = password;

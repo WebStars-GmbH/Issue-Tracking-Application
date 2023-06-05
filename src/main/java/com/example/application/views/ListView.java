@@ -1,8 +1,7 @@
-package com.example.application.views.list;
+package com.example.application.views;
 
 import com.example.application.data.entity.Contact;
 import com.example.application.data.service.CrmService;
-import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
