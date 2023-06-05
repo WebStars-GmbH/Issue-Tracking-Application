@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.LinkedList;
 import java.util.List;
 
-// Entity in Progress
+
 @Entity(name="entity_user")
 @Table(name="User")
 public class User {
