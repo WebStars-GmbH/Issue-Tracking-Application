@@ -13,8 +13,15 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 public class MainLayout extends AppLayout {
     private final SecurityService securityService;
+    public static String username;
+
+    public SecurityService getSecurityService() {
+        return securityService;
+    }
+
     public MainLayout(SecurityService securityService) {
         this.securityService = securityService;
+        username = securityService.getAuthenticatedUser().getUsername();
         createHeader();
         createDrawer();
     }
@@ -44,7 +51,7 @@ public class MainLayout extends AppLayout {
         addToDrawer(new VerticalLayout(
                 new RouterLink("List", ListView.class),
                 new RouterLink("Dashboard", DashboardView.class),
-                new RouterLink("Tickets", TicketView.class)
+                new RouterLink("Tickets", com.example.application.views.TicketView.class)
         ));
     }
 

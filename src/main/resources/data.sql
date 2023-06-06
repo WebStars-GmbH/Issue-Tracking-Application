@@ -62,6 +62,23 @@ INSERT INTO "CONTACT" VALUES
                           (58, 1, 'bryan.shaw@ha.ee', 'Bryan', 'Shaw', 9, 1),
                           (59, 1, 'essie.adams@iliat.cw', 'Essie', 'Adams', 8, 5),
                           (60, 1, 'gary.osborne@do.ga', 'Gary', 'Osborne', 7, 5);
+
 INSERT INTO "WEBSITE" VALUES
-                          (61, 1, 'www.test.com', 'www.test.com'),
-                          (62, 1, 'www.test2.com', 'www.test2.com');
+                          (61, 1, 'www.test.com', 'www.test.com', NULL, NULL),
+                          (62, 1, 'www.test2.com', 'www.test2.com', NULL, NULL);
+
+--Insert with order: id, version, email, password, role, username
+INSERT INTO "TUSER" VALUES
+                        (63, 1, '-', '-', 'team_member', '-'),
+                        (64, 1, 'member1@webstars.com', 'password', 'team_member', 'member1'),
+                        (65, 1, 'member1@webstars.com', 'password', 'team_member', 'member2'),
+                        (66, 1, 'sysadmin@webstars.com', 'password', 'sysadmin', 'sysadmin'),
+                        (67, 1, 'manager@webstars.com', 'password', 'manager', 'manager'),
+                        (68, 1, 'customer@test.com', 'password', 'customer', 'customer'),
+                        (69, 1, 'customer@test2.com', 'password', 'customer2', 'customer2');
+
+--Insert with order: id, version, assign_date, close_date, closed_by, description_text, history, last_update, priority, register_date, registered_by, resolution_text, status, assigned_to, website
+INSERT INTO "TICKET" VALUES
+                         (70, 1, NULL, NULL, 'Das ist ein nicht zugewiesenes Ticket', 'Das ist eine History', now(), 1, now(), 'customer', '', 'registered', 63, 61),
+                         (71, 1, now(), now(), 'Das ist ein geschlossenes Ticket', 'Das ist auch eine History', now(), 0, now(), 'customer2', 'Das ist die Loesung', 'closed', 64, 62),
+                         (72, 1, now(), NULL, 'Das ist ein zugewiesenes Ticket', 'Das ist noch eine History', now(), 1, now(), 'customer2', '', 'registered', 65, 62);

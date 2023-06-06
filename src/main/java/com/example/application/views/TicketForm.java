@@ -1,9 +1,6 @@
-package com.example.application.views;
+package com.example.application.views.list;
 
-import com.example.application.data.entity.Company;
-import com.example.application.data.entity.Status;
-import com.example.application.data.entity.Ticket;
-import com.example.application.data.entity.Website;
+import com.example.application.data.entity.*;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
@@ -20,16 +17,14 @@ import com.vaadin.flow.shared.Registration;
 import java.util.List;
 
 public class TicketForm extends FormLayout {
-    TextField description_text = new TextField("description_text");
+    TextField description = new TextField("Description");
     //DateTimePicker register_date = new DateTimePicker("date and time");
 
     ComboBox<Website> website = new ComboBox<>("Website");
+    ComboBox<TUser> assigned_to = new ComboBox<>("Assigned to");
 
     /*
-    TextField lastName = new TextField("Last Name");
     EmailField email = new EmailField("Email");
-    ComboBox<Status> status = new ComboBox<>("Status");
-    ComboBox<Company> company = new ComboBox<>("Company");
     */
 
     Button save = new Button("Save");
@@ -37,19 +32,19 @@ public class TicketForm extends FormLayout {
     Button close = new Button("Cancel");
     Binder<Ticket> binder = new BeanValidationBinder<>(Ticket.class);
 
-    public TicketForm(List<Company> companies, List<Status> statuses, List<Website> websites) {
+    public TicketForm(List<Company> companies, List<Status> statuses, List<Website> websites, List<TUser>users) {
         addClassName("ticket-form");
         binder.bindInstanceFields(this);
-        //company.setItems(companies);
-        //company.setItemLabelGenerator(Company::getName);
-        //status.setItems(statuses);
-        //status.setItemLabelGenerator(Status::getName);
+
         website.setItems(websites);
+        website.setItemLabelGenerator(Website::getWebsite_name);
+        assigned_to.setItems(users);
+        assigned_to.setItemLabelGenerator(TUser::getUsername);
 
-
-        add(description_text,
+        add(description,
                 //register_date,
                 website,
+                assigned_to,
                 createButtonsLayout());
     }
 
@@ -77,6 +72,7 @@ public class TicketForm extends FormLayout {
     }
 
     public void setTicket(Ticket ticket) {
+
         binder.setBean(ticket);
     }
 

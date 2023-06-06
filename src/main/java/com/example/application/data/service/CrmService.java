@@ -17,16 +17,20 @@ public class CrmService {
 
     private final WebsiteRepository websiteRepository;
 
+    private final TUserRepository tUserRepository;
+
     public CrmService(ContactRepository contactRepository,
                       CompanyRepository companyRepository,
                       StatusRepository statusRepository,
                       TicketRepository ticketRepository,
-                      WebsiteRepository websiteRepository) {
+                      WebsiteRepository websiteRepository,
+                      TUserRepository tUserRepository) {
         this.contactRepository = contactRepository;
         this.companyRepository = companyRepository;
         this.statusRepository = statusRepository;
         this.ticketRepository = ticketRepository;
         this.websiteRepository = websiteRepository;
+        this.tUserRepository = tUserRepository;
     }
 
     public List<Contact> findAllContacts(String stringFilter) {
@@ -73,6 +77,29 @@ public class CrmService {
         }
     }
 
+    public List<Ticket> findAllTicketsByStatus(String stringFilter){
+        if (stringFilter == null || stringFilter.isEmpty()) {
+            return ticketRepository.findAll();
+        } else {
+            return ticketRepository.searchByStatus(stringFilter);
+        }
+    }
+
+    public List<Ticket> findAllTicketsByAssignedTo(String stringFilter){
+        if (stringFilter == null || stringFilter.isEmpty()) {
+            return ticketRepository.findAll();
+        } else {
+            return ticketRepository.searchByAssignedTo(stringFilter);
+        }
+    }
+
+    public List<Ticket> findAllTicketsByDescription(String stringFilter){
+        if (stringFilter == null || stringFilter.isEmpty()) {
+            return ticketRepository.findAll();
+        } else {
+            return ticketRepository.searchByDescription(stringFilter);
+        }
+    }
 
     public long countTickets() {
         return ticketRepository.count();
@@ -88,5 +115,30 @@ public class CrmService {
             return;
         }
         ticketRepository.save(ticket);
+    }
+
+    public List<TUser> findAllTUsers(){return tUserRepository.findAll();}
+    public List<TUser> findAllTUsers(String stringFilter){
+        if (stringFilter == null || stringFilter.isEmpty()) {
+            return tUserRepository.findAll();
+        } else {
+            return tUserRepository.search(stringFilter);
+        }
+    }
+
+    public long countTUsers() {
+        return tUserRepository.count();
+    }
+
+    public void deleteTUser(TUser tUser) {
+        tUserRepository.delete(tUser);
+    }
+
+    public void saveTUser(TUser tUser) {
+        if (tUser == null) {
+            System.err.println("TUser is null. Are you sure you have connected your form to the application?");
+            return;
+        }
+        tUserRepository.save(tUser);
     }
 }

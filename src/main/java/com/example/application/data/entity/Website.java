@@ -1,7 +1,14 @@
 package com.example.application.data.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
+
+import java.util.LinkedList;
+import java.util.List;
+
 // Entity in Progress
 @Entity
 public class Website extends AbstractEntity{
@@ -10,8 +17,7 @@ public class Website extends AbstractEntity{
     @NotBlank
     private String URL;
 
-    /*
-    @OneToMany ( mappedBy ="website")
+    @OneToMany( mappedBy ="website")
     private List<Ticket> tickets = new LinkedList<>();
 
     @ManyToOne
@@ -21,7 +27,6 @@ public class Website extends AbstractEntity{
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
-*/
 
     public Website(){}
 
@@ -46,7 +51,6 @@ public class Website extends AbstractEntity{
         this.URL = URL;
     }
 
-    /*
     public List<Ticket> getTickets() {
         return tickets;
     }
@@ -70,5 +74,5 @@ public class Website extends AbstractEntity{
     public void setTeam(Team team) {
         this.team = team;
     }
-    */
+
 }
