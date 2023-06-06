@@ -9,12 +9,12 @@ import java.util.List;
 // Entity in Progress
 @Entity(name="entity_tuser")
 @Table(name="TUser")
-public class TUser {
-    @Id
+public class TUser extends AbstractEntity{
+   /* @Id
     @Column(name = "tuser_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long user_id;
-
+*/
     @OneToMany(mappedBy="registered_by", fetch = FetchType.EAGER)
     private List<Ticket> registered_by = new LinkedList<>();
 
@@ -38,14 +38,14 @@ public class TUser {
     @ManyToMany(mappedBy = "team_members")
     private List<Team> teams = new LinkedList<>();
 
-    public Long getId() {
+    /*public Long getId() {
         return user_id;
     }
 
     public void setId(Long id) {
         this.user_id = id;
     }
-
+*/
     public String getUsername() {
         return username;
     }
@@ -86,14 +86,14 @@ public class TUser {
         this.websites = websites;
     }
 
-    public Long getUser_id() {
+   /* public Long getUser_id() {
         return user_id;
     }
 
     public void setUser_id(Long user_id) {
         this.user_id = user_id;
     }
-
+*/
     public List<Ticket> getRegistered_by() {
         return registered_by;
     }

@@ -90,7 +90,7 @@ public class CreateUserView extends VerticalLayout {
     }
 
     private void deleteUser(CreateUserForm.DeleteEvent event) {
-        service.deleteUser(event.getUser().getUser_id());
+        service.deleteUser(event.getUser().getId());
         updateList();
         closeEditor();
     }
