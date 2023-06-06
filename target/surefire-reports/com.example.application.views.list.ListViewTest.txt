@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.example.application.views.list.ListViewTest
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.39 s - in com.example.application.views.list.ListViewTest
