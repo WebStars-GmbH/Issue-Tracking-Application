@@ -46,15 +46,23 @@ public class Ticket extends AbstractEntity{
     //@NotBlank
     private String description = "";
 
-    private String resolution = "";
+    private String solution = "";
     //@NotBlank
     private int priority = 0;
     //@NotBlank
     private String history = "";
 
     //Constructors
-    public Ticket(){}
+    public Ticket(){
+        this.status = "registered";
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        this.register_date = timestamp;
+        this.last_update = timestamp;
+        String timestampString = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(timestamp);
+        this.history = timestampString + ": Ticket created ";
+    }
 
+/*
     public Ticket(TUser tuser, Website website, String description){
         this.registered_by = tuser.getUsername();
         this.website = website;
@@ -67,7 +75,7 @@ public class Ticket extends AbstractEntity{
         String timestampString = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(timestamp);
         this.history = timestampString + ": Ticket created by " + tuser.getUsername();
     }
-
+*/
 
     //Getters and Setters
     public Timestamp getRegister_date() {
@@ -144,12 +152,12 @@ public class Ticket extends AbstractEntity{
         this.description = description;
     }
 
-    public String getResolution() {
-        return resolution;
+    public String getSolution() {
+        return solution;
     }
 
-    public void setResolution(String resolution) {
-        this.resolution = resolution;
+    public void setSolution(String solution) {
+        this.solution = solution;
     }
 
     public int getPriority() {

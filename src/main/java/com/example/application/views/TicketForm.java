@@ -1,6 +1,7 @@
-package com.example.application.views.list;
+package com.example.application.views;
 
 import com.example.application.data.entity.*;
+import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
@@ -9,42 +10,58 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
+import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep.LabelsPosition;
 
 import java.util.List;
 
 public class TicketForm extends FormLayout {
     TextField description = new TextField("Description");
-    //DateTimePicker register_date = new DateTimePicker("date and time");
+
+    IntegerField priority = new IntegerField();
+
 
     ComboBox<Website> website = new ComboBox<>("Website");
     ComboBox<TUser> assigned_to = new ComboBox<>("Assigned to");
 
-    /*
-    EmailField email = new EmailField("Email");
-    */
+    TextField solution = new TextField("Solution");
+
+    TextField status = new TextField("Status");
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
+
+    //Button closeTicket = new Button("Close");
     Binder<Ticket> binder = new BeanValidationBinder<>(Ticket.class);
 
-    public TicketForm(List<Company> companies, List<Status> statuses, List<Website> websites, List<TUser>users) {
+    public TicketForm(CrmService service, List<Website> websites, List<TUser>users) {
+        setResponsiveSteps(new ResponsiveStep("0", 1, LabelsPosition.ASIDE));
+        priority.setValue(2);
+        priority.setStepButtonsVisible(true);
+        priority.setMin(0);
+        priority.setMax(2);
+
         addClassName("ticket-form");
         binder.bindInstanceFields(this);
 
         website.setItems(websites);
         website.setItemLabelGenerator(Website::getWebsite_name);
+
+        users = service.findAllTUsersByRole("team_member");
         assigned_to.setItems(users);
         assigned_to.setItemLabelGenerator(TUser::getUsername);
 
         add(description,
-                //register_date,
+                solution,
                 website,
                 assigned_to,
+                priority,
+                status,
                 createButtonsLayout());
     }
 
@@ -52,6 +69,7 @@ public class TicketForm extends FormLayout {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        //closeTicket.addThemeVariants(ButtonVariant.LUMO_PRIMARY); TODO
 
         save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
@@ -59,10 +77,12 @@ public class TicketForm extends FormLayout {
         save.addClickListener(event -> validateAndSave());
         delete.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
         close.addClickListener(event -> fireEvent(new CloseEvent(this)));
+        //closeTicket.addClickListener(event -> closeTicket()); TODO
 
         binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
 
         return new HorizontalLayout(save, delete, close);
+        //return new HorizontalLayout(save, delete, close, closeTicket); TODO
     }
 
     private void validateAndSave() {

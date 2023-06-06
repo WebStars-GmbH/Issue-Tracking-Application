@@ -126,6 +126,14 @@ public class CrmService {
         }
     }
 
+    public List<TUser> findAllTUsersByRole(String stringFilter){
+        if (stringFilter == null || stringFilter.isEmpty()) {
+            return tUserRepository.findAll();
+        } else {
+            return tUserRepository.searchByRole(stringFilter);
+        }
+    }
+
     public long countTUsers() {
         return tUserRepository.count();
     }
