@@ -44,7 +44,8 @@ public class MainLayout extends AppLayout {
         addToDrawer(new VerticalLayout(
                 new RouterLink("List", ListView.class),
                 new RouterLink("Dashboard", DashboardView.class),
-                new RouterLink("Tickets", TicketView.class)
+                new RouterLink("Tickets", TicketView.class),
+                new RouterLink("Create User", CreateUserView.class)
         ));
     }
 
