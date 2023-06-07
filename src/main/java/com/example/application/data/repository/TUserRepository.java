@@ -18,7 +18,7 @@ public interface TUserRepository extends JpaRepository<TUser, Long> {
     List<TUser> searchByRole(@Param("searchTerm") String searchTerm);
 
     @Query("select t from TUser t " +
-            "where lower(t.username) like lower(concat('%', :searchTerm, '%'))")
+            "where lower(t.username) like lower(:searchTerm)")
     TUser getTUserByUsername(@Param("searchTerm") String searchTerm);
 }
 
