@@ -7,22 +7,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 // Entity in Progress
-@Entity(name="entity_tuser")
-@Table(name="TUser")
+@Entity
 public class TUser extends AbstractEntity{
    /* @Id
     @Column(name = "tuser_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long user_id;
 */
-    @OneToMany(mappedBy="registered_by", fetch = FetchType.EAGER)
-    private List<Ticket> registered_by = new LinkedList<>();
-
-    @OneToMany(mappedBy="assigned_to", fetch = FetchType.EAGER)
-    private List<Ticket> assigned_to = new LinkedList<>();
-
-    @OneToMany(mappedBy="closed_by", fetch = FetchType.EAGER)
-    private List<Ticket> closed_by = new LinkedList<>();
     @NotBlank
     private String email;
 
@@ -114,13 +105,7 @@ public class TUser extends AbstractEntity{
         this.user_id = user_id;
     }
 */
-    public List<Ticket> getRegistered_by() {
-        return registered_by;
-    }
 
-    public void setRegistered_by(List<Ticket> registered_by) {
-        this.registered_by = registered_by;
-    }
 
     public List<Ticket> getAssigned_to() {
         return assigned_tickets;
