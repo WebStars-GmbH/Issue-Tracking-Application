@@ -1,9 +1,11 @@
 package com.example.application.views;
 
+import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Ticket;
 import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -15,15 +17,24 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.List;
+
 @SpringComponent
 @Scope("prototype")
 @PermitAll
-@Route(value = "Tickets", layout = MainLayout.class)
+@Route(value = "Tickets", layout = com.example.application.views.MainLayout.class)
 @PageTitle("Tickets | Webst@rs Ticketing Application")
 public class TicketView extends VerticalLayout {
     Grid<Ticket> grid = new Grid<>(Ticket.class);
-    TextField filterText = new TextField();
+    TextField websiteFilterText = new TextField("Website");
+    TextField statusFilterText = new TextField("Status");
+    TextField descriptionFilterText = new TextField("Description");
+
+    ComboBox<TUser> assignedToComboBox = new ComboBox<>("Assigned To");
     TicketForm form;
+    TicketAddForm addForm;
     CrmService service;
 
     public TicketView(CrmService service) {
@@ -33,14 +44,13 @@ public class TicketView extends VerticalLayout {
         configureGrid();
         configureForm();
 
-
         add(getToolbar(), getContent());
         updateList();
         closeEditor();
     }
 
     private HorizontalLayout getContent() {
-        HorizontalLayout content = new HorizontalLayout(grid, form);
+        HorizontalLayout content = new HorizontalLayout(grid, form, addForm);
         content.setFlexGrow(2, grid);
         content.setFlexGrow(1, form);
         content.addClassNames("content");
@@ -49,11 +59,22 @@ public class TicketView extends VerticalLayout {
     }
 
     private void configureForm() {
-        form = new TicketForm(service.findAllCompanies(), service.findAllStatuses(), service.findAllWebsites());
-        form.setWidth("25em");
+        form = new TicketForm(service, service.findAllWebsites(), service.findAllTUsers());
+        form.setWidth("70em");
         form.addSaveListener(this::saveTicket); // <1>
         form.addDeleteListener(this::deleteTicket); // <2>
         form.addCloseListener(e -> closeEditor()); // <3>
+
+        addForm = new TicketAddForm(service, service.findAllWebsites(), service.findAllTUsers());
+        addForm.setWidth("70em");
+        addForm.addSaveListener(this::saveAddTicket); // <1>
+        addForm.addCloseListener(e -> closeEditor()); // <3>
+    }
+
+    private void saveAddTicket(TicketAddForm.SaveEvent event) {
+        service.saveTicket(event.getTicket());
+        updateList();
+        closeEditor();
     }
 
     private void saveTicket(TicketForm.SaveEvent event) {
@@ -71,8 +92,13 @@ public class TicketView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassNames("ticket-grid");
         grid.setSizeFull();
-        grid.setColumns("status", "description_text");
-        grid.addColumn(ticket -> ticket.getWebsite().getURL()).setHeader("Website");
+
+        grid.setColumns("priority", "header", "status", "registered_by", "register_date", "description", "close_date", "solution", "last_update", "history");
+
+        grid.addColumn(ticket -> ticket.getWebsite().getURL()).setHeader("Website").setSortable(true);
+
+        grid.addColumn(ticket -> ticket.getAssigned_to() == null ? "" : ticket.getAssigned_to().getUsername()).setHeader("Assigned to").setSortable(true);
+
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         grid.asSingleSelect().addValueChangeListener(event ->
@@ -80,42 +106,104 @@ public class TicketView extends VerticalLayout {
     }
 
     private Component getToolbar() {
-        filterText.setPlaceholder("Filter by name...");
-        filterText.setClearButtonVisible(true);
-        filterText.setValueChangeMode(ValueChangeMode.LAZY);
-        filterText.addValueChangeListener(e -> updateList());
+        websiteFilterText.setPlaceholder("Filter by website...");
+        websiteFilterText.setClearButtonVisible(true);
+        websiteFilterText.setValueChangeMode(ValueChangeMode.LAZY);
+        websiteFilterText.addValueChangeListener(e -> updateList());
+
+        statusFilterText.setPlaceholder("Filter by status...");
+        statusFilterText.setClearButtonVisible(true);
+        statusFilterText.setValueChangeMode(ValueChangeMode.LAZY);
+        statusFilterText.addValueChangeListener(e -> updateListByStatus());
+
+        descriptionFilterText.setPlaceholder("Filter by description...");
+        descriptionFilterText.setClearButtonVisible(true);
+        descriptionFilterText.setValueChangeMode(ValueChangeMode.LAZY);
+        descriptionFilterText.addValueChangeListener(e -> updateListByDescription());
+
+        List<TUser> users = service.findAllTUsersByRole("team_member");
+        assignedToComboBox.setItems(users);
+        assignedToComboBox.setItemLabelGenerator(TUser::getUsername);
+        assignedToComboBox.addValueChangeListener(e -> updateListByAssignedTo());
 
         Button addTicketButton = new Button("Add ticket");
         addTicketButton.addClickListener(click -> addTicket());
 
-        var toolbar = new HorizontalLayout(filterText, addTicketButton);
+        Button clearFieldsButton = new Button("Clear filters");
+        clearFieldsButton.addClickListener(click -> clearFields());
+
+        var toolbar = new HorizontalLayout(clearFieldsButton, statusFilterText, descriptionFilterText, websiteFilterText, assignedToComboBox, addTicketButton);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
 
-    public void editTicket(Ticket contact) {
-        if (contact == null) {
+    private void clearFields() {
+        websiteFilterText.clear();
+        websiteFilterText.clear();
+        statusFilterText.clear();
+        descriptionFilterText.clear();
+        assignedToComboBox.clear();
+
+        grid.setItems(service.findAllTickets(""));
+    }
+
+    public void editTicket(Ticket ticket) {
+        if (ticket == null) {
             closeEditor();
         } else {
-            form.setTicket(contact);
+            closeEditor();
+            form.setTicket(ticket);
             form.setVisible(true);
             addClassName("editing");
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            ticket.setLast_update(timestamp);
+            String timestampString = new SimpleDateFormat("yyyy.MM.dd.HH.mm").format(timestamp);
+            String u = com.example.application.views.MainLayout.username;
+            ticket.setHistory(ticket.getHistory() + timestampString + ": modified by " + u + "; "); //TODO
         }
     }
 
     private void closeEditor() {
         form.setTicket(null);
         form.setVisible(false);
+        addForm.setTicket(null);
+        addForm.setVisible(false);
         removeClassName("editing");
     }
 
     private void addTicket() {
+        closeEditor();
         grid.asSingleSelect().clear();
-        editTicket(new Ticket());
+        Ticket ticket = new Ticket();
+        ticket.setStatus("registered");
+        //editTicket(ticket);
+
+        addForm.setTicket(ticket);
+        addForm.setVisible(true);
+        addClassName("adding");
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        ticket.setStatus("registered");
+        String u = com.example.application.views.MainLayout.username;
+
+        TUser tuser = service.getTUserByUsername(u);//TODO
+        ticket.setRegistered_by(u);
+        ticket.setRegister_date(timestamp);
+        ticket.setLast_update(timestamp);
+        String timestampString = new SimpleDateFormat("yyyy.MM.dd.HH.mm").format(timestamp);
+        ticket.setHistory(timestampString + ": created by " + u + "; "); //TODO
     }
 
-
     private void updateList() {
-        grid.setItems(service.findAllTickets(filterText.getValue()));
+        grid.setItems(service.findAllTickets(websiteFilterText.getValue()));
+    }
+    private void updateListByStatus() {
+        grid.setItems(service.findAllTicketsByStatus(statusFilterText.getValue()));
+    }
+
+    private void updateListByDescription() {
+        grid.setItems(service.findAllTicketsByDescription(descriptionFilterText.getValue()));
+    }
+    private void updateListByAssignedTo() {
+        if (assignedToComboBox.getValue() != null) grid.setItems(service.findAllTicketsByAssignedTo(assignedToComboBox.getValue().getUsername()));
     }
 }

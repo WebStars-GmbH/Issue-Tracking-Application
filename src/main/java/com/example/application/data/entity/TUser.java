@@ -24,15 +24,31 @@ public class TUser extends AbstractEntity{
     @OneToMany(mappedBy="closed_by", fetch = FetchType.EAGER)
     private List<Ticket> closed_by = new LinkedList<>();
     @NotBlank
-    private String username;
+    private String email;
+
     @NotBlank
     private String password;
     @NotBlank
     private String role;
-    @NotBlank
-    private String email;
 
-    @OneToMany//(mappedBy = "tuser", fetch = FetchType.EAGER)
+    @NotBlank
+    private String username;
+
+
+    /*
+    @OneToMany(mappedBy="registered_by", fetch = FetchType.EAGER)
+    private List<Ticket> registered_tickets = new LinkedList<>();
+    */
+
+    @OneToMany ( mappedBy="assigned_to")
+    private List<Ticket> assigned_tickets = new LinkedList<>();
+
+    /*
+    @OneToMany(mappedBy="closed_by", fetch = FetchType.EAGER)
+    private List<Ticket> closed_tickets = new LinkedList<>();
+     */
+
+    @OneToMany(mappedBy = "tuser", fetch = FetchType.EAGER)
     private List<Website> websites = new LinkedList<>();
 
     @ManyToMany(mappedBy = "team_members")
@@ -85,6 +101,10 @@ public class TUser extends AbstractEntity{
     public void setWebsites(List<Website> websites) {
         this.websites = websites;
     }
+    /*
+        public List<Ticket> getRegistered_by() {
+            return registered_tickets;
+        }
 
    /* public Long getUser_id() {
         return user_id;
@@ -103,20 +123,21 @@ public class TUser extends AbstractEntity{
     }
 
     public List<Ticket> getAssigned_to() {
-        return assigned_to;
+        return assigned_tickets;
     }
 
     public void setAssigned_to(List<Ticket> assigned_to) {
-        this.assigned_to = assigned_to;
+        this.assigned_tickets = assigned_to;
     }
-
+/*
     public List<Ticket> getClosed_by() {
-        return closed_by;
+        return closed_tickets;
     }
 
     public void setClosed_by(List<Ticket> closed_by) {
-        this.closed_by = closed_by;
+        this.closed_tickets = closed_by;
     }
+ */
 
     public List<Team> getTeams() {
         return teams;

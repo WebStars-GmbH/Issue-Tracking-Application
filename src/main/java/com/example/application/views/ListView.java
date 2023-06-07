@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Scope;
 @SpringComponent
 @Scope("prototype")
 @PermitAll
-@Route(value = "", layout = MainLayout.class)
+@Route(value = "", layout = com.example.application.views.MainLayout.class)
 @PageTitle("Contacts | Vaadin CRM")
 public class ListView extends VerticalLayout {
     Grid<Contact> grid = new Grid<>(Contact.class);
