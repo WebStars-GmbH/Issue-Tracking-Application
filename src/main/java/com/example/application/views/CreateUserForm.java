@@ -1,6 +1,7 @@
 package com.example.application.views;
 
 import com.example.application.data.entity.*;
+import com.example.application.data.service.WebsiteService;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
@@ -15,8 +16,12 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import java.util.List;
 
+@Component
 public class CreateUserForm extends FormLayout {
     TextField firstName = new TextField("First name");
     TextField lastName = new TextField("Last name");
@@ -25,23 +30,34 @@ public class CreateUserForm extends FormLayout {
     PasswordField password = new PasswordField("Password");
     PasswordField passwordConfirm = new PasswordField("Confirm password");
     ComboBox<String> role = new ComboBox<>("Role");
-
+    ComboBox<Website> website = new ComboBox<>("Website");
 
     Button save = new Button("Save");
     Button close = new Button("Cancel");
     Binder<TUser> binder = new BeanValidationBinder<>(TUser.class);
+    Binder<Website> websiteBinder = new BeanValidationBinder<>(Website.class);
 
-    public CreateUserForm() {
+    @Autowired
+    public CreateUserForm(WebsiteService websiteService) {
         addClassName("user-form");
 
-        role.setItems("Admin", "User");  // Add as many roles as you need
+        role.setItems("Customer", "Support-Coordinator", "Support-Member", "System-Admin", "Management");  // Add as many roles as you need
         binder.bindInstanceFields(this);
+
+
+        List<Website> allWebsites = websiteService.getAllWebsites();
+        website.setItems(allWebsites);
+        website.setItemLabelGenerator(Website::getWebsite_name);
+
+
+
 
         add(firstName,
                 lastName,
                 username,
                 email,
                 role,
+                website,
                 password,
                 passwordConfirm,
                 createButtonsLayout());
@@ -80,7 +96,7 @@ public class CreateUserForm extends FormLayout {
 
     // Events
     public static abstract class UserFormEvent extends ComponentEvent<CreateUserForm> {
-        private TUser user;
+        private final TUser user;
 
         protected UserFormEvent(CreateUserForm source, TUser user) {
             super(source, false);

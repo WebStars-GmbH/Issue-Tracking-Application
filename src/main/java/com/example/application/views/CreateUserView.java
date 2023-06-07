@@ -2,6 +2,7 @@ package com.example.application.views;
 
 import com.example.application.data.entity.TUser;
 import com.example.application.data.service.UserService;
+import com.example.application.data.service.WebsiteService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -25,9 +26,11 @@ public class CreateUserView extends VerticalLayout {
     TextField filterText = new TextField();
     CreateUserForm form;
     UserService service;
+    WebsiteService websiteService;
 
-    public CreateUserView(UserService service) {
+    public CreateUserView(UserService service,WebsiteService websiteService) {
         this.service = service;
+        this.websiteService = websiteService;
         addClassName("user-view");
         setSizeFull();
         configureGrid();
@@ -51,7 +54,7 @@ public class CreateUserView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassName("user-grid");
         grid.setSizeFull();
-        grid.setColumns("username", "email", "role" );  // Set the columns that you want to display in your grid
+        grid.setColumns(  "username", "email", "role" );  // Set the columns that you want to display in your grid
 
         // You can also add a click listener to handle row clicks
         grid.asSingleSelect().addValueChangeListener(event ->
@@ -73,14 +76,13 @@ public class CreateUserView extends VerticalLayout {
         form.setVisible(false);
         removeClassName("editing");
     }
-    private CreateUserForm configureForm() {
+    private void configureForm() {
         if (form == null) {
-            form = new CreateUserForm();
+            form = new CreateUserForm(websiteService);
             form.addSaveListener(this::saveUser);
             form.addDeleteListener(this::deleteUser);
             form.addCloseListener(e -> closeEditor());
         }
-        return form;
     }
 
     private void saveUser(CreateUserForm.SaveEvent event) {

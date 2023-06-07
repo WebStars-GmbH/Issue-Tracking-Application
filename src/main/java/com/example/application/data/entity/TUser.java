@@ -24,6 +24,11 @@ public class TUser extends AbstractEntity{
 
     @NotBlank
     private String username;
+//    @NotBlank
+//    private String firstname;
+//
+//    @NotBlank
+//    private String lastname;
 
 
     /*
@@ -136,6 +141,8 @@ public class TUser extends AbstractEntity{
     }
 
     public TUser(String name, String email, String password, String role) {
+        //this.firstname = firstname;
+        //this.lastname = lastname;
         this.username = name;
         this.email = email;
         this.password = password;
