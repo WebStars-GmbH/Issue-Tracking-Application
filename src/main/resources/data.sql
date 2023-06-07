@@ -77,8 +77,8 @@ INSERT INTO "TUSER" VALUES
                         (68, 1, 'customer@test.com', 'password', 'customer', 'customer'),
                         (69, 1, 'customer@test2.com', 'password', 'customer2', 'customer2');
 
---Insert with order: id, version, assign_date, close_date, closed_by, description_text, history, last_update, priority, register_date, registered_by, resolution_text, status, assigned_to, website
+--Insert with order: id, version, assign_date, close_date, closed_by, description_text, header, history, last_update, priority, register_date, registered_by, resolution_text, status, assigned_to, website
 INSERT INTO "TICKET" VALUES
-                         (70, 1, NULL, NULL, 'Das ist ein nicht zugewiesenes Ticket', 'Das ist eine History', now(), 1, now(), 'customer', '', 'registered', 63, 61),
-                         (71, 1, now(), now(), 'Das ist ein geschlossenes Ticket', 'Das ist auch eine History', now(), 0, now(), 'customer2', 'Das ist die Loesung', 'closed', 64, 62),
-                         (72, 1, now(), NULL, 'Das ist ein zugewiesenes Ticket', 'Das ist noch eine History', now(), 1, now(), 'customer2', '', 'registered', 65, 62);
+                         (70, 1, NULL, NULL, 'Das ist ein nicht zugewiesenes Ticket', 'Ticket1', 'Das ist eine History', now(), 1, now(), 'customer', '', 'registered', 63, 61),
+                         (71, 1, now(), now(), 'Das ist ein geschlossenes Ticket', 'Ticket2', 'Das ist auch eine History', now(), 0, now(), 'customer2', 'Das ist die Loesung', 'closed', 64, 62),
+                         (72, 1, now(), NULL, 'Das ist ein zugewiesenes Ticket', 'Ticket3', 'Das ist noch eine History', now(), 1, now(), 'customer2', '', 'registered', 65, 62);

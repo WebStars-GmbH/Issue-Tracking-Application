@@ -5,10 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 
 @Entity
 public class Ticket extends AbstractEntity{
@@ -24,6 +24,9 @@ public class Ticket extends AbstractEntity{
 
     private String status;
 
+    @NotBlank
+    private String header;
+
     private Timestamp assign_date;
 
     private Timestamp close_date;
@@ -33,7 +36,7 @@ public class Ticket extends AbstractEntity{
     private String registered_by;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tuser_id")
-    @NotNull
+    //@NotNull
     @JsonIgnoreProperties({"assigned_tickets"})
     private TUser assigned_to;
 
@@ -43,39 +46,17 @@ public class Ticket extends AbstractEntity{
     private TUser closed_by;
     */
 
-    //@NotBlank
+    @NotBlank
     private String description = "";
 
     private String solution = "";
-    //@NotBlank
+
     private int priority = 0;
     //@NotBlank
     private String history = "";
 
     //Constructors
-    public Ticket(){
-        this.status = "registered";
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        this.register_date = timestamp;
-        this.last_update = timestamp;
-        String timestampString = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(timestamp);
-        this.history = timestampString + ": Ticket created ";
-    }
-
-/*
-    public Ticket(TUser tuser, Website website, String description){
-        this.registered_by = tuser.getUsername();
-        this.website = website;
-
-        this.description = description;
-
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        this.register_date = timestamp;
-        this.last_update = timestamp;
-        String timestampString = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(timestamp);
-        this.history = timestampString + ": Ticket created by " + tuser.getUsername();
-    }
-*/
+    public Ticket(){}
 
     //Getters and Setters
     public Timestamp getRegister_date() {
@@ -92,6 +73,14 @@ public class Ticket extends AbstractEntity{
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getHeader() {
+        return header;
+    }
+
+    public void setHeader(String header) {
+        this.header = header;
     }
 
     public Timestamp getAssign_date() {

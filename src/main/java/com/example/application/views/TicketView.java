@@ -33,7 +33,8 @@ public class TicketView extends VerticalLayout {
     TextField descriptionFilterText = new TextField("Description");
 
     ComboBox<TUser> assignedToComboBox = new ComboBox<>("Assigned To");
-    com.example.application.views.TicketForm form;
+    TicketForm form;
+    TicketAddForm addForm;
     CrmService service;
 
     public TicketView(CrmService service) {
@@ -43,14 +44,13 @@ public class TicketView extends VerticalLayout {
         configureGrid();
         configureForm();
 
-
         add(getToolbar(), getContent());
         updateList();
         closeEditor();
     }
 
     private HorizontalLayout getContent() {
-        HorizontalLayout content = new HorizontalLayout(grid, form);
+        HorizontalLayout content = new HorizontalLayout(grid, form, addForm);
         content.setFlexGrow(2, grid);
         content.setFlexGrow(1, form);
         content.addClassNames("content");
@@ -59,20 +59,31 @@ public class TicketView extends VerticalLayout {
     }
 
     private void configureForm() {
-        form = new com.example.application.views.TicketForm(service, service.findAllWebsites(), service.findAllTUsers());
-        form.setWidth("25em");
+        form = new TicketForm(service, service.findAllWebsites(), service.findAllTUsers());
+        form.setWidth("70em");
         form.addSaveListener(this::saveTicket); // <1>
         form.addDeleteListener(this::deleteTicket); // <2>
         form.addCloseListener(e -> closeEditor()); // <3>
+
+        addForm = new TicketAddForm(service, service.findAllWebsites(), service.findAllTUsers());
+        addForm.setWidth("70em");
+        addForm.addSaveListener(this::saveAddTicket); // <1>
+        addForm.addCloseListener(e -> closeEditor()); // <3>
     }
 
-    private void saveTicket(com.example.application.views.TicketForm.SaveEvent event) {
+    private void saveAddTicket(TicketAddForm.SaveEvent event) {
         service.saveTicket(event.getTicket());
         updateList();
         closeEditor();
     }
 
-    private void deleteTicket(com.example.application.views.TicketForm.DeleteEvent event) {
+    private void saveTicket(TicketForm.SaveEvent event) {
+        service.saveTicket(event.getTicket());
+        updateList();
+        closeEditor();
+    }
+
+    private void deleteTicket(TicketForm.DeleteEvent event) {
         service.deleteTicket(event.getTicket());
         updateList();
         closeEditor();
@@ -82,14 +93,13 @@ public class TicketView extends VerticalLayout {
         grid.addClassNames("ticket-grid");
         grid.setSizeFull();
 
-        grid.setColumns("priority", "status", "registered_by", "register_date", "description", "close_date", "solution", "last_update", "history");
+        grid.setColumns("priority", "header", "status", "registered_by", "register_date", "description", "close_date", "solution", "last_update", "history");
 
-        grid.addColumn(ticket -> ticket.getWebsite().getURL()).setHeader("Website").setSortable (true);;
+        grid.addColumn(ticket -> ticket.getWebsite().getURL()).setHeader("Website").setSortable(true);
 
-        grid.addColumn(ticket -> ticket.getAssigned_to().getUsername()).setHeader("Assigned to").setSortable (true);;
+        grid.addColumn(ticket -> ticket.getAssigned_to() == null ? "" : ticket.getAssigned_to().getUsername()).setHeader("Assigned to").setSortable(true);
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
-
 
         grid.asSingleSelect().addValueChangeListener(event ->
                 editTicket(event.getValue()));
@@ -141,32 +151,47 @@ public class TicketView extends VerticalLayout {
         if (ticket == null) {
             closeEditor();
         } else {
+            closeEditor();
             form.setTicket(ticket);
             form.setVisible(true);
             addClassName("editing");
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             ticket.setLast_update(timestamp);
-            String timestampString = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(timestamp);
-            //ticket.setHistory(ticket.getHistory() + timestampString + ": Ticket modified"); //TODO
+            String timestampString = new SimpleDateFormat("yyyy.MM.dd.HH.mm").format(timestamp);
+            String u = com.example.application.views.MainLayout.username;
+            ticket.setHistory(ticket.getHistory() + timestampString + ": modified by " + u + "; "); //TODO
         }
     }
 
     private void closeEditor() {
         form.setTicket(null);
         form.setVisible(false);
+        addForm.setTicket(null);
+        addForm.setVisible(false);
         removeClassName("editing");
     }
 
     private void addTicket() {
+        closeEditor();
         grid.asSingleSelect().clear();
         Ticket ticket = new Ticket();
+        ticket.setStatus("registered");
+        //editTicket(ticket);
+
+        addForm.setTicket(ticket);
+        addForm.setVisible(true);
+        addClassName("adding");
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        ticket.setStatus("registered");
         String u = com.example.application.views.MainLayout.username;
+
+        TUser tuser = service.getTUserByUsername(u);//TODO
         ticket.setRegistered_by(u);
-
-        //TUser tuser = service.findAllTUsers(u).get(0);
-        editTicket(ticket);
+        ticket.setRegister_date(timestamp);
+        ticket.setLast_update(timestamp);
+        String timestampString = new SimpleDateFormat("yyyy.MM.dd.HH.mm").format(timestamp);
+        ticket.setHistory(timestampString + ": created by " + u + "; "); //TODO
     }
-
 
     private void updateList() {
         grid.setItems(service.findAllTickets(websiteFilterText.getValue()));
