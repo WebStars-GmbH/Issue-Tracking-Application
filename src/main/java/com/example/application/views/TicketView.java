@@ -204,6 +204,6 @@ public class TicketView extends VerticalLayout {
         grid.setItems(service.findAllTicketsByDescription(descriptionFilterText.getValue()));
     }
     private void updateListByAssignedTo() {
-        grid.setItems(service.findAllTicketsByAssignedTo(assignedToComboBox.getValue().getUsername()));
+        if (assignedToComboBox.getValue() != null) grid.setItems(service.findAllTicketsByAssignedTo(assignedToComboBox.getValue().getUsername()));
     }
 }
