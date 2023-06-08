@@ -31,6 +31,8 @@ public class TicketView extends VerticalLayout {
     Grid<Ticket> grid = new Grid<>(Ticket.class);
     TextField websiteFilterText = new TextField("Website");
     TextField statusFilterText = new TextField("Status");
+
+    ComboBox<String> statusComboBox = new ComboBox<>("Status");
     TextField descriptionFilterText = new TextField("Description");
 
     ComboBox<TUser> assignedToComboBox = new ComboBox<>("Assigned To");
@@ -124,6 +126,9 @@ public class TicketView extends VerticalLayout {
         descriptionFilterText.setValueChangeMode(ValueChangeMode.LAZY);
         descriptionFilterText.addValueChangeListener(e -> updateListByDescription());
 
+        statusComboBox.setItems("Registered", "Assigned", "In progress", "Closed");
+        statusComboBox.addValueChangeListener(e -> updateListByStatus());
+
         List<TUser> users = service.findAllTUsersByRole("team_member");
         assignedToComboBox.setItems(users);
         assignedToComboBox.setItemLabelGenerator(TUser::getUsername);
@@ -135,7 +140,7 @@ public class TicketView extends VerticalLayout {
         Button clearFieldsButton = new Button("Clear filters");
         clearFieldsButton.addClickListener(click -> clearFields());
 
-        var toolbar = new HorizontalLayout(clearFieldsButton, statusFilterText, descriptionFilterText, websiteFilterText, assignedToComboBox, addTicketButton);
+        var toolbar = new HorizontalLayout(clearFieldsButton, statusComboBox, descriptionFilterText, websiteFilterText, assignedToComboBox, addTicketButton);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
@@ -146,6 +151,7 @@ public class TicketView extends VerticalLayout {
         statusFilterText.clear();
         descriptionFilterText.clear();
         assignedToComboBox.clear();
+        statusComboBox.clear();
 
         grid.setItems(ticketService.findAllTickets(""));
     }
@@ -179,15 +185,12 @@ public class TicketView extends VerticalLayout {
         grid.asSingleSelect().clear();
         Ticket ticket = new Ticket();
         ticket.setStatus("registered");
-        //editTicket(ticket);
-
         addForm.setTicket(ticket);
         addForm.setVisible(true);
         addClassName("adding");
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        ticket.setStatus("registered");
+        ticket.setStatus("Registered");
         String u = com.example.application.views.MainLayout.username;
-
         TUser tuser = service.getTUserByUsername(u);//TODO
         ticket.setRegistered_by(u);
         ticket.setRegister_date(timestamp);
@@ -200,7 +203,7 @@ public class TicketView extends VerticalLayout {
         grid.setItems(ticketService.findAllTickets(websiteFilterText.getValue()));
     }
     private void updateListByStatus() {
-        grid.setItems(ticketService.findAllTicketsByStatus(statusFilterText.getValue()));
+        if (statusComboBox.getValue() != null) grid.setItems(ticketService.findAllTicketsByStatus(statusComboBox.getValue()));
     }
 
     private void updateListByDescription() {

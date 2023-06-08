@@ -1,6 +1,8 @@
 package com.example.application.views;
 
-import com.example.application.data.entity.*;
+import com.example.application.data.entity.TUser;
+import com.example.application.data.entity.Ticket;
+import com.example.application.data.entity.Website;
 import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -9,13 +11,15 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep.LabelsPosition;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
-import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep.LabelsPosition;
 
 import java.util.List;
 
@@ -30,7 +34,7 @@ public class TicketForm extends FormLayout {
 
     TextField solution = new TextField("Solution");
 
-    TextField status = new TextField("Status");
+    ComboBox<String> status = new ComboBox<>("Status");
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
@@ -49,6 +53,7 @@ public class TicketForm extends FormLayout {
         addClassName("ticket-form");
         binder.bindInstanceFields(this);
 
+        status.setItems("Registered", "Assigned", "In Progress", "Closed");
         website.setItems(websites);
         website.setItemLabelGenerator(Website::getWebsite_name);
 
@@ -115,6 +120,9 @@ public class TicketForm extends FormLayout {
 
         SaveEvent(TicketForm source, Ticket ticket) {
             super(source, ticket);
+            Notification notification = Notification
+                    .show("Ticket saved!");
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         }
     }
 

@@ -11,6 +11,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
@@ -89,6 +91,9 @@ public class TicketAddForm extends FormLayout {
 
         SaveEvent(TicketAddForm source, Ticket ticket) {
             super(source, ticket);
+            Notification notification = Notification
+                    .show("Ticket successfully created!");
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         }
     }
 
