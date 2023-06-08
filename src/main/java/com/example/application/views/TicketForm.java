@@ -126,15 +126,18 @@ public class TicketForm extends FormLayout {
     public static class DeleteEvent extends TicketFormEvent {
         DeleteEvent(TicketForm source, Ticket ticket) {
             super(source, ticket);
+            Notification notification = Notification
+                    .show("Ticket deleted!");
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         }
     }
 
     private void ConfirmAndDelete(){
         ConfirmDialog dialog = new ConfirmDialog();
-        dialog.setHeader("Delete?");
-        dialog.setText("Are you sure you want to permanently delete this ticket?");
+        dialog.setHeader("Do you want to delete this ticket?");
+        dialog.setText("Are you sure you want to permanently delete this ticket? This cannot be reversed.");
         dialog.setCancelable(true);
-        dialog.setConfirmText("Delete");
+        dialog.setConfirmText("Delete Ticket");
         dialog.setConfirmButtonTheme("error primary");
         dialog.addConfirmListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
         dialog.open();
