@@ -19,10 +19,10 @@ public class Ticket extends AbstractEntity{
     private Timestamp register_date;
     //@NotBlank
 
-    private String status;
+    private String status = "";
 
     @NotBlank
-    private String header;
+    private String header = "";
 
     private Timestamp assign_date;
 

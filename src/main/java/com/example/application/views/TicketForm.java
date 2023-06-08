@@ -11,12 +11,17 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
+import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep.LabelsPosition;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
@@ -26,16 +31,18 @@ import java.util.List;
 
 public class TicketForm extends FormLayout {
     TextField header = new TextField("Header");
-    TextField description = new TextField("Description");
+
+    TextArea description = new TextArea("Description");
 
     IntegerField priority = new IntegerField("Priority");
 
     ComboBox<Website> website = new ComboBox<>("Website");
     ComboBox<TUser> assigned_to = new ComboBox<>("Assigned to");
 
-    TextField solution = new TextField("Solution");
+    TextArea solution = new TextArea("Solution");
 
-    ComboBox<String> status = new ComboBox<>("Status");
+    RadioButtonGroup<String> status = new RadioButtonGroup<>("Status");
+
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
@@ -45,6 +52,7 @@ public class TicketForm extends FormLayout {
     Binder<Ticket> binder = new BeanValidationBinder<>(Ticket.class);
 
     public TicketForm(CrmService service, List<Website> websites, List<TUser>users) {
+
         setResponsiveSteps(new ResponsiveStep("0", 1, LabelsPosition.ASIDE));
         priority.setValue(2);
         priority.setStepButtonsVisible(true);
@@ -62,6 +70,14 @@ public class TicketForm extends FormLayout {
         assigned_to.setItems(users);
         assigned_to.setItemLabelGenerator(TUser::getUsername);
 
+        Span history_text = new Span("Some history... TODO");//TODO
+        VerticalLayout content = new VerticalLayout(history_text);
+        content.setSpacing(false);
+        content.setPadding(false);
+
+        Details details = new Details("History", content);
+        details.setOpened(false);
+
         add(header,
                 website,
                 description,
@@ -69,7 +85,8 @@ public class TicketForm extends FormLayout {
                 priority,
                 assigned_to,
                 status,
-                createButtonsLayout());
+                createButtonsLayout(),
+                details);
     }
 
     private HorizontalLayout createButtonsLayout() {
@@ -77,7 +94,7 @@ public class TicketForm extends FormLayout {
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
-        save.addClickShortcut(Key.ENTER);
+        //save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
 
         save.addClickListener(event -> validateAndSave());

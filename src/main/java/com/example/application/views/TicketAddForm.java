@@ -14,6 +14,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
@@ -23,7 +24,7 @@ import java.util.List;
 
 public class TicketAddForm extends FormLayout {
     TextField header = new TextField("Header");
-    TextField description = new TextField("Description");
+    TextArea description = new TextArea("Description");
 
     ComboBox<Website> website = new ComboBox<>("Website");
 
@@ -32,12 +33,11 @@ public class TicketAddForm extends FormLayout {
     Binder<Ticket> binder = new BeanValidationBinder<>(Ticket.class);
 
     public TicketAddForm(CrmService service, List<Website> websites, List<TUser>users) {
-        description.setHeight("70em");
-        description.setWidth("70em");
 
         addClassName("ticket-form");
         binder.bindInstanceFields(this);
 
+        website.setAllowCustomValue(true);
         website.setItems(websites);
         website.setItemLabelGenerator(Website::getWebsite_name);
 

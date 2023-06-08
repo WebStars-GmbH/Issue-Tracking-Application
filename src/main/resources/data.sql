@@ -81,4 +81,6 @@ INSERT INTO "TUSER" VALUES
 INSERT INTO "TICKET" VALUES
                          (70, 1, NULL, NULL, NULL, 'Das ist ein nicht zugewiesenes Ticket', 'Ticket1', 'Das ist eine History', now(), 1, now(), 'user', '', 'Registered', NULL, 61),
                          (71, 1, now(), now(), NULL, 'Das ist ein geschlossenes Ticket', 'Ticket2', 'Das ist auch eine History', now(), 0, now(), 'user2', 'Das ist die Loesung', 'Closed', 64, 62),
-                         (72, 1, now(), NULL, NULL, 'Das ist ein zugewiesenes Ticket', 'Ticket3', 'Das ist noch eine History', now(), 1, now(), 'user2', '', 'Registered', 65, 62);
+                         (72, 1, NULL, NULL, NULL, 'Das ist noch ein nicht zugewiesenes Ticket', 'Ticket3', 'blabla', now(), 1, now(), 'user', '', 'Registered', NULL, 62),
+                         (73, 1, now(), now(), NULL, 'Das ist noch ein geschlossenes Ticket', 'Ticket4', '', now(), 0, now(), 'user2', 'Das ist die Loesung', 'Closed', 64, 62),
+                         (74, 1, now(), NULL, NULL, 'Das ist ein zugewiesenes Ticket', 'Ticket5', 'Das ist noch eine History', now(), 1, now(), 'user2', '', 'Registered', 65, 62);

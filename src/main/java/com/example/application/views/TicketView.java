@@ -7,10 +7,15 @@ import com.example.application.data.service.TicketService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -88,6 +93,21 @@ public class TicketView extends VerticalLayout {
         closeEditor();
     }
 
+    private void ConfirmAndDelete(Ticket ticket){
+        ConfirmDialog dialog = new ConfirmDialog();
+        dialog.setHeader("Do you want to delete this ticket?");
+        dialog.setText("Are you sure you want to permanently delete this ticket? This cannot be reversed.");
+        dialog.setCancelable(true);
+        dialog.setConfirmText("Delete Ticket");
+        dialog.setConfirmButtonTheme("error primary");
+        dialog.addConfirmListener(event -> {
+            ticketService.deleteTicket(ticket);
+            updateList();
+            form.setTicket(null);
+            form.setVisible(false);});
+        dialog.open();
+    }
+
     private void deleteTicket(TicketForm.DeleteEvent event) {
         ticketService.deleteTicket(event.getTicket());
         updateList();
@@ -106,15 +126,19 @@ public class TicketView extends VerticalLayout {
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
-        grid.asSingleSelect().addValueChangeListener(event ->
-                editTicket(event.getValue()));
+        GridContextMenu<Ticket> menu = grid.addContextMenu();
+        menu.addItem("View", event -> {        });
+        menu.addItem("Edit", event -> editTicket(event.getItem().get()));
+        menu.addItem("Delete", event -> ConfirmAndDelete(event.getItem().get()));
+        grid.addItemDoubleClickListener(event -> editTicket(event.getItem()));
     }
 
     private Component getToolbar() {
         websiteFilterText.setPlaceholder("Filter by website...");
+        websiteFilterText.setTooltipText("Please type what the website name should contain...");
         websiteFilterText.setClearButtonVisible(true);
         websiteFilterText.setValueChangeMode(ValueChangeMode.LAZY);
-        websiteFilterText.addValueChangeListener(e -> updateList());
+        websiteFilterText.addValueChangeListener(e -> updateListByWebsite());
 
         statusFilterText.setPlaceholder("Filter by status...");
         statusFilterText.setClearButtonVisible(true);
@@ -122,14 +146,17 @@ public class TicketView extends VerticalLayout {
         statusFilterText.addValueChangeListener(e -> updateListByStatus());
 
         descriptionFilterText.setPlaceholder("Filter by description...");
+        descriptionFilterText.setTooltipText("Please type what the description should contain...");
         descriptionFilterText.setClearButtonVisible(true);
         descriptionFilterText.setValueChangeMode(ValueChangeMode.LAZY);
         descriptionFilterText.addValueChangeListener(e -> updateListByDescription());
 
         statusComboBox.setItems("Registered", "Assigned", "In progress", "Closed");
+        statusComboBox.setTooltipText("Please choose the status of the tickets you want to look for...");
         statusComboBox.addValueChangeListener(e -> updateListByStatus());
 
         List<TUser> users = service.findAllTUsersByRole("team_member");
+        assignedToComboBox.setTooltipText("Please choose the assigned users you want to look for...");
         assignedToComboBox.setItems(users);
         assignedToComboBox.setItemLabelGenerator(TUser::getUsername);
         assignedToComboBox.addValueChangeListener(e -> updateListByAssignedTo());
@@ -140,7 +167,10 @@ public class TicketView extends VerticalLayout {
         Button clearFieldsButton = new Button("Clear filters");
         clearFieldsButton.addClickListener(click -> clearFields());
 
-        var toolbar = new HorizontalLayout(clearFieldsButton, statusComboBox, descriptionFilterText, websiteFilterText, assignedToComboBox, addTicketButton);
+        Button applyAllFiltersButton = new Button("Apply all filters");
+        applyAllFiltersButton.addClickListener(click -> updateListByAllFilters());
+
+        var toolbar = new HorizontalLayout(clearFieldsButton, statusComboBox, websiteFilterText, descriptionFilterText, assignedToComboBox, applyAllFiltersButton, addTicketButton);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
@@ -200,6 +230,9 @@ public class TicketView extends VerticalLayout {
     }
 
     private void updateList() {
+        grid.setItems(ticketService.findAllTickets(""));
+    }
+    private void updateListByWebsite() {
         grid.setItems(ticketService.findAllTickets(websiteFilterText.getValue()));
     }
     private void updateListByStatus() {
@@ -211,5 +244,28 @@ public class TicketView extends VerticalLayout {
     }
     private void updateListByAssignedTo() {
         if (assignedToComboBox.getValue() != null) grid.setItems(ticketService.findAllTicketsByAssignedTo(assignedToComboBox.getValue().getUsername()));
+    }
+
+    private void updateListByAllFilters() {
+        String statusFilter = "";
+        if (statusComboBox.getValue() != null) statusFilter = statusComboBox.getValue();
+
+        String websiteFilter = "";
+        if (websiteFilterText.getValue() != null) websiteFilter = websiteFilterText.getValue();
+
+        String descriptionFilter = "";
+        if (descriptionFilterText.getValue() != null) descriptionFilter = descriptionFilterText.getValue();
+
+        String assignedToFilter = "";
+        if (assignedToComboBox.getValue() == null) grid.setItems(ticketService.findAllTicketsByStatusWebsiteDescription(statusFilter, websiteFilter, descriptionFilter));
+        else {
+            assignedToFilter = assignedToComboBox.getValue().getUsername();
+            grid.setItems(ticketService.findAllTicketsByAllFilters(statusFilter, websiteFilter, descriptionFilter, assignedToFilter));
+        }
+
+        Notification notification = Notification
+                .show("Found " + grid.getDataProvider().size(new Query<>()) + " Tickets with: Status: " + statusFilter + ", Website: " + websiteFilter + ", Description: " + descriptionFilter + ", Assigned to: " + assignedToFilter + ";");
+        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+
     }
 }

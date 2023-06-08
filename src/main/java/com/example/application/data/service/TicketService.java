@@ -49,6 +49,14 @@ public class TicketService {
         }
     }
 
+    public List<Ticket> findAllTicketsByAllFilters(String statusFilter, String websiteFilter, String descriptionFilter, String assignedToFilter){
+        return ticketRepository.searchByAllFilters(statusFilter, websiteFilter, descriptionFilter, assignedToFilter);
+    }
+
+    public List<Ticket> findAllTicketsByStatusWebsiteDescription(String statusFilter, String websiteFilter, String descriptionFilter){
+        return ticketRepository.searchByStatusWebsiteDescription(statusFilter, websiteFilter, descriptionFilter);
+    }
+
     public long countTickets() {
         return ticketRepository.count();
     }
