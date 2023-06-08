@@ -1,10 +1,7 @@
 package com.example.application.data.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -40,11 +37,7 @@ public class Ticket extends AbstractEntity{
     @JsonIgnoreProperties({"assigned_tickets"})
     private TUser assigned_to;
 
-    /*
-    @ManyToOne(fetch = FetchType.EAGER)
-    //@JoinColumn(name = "tuser_id")
-    private TUser closed_by;
-    */
+    private String closed_by;
 
     @NotBlank
     private String description = "";
@@ -52,7 +45,8 @@ public class Ticket extends AbstractEntity{
     private String solution = "";
 
     private int priority = 0;
-    //@NotBlank
+
+    @Column(nullable = true, columnDefinition = "nvarchar(MAX)")
     private String history = "";
 
     //Constructors
@@ -123,15 +117,14 @@ public class Ticket extends AbstractEntity{
         this.assigned_to = assigned_to;
     }
 
-    /*
-    public TUser getClosed_by() {
+
+    public String getClosed_by() {
         return closed_by;
     }
 
-    public void setClosed_by(TUser closed_by) {
+    public void setClosed_by(String closed_by) {
         this.closed_by = closed_by;
     }
-    */
 
     public String getDescription() {
         return description;
