@@ -12,23 +12,17 @@ public class CrmService {
     private final ContactRepository contactRepository;
     private final CompanyRepository companyRepository;
     private final StatusRepository statusRepository;
-
-    private final TicketRepository ticketRepository;
-
     private final WebsiteRepository websiteRepository;
-
     private final TUserRepository tUserRepository;
 
     public CrmService(ContactRepository contactRepository,
                       CompanyRepository companyRepository,
                       StatusRepository statusRepository,
-                      TicketRepository ticketRepository,
                       WebsiteRepository websiteRepository,
                       TUserRepository tUserRepository) {
         this.contactRepository = contactRepository;
         this.companyRepository = companyRepository;
         this.statusRepository = statusRepository;
-        this.ticketRepository = ticketRepository;
         this.websiteRepository = websiteRepository;
         this.tUserRepository = tUserRepository;
     }
@@ -67,54 +61,6 @@ public class CrmService {
 
     public List<Website> findAllWebsites(){
         return websiteRepository.findAll();
-    }
-
-    public List<Ticket> findAllTickets(String stringFilter){
-        if (stringFilter == null || stringFilter.isEmpty()) {
-            return ticketRepository.findAll();
-        } else {
-            return ticketRepository.search(stringFilter);
-        }
-    }
-
-    public List<Ticket> findAllTicketsByStatus(String stringFilter){
-        if (stringFilter == null || stringFilter.isEmpty()) {
-            return ticketRepository.findAll();
-        } else {
-            return ticketRepository.searchByStatus(stringFilter);
-        }
-    }
-
-    public List<Ticket> findAllTicketsByAssignedTo(String stringFilter){
-        if (stringFilter == null || stringFilter.isEmpty()) {
-            return ticketRepository.findAll();
-        } else {
-            return ticketRepository.searchByAssignedTo(stringFilter);
-        }
-    }
-
-    public List<Ticket> findAllTicketsByDescription(String stringFilter){
-        if (stringFilter == null || stringFilter.isEmpty()) {
-            return ticketRepository.findAll();
-        } else {
-            return ticketRepository.searchByDescription(stringFilter);
-        }
-    }
-
-    public long countTickets() {
-        return ticketRepository.count();
-    }
-
-    public void deleteTicket(Ticket ticket) {
-        ticketRepository.delete(ticket);
-    }
-
-    public void saveTicket(Ticket ticket) {
-        if (ticket == null) {
-            System.err.println("Ticket is null. Are you sure you have connected your form to the application?");
-            return;
-        }
-        ticketRepository.save(ticket);
     }
 
     public List<TUser> findAllTUsers(){return tUserRepository.findAll();}

@@ -3,6 +3,7 @@ package com.example.application.views;
 import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Ticket;
 import com.example.application.data.service.CrmService;
+import com.example.application.data.service.TicketService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -36,9 +37,11 @@ public class TicketView extends VerticalLayout {
     TicketForm form;
     TicketAddForm addForm;
     CrmService service;
+    TicketService ticketService;
 
-    public TicketView(CrmService service) {
+    public TicketView(CrmService service, TicketService ticketService) {
         this.service = service;
+        this.ticketService = ticketService;
         addClassName("ticket-view");
         setSizeFull();
         configureGrid();
@@ -72,19 +75,19 @@ public class TicketView extends VerticalLayout {
     }
 
     private void saveAddTicket(TicketAddForm.SaveEvent event) {
-        service.saveTicket(event.getTicket());
+        ticketService.saveTicket(event.getTicket());
         updateList();
         closeEditor();
     }
 
     private void saveTicket(TicketForm.SaveEvent event) {
-        service.saveTicket(event.getTicket());
+        ticketService.saveTicket(event.getTicket());
         updateList();
         closeEditor();
     }
 
     private void deleteTicket(TicketForm.DeleteEvent event) {
-        service.deleteTicket(event.getTicket());
+        ticketService.deleteTicket(event.getTicket());
         updateList();
         closeEditor();
     }
@@ -144,7 +147,7 @@ public class TicketView extends VerticalLayout {
         descriptionFilterText.clear();
         assignedToComboBox.clear();
 
-        grid.setItems(service.findAllTickets(""));
+        grid.setItems(ticketService.findAllTickets(""));
     }
 
     public void editTicket(Ticket ticket) {
@@ -194,16 +197,16 @@ public class TicketView extends VerticalLayout {
     }
 
     private void updateList() {
-        grid.setItems(service.findAllTickets(websiteFilterText.getValue()));
+        grid.setItems(ticketService.findAllTickets(websiteFilterText.getValue()));
     }
     private void updateListByStatus() {
-        grid.setItems(service.findAllTicketsByStatus(statusFilterText.getValue()));
+        grid.setItems(ticketService.findAllTicketsByStatus(statusFilterText.getValue()));
     }
 
     private void updateListByDescription() {
-        grid.setItems(service.findAllTicketsByDescription(descriptionFilterText.getValue()));
+        grid.setItems(ticketService.findAllTicketsByDescription(descriptionFilterText.getValue()));
     }
     private void updateListByAssignedTo() {
-        if (assignedToComboBox.getValue() != null) grid.setItems(service.findAllTicketsByAssignedTo(assignedToComboBox.getValue().getUsername()));
+        if (assignedToComboBox.getValue() != null) grid.setItems(ticketService.findAllTicketsByAssignedTo(assignedToComboBox.getValue().getUsername()));
     }
 }
