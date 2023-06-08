@@ -18,7 +18,9 @@ import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.vaadin.flow.component.listbox.MultiSelectListBox;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +33,7 @@ public class CreateUserForm extends FormLayout {
     PasswordField password = new PasswordField("Password");
     PasswordField passwordConfirm = new PasswordField("Confirm password");
     ComboBox<String> role = new ComboBox<>("Role");
-    ComboBox<Website> website = new ComboBox<>("Website");
+    MultiSelectListBox<Website> website = new MultiSelectListBox<>();
 
     Button save = new Button("Save");
     Button close = new Button("Cancel");
@@ -41,7 +43,7 @@ public class CreateUserForm extends FormLayout {
     public CreateUserForm(WebsiteService websiteService) {
         addClassName("user-form");
 
-        role.setItems("Customer", "Support-Coordinator", "Support-Member", "System-Admin", "Management");  // Add as many roles as you need
+        role.setItems("Customer", "Support-Coordinator", "Support-Member", "System-Admin", "Management");
         binder.bindInstanceFields(this);
 
 
@@ -77,7 +79,15 @@ public class CreateUserForm extends FormLayout {
     private void validateAndSave() {
         if (binder.isValid()) {
             if (password.getValue().equals(passwordConfirm.getValue())) {
-                fireEvent(new SaveEvent(this, binder.getBean()));
+                TUser user = binder.getBean();
+                List<Website> selectedWebsites = new ArrayList<>(website.getSelectedItems()); // Get selected websites from the multiselect list box
+                List<Website> userWebsites = user.getWebsites();
+                if(userWebsites == null){
+                    userWebsites = new ArrayList<>();
+                }
+                userWebsites.addAll(selectedWebsites);
+                user.setWebsites(userWebsites);
+                fireEvent(new SaveEvent(this, user));
             } else {
                 passwordConfirm.setErrorMessage("Passwords do not match!");
                 passwordConfirm.setInvalid(true);

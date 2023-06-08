@@ -15,6 +15,12 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
+import com.example.application.data.entity.Website;
+
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @SpringComponent
 @Scope("prototype")
@@ -57,7 +63,10 @@ public class CreateUserView extends VerticalLayout {
         grid.setColumns( "firstname", "lastname", "username", "email", "role" );  // Set the columns that you want to display in your grid
        // grid.addColumn("websites");
         //grid.addColumn(user -> user.getWebsites().getWebsite_name().setHeader("Website").setSortable(true);
-
+        grid.addColumn(user -> user.getWebsites().stream()
+                        .map(Website::getWebsite_name)
+                        .collect(Collectors.joining(", ")))
+                .setHeader("Websites");
         // You can also add a click listener to handle row clicks
         grid.asSingleSelect().addValueChangeListener(event ->
                 editUser(event.getValue()));
@@ -90,7 +99,18 @@ public class CreateUserView extends VerticalLayout {
     }
 
     private void saveUser(CreateUserForm.SaveEvent event) {
-        userService.saveUser(event.getUser());
+        TUser user = event.getUser();
+        // Zuerst den Benutzer speichern
+        userService.saveUser(user);
+
+        List<Website> selectedWebsites = user.getWebsites();
+        if (selectedWebsites != null) {
+            for (Website website : selectedWebsites) {
+                website.setUser(user);
+                // Dann die Website speichern
+                websiteService.saveWebsite(website);
+            }
+        }
         updateList();
         closeEditor();
     }

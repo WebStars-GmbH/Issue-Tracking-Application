@@ -1,9 +1,6 @@
 package com.example.application.data.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.LinkedList;
@@ -20,7 +17,7 @@ public class Website extends AbstractEntity{
     @OneToMany( mappedBy ="website")
     private List<Ticket> tickets = new LinkedList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tuser_id")
     private TUser tuser;
 
