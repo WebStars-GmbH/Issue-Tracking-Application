@@ -1,6 +1,8 @@
 package com.example.application.views;
 
-import com.example.application.data.entity.*;
+import com.example.application.data.entity.TUser;
+import com.example.application.data.entity.Ticket;
+import com.example.application.data.entity.Website;
 import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -8,29 +10,39 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
+import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep.LabelsPosition;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
-import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep.LabelsPosition;
 
 import java.util.List;
 
 public class TicketForm extends FormLayout {
     TextField header = new TextField("Header");
-    TextField description = new TextField("Description");
+
+    TextArea description = new TextArea("Description");
 
     IntegerField priority = new IntegerField("Priority");
 
     ComboBox<Website> website = new ComboBox<>("Website");
     ComboBox<TUser> assigned_to = new ComboBox<>("Assigned to");
 
-    TextField solution = new TextField("Solution");
+    TextArea solution = new TextArea("Solution");
 
-    TextField status = new TextField("Status");
+    RadioButtonGroup<String> status = new RadioButtonGroup<>("Status");
+
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
@@ -40,6 +52,7 @@ public class TicketForm extends FormLayout {
     Binder<Ticket> binder = new BeanValidationBinder<>(Ticket.class);
 
     public TicketForm(CrmService service, List<Website> websites, List<TUser>users) {
+
         setResponsiveSteps(new ResponsiveStep("0", 1, LabelsPosition.ASIDE));
         priority.setValue(2);
         priority.setStepButtonsVisible(true);
@@ -49,12 +62,21 @@ public class TicketForm extends FormLayout {
         addClassName("ticket-form");
         binder.bindInstanceFields(this);
 
+        status.setItems("Registered", "Assigned", "In Progress", "Closed");
         website.setItems(websites);
         website.setItemLabelGenerator(Website::getWebsite_name);
 
-        users = service.findAllTUsersByRole("team_member");
+        if (service != null) users = service.findAllTUsersByRole("team_member");
         assigned_to.setItems(users);
         assigned_to.setItemLabelGenerator(TUser::getUsername);
+
+        Span history_text = new Span("Some history... TODO");//TODO
+        VerticalLayout content = new VerticalLayout(history_text);
+        content.setSpacing(false);
+        content.setPadding(false);
+
+        Details details = new Details("History", content);
+        details.setOpened(false);
 
         add(header,
                 website,
@@ -63,27 +85,24 @@ public class TicketForm extends FormLayout {
                 priority,
                 assigned_to,
                 status,
-                createButtonsLayout());
+                createButtonsLayout(),
+                details);
     }
 
     private HorizontalLayout createButtonsLayout() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        //closeTicket.addThemeVariants(ButtonVariant.LUMO_PRIMARY); TODO
 
-        save.addClickShortcut(Key.ENTER);
+        //save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
 
         save.addClickListener(event -> validateAndSave());
-        delete.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
+        delete.addClickListener(event -> ConfirmAndDelete());
         close.addClickListener(event -> fireEvent(new CloseEvent(this)));
-        //closeTicket.addClickListener(event -> closeTicket()); TODO
-
         binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
 
         return new HorizontalLayout(save, delete, close);
-        //return new HorizontalLayout(save, delete, close, closeTicket); TODO
     }
 
     private void validateAndSave() {
@@ -115,15 +134,32 @@ public class TicketForm extends FormLayout {
 
         SaveEvent(TicketForm source, Ticket ticket) {
             super(source, ticket);
+            Notification notification = Notification
+                    .show("Ticket saved!");
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         }
     }
 
     public static class DeleteEvent extends TicketFormEvent {
         DeleteEvent(TicketForm source, Ticket ticket) {
             super(source, ticket);
+            Notification notification = Notification
+                    .show("Ticket deleted!");
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         }
-
     }
+
+    private void ConfirmAndDelete(){
+        ConfirmDialog dialog = new ConfirmDialog();
+        dialog.setHeader("Do you want to delete this ticket?");
+        dialog.setText("Are you sure you want to permanently delete this ticket? This cannot be reversed.");
+        dialog.setCancelable(true);
+        dialog.setConfirmText("Delete Ticket");
+        dialog.setConfirmButtonTheme("error primary");
+        dialog.addConfirmListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
+        dialog.open();
+    }
+
 
     public static class CloseEvent extends TicketFormEvent {
         CloseEvent(TicketForm source) {
