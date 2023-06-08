@@ -67,18 +67,24 @@ INSERT INTO "WEBSITE" VALUES
                           (61, 1, 'www.test.com', 'www.test.com', NULL, NULL),
                           (62, 1, 'www.test2.com', 'www.test2.com', NULL, NULL);
 
---Insert with order: id, version, email, password, role, username
+
+--Insert with order: id, version, email, firstname, lastname,  password, role, username
 INSERT INTO "TUSER" VALUES
-                        (63, 1, 'member0@webstars.com', 'password', 'team_member', 'member0'),
-                        (64, 1, 'member1@webstars.com', 'password', 'team_member', 'member1'),
-                        (65, 1, 'member1@webstars.com', 'password', 'team_member', 'member2'),
-                        (66, 1, 'sysadmin@webstars.com', 'password', 'sysadmin', 'sysadmin'),
-                        (67, 1, 'manager@webstars.com', 'password', 'manager', 'manager'),
-                        (68, 1, 'customer@test.com', 'password', 'customer', 'user'),
-                        (69, 1, 'customer@test2.com', 'password', 'customer', 'user2');
+                        (63, 1, 'member0@webstars.com', 'Max', 'Mustermann', 'password', 'team_member', 'member0'),
+                        (64, 1, 'Max', 'Mustermann', 'member1@webstars.com', 'password', 'team_member', 'member1'),
+                        (65, 1, 'Max', 'Mustermann', 'member1@webstars.com', 'password', 'team_member', 'member2'),
+                        (66, 1, 'Max', 'Mustermann', 'sysadmin@webstars.com', 'password', 'sysadmin', 'sysadmin'),
+                        (67, 1, 'Max', 'Mustermann', 'manager@webstars.com', 'password', 'manager', 'manager'),
+                        (68, 1, 'Max', 'Mustermann', 'customer@test.com', 'password', 'customer', 'user'),
+                        (69, 1, 'Max', 'Mustermann', 'customer@test2.com', 'password', 'customer', 'user2');
 
 --Insert with order: id, version, assign_date, close_date, closed_by, description_text, header, history, last_update, priority, register_date, registered_by, resolution_text, status, assigned_to, website
 INSERT INTO "TICKET" VALUES
                          (70, 1, NULL, NULL, 'Das ist ein nicht zugewiesenes Ticket', 'Ticket1', 'Das ist eine History', now(), 1, now(), 'user', '', 'registered', NULL, 61),
                          (71, 1, now(), now(), 'Das ist ein geschlossenes Ticket', 'Ticket2', 'Das ist auch eine History', now(), 0, now(), 'user2', 'Das ist die Loesung', 'closed', 64, 62),
                          (72, 1, now(), NULL, 'Das ist ein zugewiesenes Ticket', 'Ticket3', 'Das ist noch eine History', now(), 1, now(), 'user2', '', 'registered', 65, 62);
+
+
+INSERT INTO "WEBSITE" VALUES
+                          (73, 1, 'www.asdf.com', 'www.dsf.com', NULL, NULL),
+                          (74, 1, 'www.ewr.com', 'www.vdds.com', NULL, NULL);

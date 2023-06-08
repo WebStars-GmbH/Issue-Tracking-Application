@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class CreateUserForm extends FormLayout {
@@ -35,7 +36,6 @@ public class CreateUserForm extends FormLayout {
     Button save = new Button("Save");
     Button close = new Button("Cancel");
     Binder<TUser> binder = new BeanValidationBinder<>(TUser.class);
-    Binder<Website> websiteBinder = new BeanValidationBinder<>(Website.class);
 
     @Autowired
     public CreateUserForm(WebsiteService websiteService) {
@@ -45,11 +45,7 @@ public class CreateUserForm extends FormLayout {
         binder.bindInstanceFields(this);
 
 
-        List<Website> allWebsites = websiteService.getAllWebsites();
-        website.setItems(allWebsites);
-        website.setItemLabelGenerator(Website::getWebsite_name);
-
-
+        website.setItems(websiteService.getAllWebsites());
 
 
         add(firstName,

@@ -24,11 +24,14 @@ public class TUser extends AbstractEntity{
 
     @NotBlank
     private String username;
-//    @NotBlank
-//    private String firstname;
-//
-//    @NotBlank
-//    private String lastname;
+
+
+
+    @NotBlank
+    private String firstname;
+
+    @NotBlank
+    private String lastname;
 
 
     /*
@@ -136,13 +139,45 @@ public class TUser extends AbstractEntity{
     public void setTeams(List<Team> teams) {
         this.teams = teams;
     }
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public List<Ticket> getAssigned_tickets() {
+        return assigned_tickets;
+    }
+
+    public void setAssigned_tickets(List<Ticket> assigned_tickets) {
+        this.assigned_tickets = assigned_tickets;
+    }
 
     public TUser() {
     }
 
-    public TUser(String name, String email, String password, String role) {
-        //this.firstname = firstname;
-        //this.lastname = lastname;
+//    public TUser(String name, String email, String password, String role) {
+//        //this.firstname = firstname;
+//        //this.lastname = lastname;
+//        this.username = name;
+//        this.email = email;
+//        this.password = password;
+//        this.role = role;
+//    }
+
+    public TUser(String firstname, String lastname, String name, String email, String password, String role) {
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.username = name;
         this.email = email;
         this.password = password;

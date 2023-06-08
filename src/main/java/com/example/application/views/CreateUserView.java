@@ -1,7 +1,7 @@
 package com.example.application.views;
 
 import com.example.application.data.entity.TUser;
-import com.example.application.data.service.UserService;
+import com.example.application.data.service.TUserService;
 import com.example.application.data.service.WebsiteService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -25,11 +25,11 @@ public class CreateUserView extends VerticalLayout {
     Grid<TUser> grid = new Grid<>(TUser.class);
     TextField filterText = new TextField();
     CreateUserForm form;
-    UserService service;
+    TUserService userService;
     WebsiteService websiteService;
 
-    public CreateUserView(UserService service,WebsiteService websiteService) {
-        this.service = service;
+    public CreateUserView(TUserService userService, WebsiteService websiteService) {
+        this.userService = userService;
         this.websiteService = websiteService;
         addClassName("user-view");
         setSizeFull();
@@ -54,12 +54,16 @@ public class CreateUserView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassName("user-grid");
         grid.setSizeFull();
-        grid.setColumns(  "username", "email", "role" );  // Set the columns that you want to display in your grid
+        grid.setColumns( "firstname", "lastname", "username", "email", "role" );  // Set the columns that you want to display in your grid
+       // grid.addColumn("websites");
+        //grid.addColumn(user -> user.getWebsites().getWebsite_name().setHeader("Website").setSortable(true);
 
         // You can also add a click listener to handle row clicks
         grid.asSingleSelect().addValueChangeListener(event ->
                 editUser(event.getValue()));
     }
+
+
 
     private void editUser(TUser user) {
         if (user == null) {
@@ -86,18 +90,18 @@ public class CreateUserView extends VerticalLayout {
     }
 
     private void saveUser(CreateUserForm.SaveEvent event) {
-        service.saveUser(event.getUser());
+        userService.saveUser(event.getUser());
         updateList();
         closeEditor();
     }
 
     private void deleteUser(CreateUserForm.DeleteEvent event) {
-        service.deleteUser(event.getUser().getId());
+        userService.deleteUser(event.getUser().getId());
         updateList();
         closeEditor();
     }
     private void updateList() {
-        grid.setItems(service.findAllUsers());
+        grid.setItems(userService.findAllUsers());
     }
     private Component getToolbar() {
         filterText.setPlaceholder("Filter by name...");
