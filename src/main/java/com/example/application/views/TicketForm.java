@@ -10,6 +10,7 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep.LabelsPosition;
 import com.vaadin.flow.component.notification.Notification;
@@ -75,20 +76,16 @@ public class TicketForm extends FormLayout {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        //closeTicket.addThemeVariants(ButtonVariant.LUMO_PRIMARY); TODO
 
         save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
 
         save.addClickListener(event -> validateAndSave());
-        delete.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
+        delete.addClickListener(event -> ConfirmAndDelete());
         close.addClickListener(event -> fireEvent(new CloseEvent(this)));
-        //closeTicket.addClickListener(event -> closeTicket()); TODO
-
         binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
 
         return new HorizontalLayout(save, delete, close);
-        //return new HorizontalLayout(save, delete, close, closeTicket); TODO
     }
 
     private void validateAndSave() {
@@ -130,8 +127,19 @@ public class TicketForm extends FormLayout {
         DeleteEvent(TicketForm source, Ticket ticket) {
             super(source, ticket);
         }
-
     }
+
+    private void ConfirmAndDelete(){
+        ConfirmDialog dialog = new ConfirmDialog();
+        dialog.setHeader("Delete?");
+        dialog.setText("Are you sure you want to permanently delete this ticket?");
+        dialog.setCancelable(true);
+        dialog.setConfirmText("Delete");
+        dialog.setConfirmButtonTheme("error primary");
+        dialog.addConfirmListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
+        dialog.open();
+    }
+
 
     public static class CloseEvent extends TicketFormEvent {
         CloseEvent(TicketForm source) {
