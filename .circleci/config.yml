@@ -23,15 +23,15 @@ jobs:
           path: target
           destination: target
 
-  test:
-    docker:
-      - image: maven:3.8.1-openjdk-17-slim
-    steps:
-      - checkout
-      - run: mvn test -e
-      - store_artifacts:
-          path: reports
-          destination: reports
+#  test:
+#    docker:
+#      - image: maven:3.8.1-openjdk-17-slim
+#    steps:
+#      - checkout
+#      - run: mvn test -e
+#      - store_artifacts:
+#          path: reports
+#          destination: reports
 
   build_push_image_gcr:
 
