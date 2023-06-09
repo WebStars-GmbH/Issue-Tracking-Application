@@ -175,13 +175,14 @@ public class TUser extends AbstractEntity{
 //        this.role = role;
 //    }
 
-    public TUser(String firstname, String lastname, String name, String email, String password, String role) {
+    public TUser(String firstname, String lastname, String name, String email, String password, String role, List<Website> websiteList) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = name;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.websites = websiteList;
     }
 }
 

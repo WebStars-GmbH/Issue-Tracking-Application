@@ -100,13 +100,21 @@ public class CreateUserView extends VerticalLayout {
 
     private void saveUser(CreateUserForm.SaveEvent event) {
         TUser user = event.getUser();
+
         // Zuerst den Benutzer speichern
         userService.saveUser(user);
 
+        // Vor dem Speichern des Benutzers alle vorhandenen Websites löschen
+        // websiteService.deleteWebsitesByUser(user);
+
         List<Website> selectedWebsites = user.getWebsites();
-        if (selectedWebsites != null) {
+        if (!selectedWebsites.isEmpty()) {
             for (Website website : selectedWebsites) {
                 website.setUser(user);
+
+                // Vor dem Speichern der Website den Benutzer speichern
+                userService.saveUser(website.getUser());
+
                 // Dann die Website speichern
                 websiteService.saveWebsite(website);
             }

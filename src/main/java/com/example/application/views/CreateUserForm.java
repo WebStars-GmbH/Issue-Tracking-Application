@@ -80,13 +80,18 @@ public class CreateUserForm extends FormLayout {
         if (binder.isValid()) {
             if (password.getValue().equals(passwordConfirm.getValue())) {
                 TUser user = binder.getBean();
+
+                // Benutzer aktualisieren
+                user.setFirstname(firstName.getValue());
+                user.setLastname(lastName.getValue());
+                user.setUsername(username.getValue());
+                user.setEmail(email.getValue());
+                user.setRole(role.getValue());
+
+                // Websites aktualisieren
                 List<Website> selectedWebsites = new ArrayList<>(website.getSelectedItems()); // Get selected websites from the multiselect list box
-                List<Website> userWebsites = user.getWebsites();
-                if(userWebsites == null){
-                    userWebsites = new ArrayList<>();
-                }
-                userWebsites.addAll(selectedWebsites);
-                user.setWebsites(userWebsites);
+                user.setWebsites(selectedWebsites);
+
                 fireEvent(new SaveEvent(this, user));
             } else {
                 passwordConfirm.setErrorMessage("Passwords do not match!");

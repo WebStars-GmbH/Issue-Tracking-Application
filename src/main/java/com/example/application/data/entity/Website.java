@@ -72,4 +72,9 @@ public class Website extends AbstractEntity{
         this.team = team;
     }
 
+    @Override
+    public String toString() {
+        return website_name;
+    }
+
 }

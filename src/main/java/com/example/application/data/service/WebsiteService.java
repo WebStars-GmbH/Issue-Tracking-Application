@@ -10,10 +10,12 @@ import java.util.List;
 @Service
 public class WebsiteService {
     private final WebsiteRepository websiteRepository;
+    private final TUserRepository userRepository; // Hinzufügen der UserRepository-Referenz
 
     @Autowired
-    public WebsiteService(WebsiteRepository websiteRepository) {
+    public WebsiteService(WebsiteRepository websiteRepository, TUserRepository userRepository) {
         this.websiteRepository = websiteRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Website> getAllWebsites() {
@@ -30,5 +32,16 @@ public class WebsiteService {
 
     public void deleteWebsite(Long id) {
         websiteRepository.deleteById(id);
+    }
+
+    public void deleteWebsitesByUser(TUser user) {
+        List<Website> websitesToDelete = websiteRepository.findByUser(user);
+        if (!websitesToDelete.isEmpty()) {
+            for (Website website : websitesToDelete) {
+                website.setUser(null);
+                websiteRepository.delete(website);
+            }
+            userRepository.save(user); // Speichern der TUser-Instanz
+        }
     }
 }

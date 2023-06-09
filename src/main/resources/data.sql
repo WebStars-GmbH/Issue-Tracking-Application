@@ -71,12 +71,12 @@ INSERT INTO "WEBSITE" VALUES
 --Insert with order: id, version, email, firstname, lastname,  password, role, username
 INSERT INTO "TUSER" VALUES
                         (63, 1, 'member0@webstars.com', 'Max', 'Mustermann', 'password', 'team_member', 'member0'),
-                        (64, 1, 'Max', 'Mustermann', 'member1@webstars.com', 'password', 'team_member', 'member1'),
-                        (65, 1, 'Max', 'Mustermann', 'member1@webstars.com', 'password', 'team_member', 'member2'),
-                        (66, 1, 'Max', 'Mustermann', 'sysadmin@webstars.com', 'password', 'sysadmin', 'sysadmin'),
-                        (67, 1, 'Max', 'Mustermann', 'manager@webstars.com', 'password', 'manager', 'manager'),
-                        (68, 1, 'Max', 'Mustermann', 'customer@test.com', 'password', 'customer', 'user'),
-                        (69, 1, 'Max', 'Mustermann', 'customer@test2.com', 'password', 'customer', 'user2');
+                        (64, 1, 'member1@webstars.com', 'Max', 'Mustermann', 'password', 'team_member', 'member1'),
+                        (65, 1, 'member1@webstars.com', 'Max', 'Mustermann', 'password', 'team_member', 'member2'),
+                        (66, 1, 'sysadmin@webstars.com', 'Max', 'Mustermann',  'password', 'sysadmin', 'sysadmin'),
+                        (67, 1, 'manager@webstars.com', 'Max', 'Mustermann', 'password', 'manager', 'manager'),
+                        (68, 1, 'customer@test.com', 'Max', 'Mustermann',  'password', 'customer', 'user'),
+                        (69, 1, 'customer@test2.com', 'Max', 'Mustermann',  'password', 'customer', 'user2');
 
 --Insert with order: id, version, assign_date, close_date, closed_by, description_text, header, history, last_update, priority, register_date, registered_by, resolution_text, status, assigned_to, website
 INSERT INTO "TICKET" VALUES
@@ -88,5 +88,10 @@ INSERT INTO "TICKET" VALUES
 
 
 INSERT INTO "WEBSITE" VALUES
-                          (73, 1, 'www.asdf.com', 'www.dsf.com', NULL, NULL),
-                          (74, 1, 'www.ewr.com', 'www.vdds.com', NULL, NULL);
+                          (75, 1, 'www.google.com', 'www.google.com', NULL, NULL),
+                          (76, 1, 'www.ewr.com', 'www.ewr.com', NULL, NULL),
+                          (77, 1, 'www.mci.com', 'www.mci.com', NULL, NULL),
+                          (78, 1, 'www.webstars.com', 'www.webstars.com', NULL, NULL),
+                          (79, 1, 'www.codepen.com', 'www.codepen.com', NULL, NULL),
+                          (80, 1, 'www.stackoverflow.com', 'www.stackoverflow.com', NULL, NULL),
+                          (81, 1, 'www.github.com', 'www.github.com', NULL, NULL);
