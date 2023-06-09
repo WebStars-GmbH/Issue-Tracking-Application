@@ -155,7 +155,7 @@ public class TicketView extends VerticalLayout {
         statusComboBox.setTooltipText("Please choose the status of the tickets you want to look for...");
         statusComboBox.addValueChangeListener(e -> updateListByStatus());
 
-        List<TUser> users = service.findAllTUsersByRole("team_member");
+        List<TUser> users = service.findAllTUsersByRole("Support-Member");
         assignedToComboBox.setTooltipText("Please choose the assigned users you want to look for...");
         assignedToComboBox.setItems(users);
         assignedToComboBox.setItemLabelGenerator(TUser::getUsername);

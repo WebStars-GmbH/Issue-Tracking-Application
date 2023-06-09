@@ -66,7 +66,7 @@ public class TicketForm extends FormLayout {
         website.setItems(websites);
         website.setItemLabelGenerator(Website::getWebsite_name);
 
-        if (service != null) users = service.findAllTUsersByRole("team_member");
+        if (service != null) users = service.findAllTUsersByRole("Support-Member");
         assigned_to.setItems(users);
         assigned_to.setItemLabelGenerator(TUser::getUsername);
 

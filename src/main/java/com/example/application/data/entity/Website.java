@@ -39,6 +39,11 @@ public class Website extends AbstractEntity{
         return website_name;
     }
 
+    @Override
+    public String toString() {
+        return website_name;
+    }
+
     public void setWebsite_name(String website_name) {
         this.website_name = website_name;
     }

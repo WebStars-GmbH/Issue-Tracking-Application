@@ -9,20 +9,23 @@ import java.util.List;
 @Entity
 public class Role extends AbstractEntity {
 
+    private String name;
+
     @OneToMany(mappedBy = "role")
     private List<TUser> users = new LinkedList<>();
 
-    private String name;
+    public Role() {}
 
-    public Role() {
-
+    @Override
+    public String toString() {
+        return name;
     }
 
     public Role(String name) {
         this.name = name;
     }
 
-    public String getName() {
+    public String getRole_name() {
         return name;
     }
 

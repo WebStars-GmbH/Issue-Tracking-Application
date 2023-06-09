@@ -48,6 +48,8 @@ public class CreateUserForm extends FormLayout {
 
         website.setItems(websiteService.getAllWebsites());
         role.setItems(roleService.getAllRoles());
+//        website.setItemLabelGenerator(Website::getWebsite_name);
+//        role.setItemLabelGenerator(Role::getRole_name);
 
 
         add(firstName,

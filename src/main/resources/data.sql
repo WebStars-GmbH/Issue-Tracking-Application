@@ -69,7 +69,7 @@ INSERT INTO "WEBSITE" VALUES
 
 --Insert with order: id, version, role_name
 INSERT INTO "ROLE" VALUES
-                       (81, 1, 'Admin'),
+                       (81, 1, 'System-Admin'),
                        (82, 1, 'Support-Member'),
                        (83, 1, 'Support-Coordinator'),
                        (84, 1, 'Management'),
