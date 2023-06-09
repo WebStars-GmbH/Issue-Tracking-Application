@@ -8,3 +8,8 @@ a[highlight] {
     font-weight: bold;
     text-decoration: underline;
 }
+
+vaadin-button[theme~="primary"] {
+    background-color: floralwhite;
+    color: black;
+}

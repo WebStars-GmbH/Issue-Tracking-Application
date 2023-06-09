@@ -1,6 +1,7 @@
 package com.example.application.views;
 
 import com.example.application.data.entity.*;
+import com.example.application.data.service.RoleService;
 import com.example.application.data.service.WebsiteService;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -30,7 +31,7 @@ public class CreateUserForm extends FormLayout {
     EmailField email = new EmailField("Email");
     PasswordField password = new PasswordField("Password");
     PasswordField passwordConfirm = new PasswordField("Confirm password");
-    ComboBox<String> role = new ComboBox<>("Role");
+    ComboBox<Role> role = new ComboBox<>("Role");
     ComboBox<Website> website = new ComboBox<>("Website");
 
     Button save = new Button("Save");
@@ -38,14 +39,15 @@ public class CreateUserForm extends FormLayout {
     Binder<TUser> binder = new BeanValidationBinder<>(TUser.class);
 
     @Autowired
-    public CreateUserForm(WebsiteService websiteService) {
+    public CreateUserForm(WebsiteService websiteService, RoleService roleService) {
         addClassName("user-form");
 
-        role.setItems("Customer", "Support-Coordinator", "Support-Member", "System-Admin", "Management");  // Add as many roles as you need
+//        role.setItems("Customer", "Support-Coordinator", "Support-Member", "System-Admin", "Management");  // Add as many roles as you need
         binder.bindInstanceFields(this);
 
 
         website.setItems(websiteService.getAllWebsites());
+        role.setItems(roleService.getAllRoles());
 
 
         add(firstName,

@@ -19,13 +19,12 @@ public class TUser extends AbstractEntity{
 
     @NotBlank
     private String password;
-    @NotBlank
-    private String role;
 
+    @ManyToOne
+    @JoinColumn(name="role_id")
+    private Role role;
     @NotBlank
     private String username;
-
-
 
     @NotBlank
     private String firstname;
@@ -77,11 +76,11 @@ public class TUser extends AbstractEntity{
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -175,7 +174,7 @@ public class TUser extends AbstractEntity{
 //        this.role = role;
 //    }
 
-    public TUser(String firstname, String lastname, String name, String email, String password, String role) {
+    public TUser(String firstname, String lastname, String name, String email, String password, Role role) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = name;
