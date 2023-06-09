@@ -127,9 +127,9 @@ public class TicketView extends VerticalLayout {
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         GridContextMenu<Ticket> menu = grid.addContextMenu();
-        menu.addItem("View", event -> {        });
-        menu.addItem("Edit", event -> editTicket(event.getItem().get()));
-        menu.addItem("Delete", event -> ConfirmAndDelete(event.getItem().get()));
+        menu.addItem("View Details", event -> {        });
+        menu.addItem("Edit Ticket", event -> editTicket(event.getItem().get()));
+        menu.addItem("Delete Ticket", event -> ConfirmAndDelete(event.getItem().get()));
         grid.addItemDoubleClickListener(event -> editTicket(event.getItem()));
     }
 
@@ -151,7 +151,7 @@ public class TicketView extends VerticalLayout {
         descriptionFilterText.setValueChangeMode(ValueChangeMode.LAZY);
         descriptionFilterText.addValueChangeListener(e -> updateListByDescription());
 
-        statusComboBox.setItems("Registered", "Assigned", "In progress", "Closed");
+        statusComboBox.setItems("Registered", "Assigned", "In progress", "Cancelled", "Solved");
         statusComboBox.setTooltipText("Please choose the status of the tickets you want to look for...");
         statusComboBox.addValueChangeListener(e -> updateListByStatus());
 
@@ -220,7 +220,7 @@ public class TicketView extends VerticalLayout {
         addClassName("adding");
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         ticket.setStatus("Registered");
-        String u = com.example.application.views.MainLayout.username;
+        String u = MainLayout.username;
         TUser tuser = service.getTUserByUsername(u);//TODO
         ticket.setRegistered_by(u);
         ticket.setRegister_date(timestamp);
