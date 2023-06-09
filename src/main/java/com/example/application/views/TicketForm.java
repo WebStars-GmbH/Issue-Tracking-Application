@@ -62,7 +62,7 @@ public class TicketForm extends FormLayout {
         addClassName("ticket-form");
         binder.bindInstanceFields(this);
 
-        status.setItems("Registered", "Assigned", "In Progress", "Closed");
+        status.setItems("Registered", "Assigned", "In Progress", "Cancelled", "Solved");
         website.setItems(websites);
         website.setItemLabelGenerator(Website::getWebsite_name);
 
