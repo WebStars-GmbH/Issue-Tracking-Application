@@ -1,6 +1,7 @@
 package com.example.application.views;
 
 import com.example.application.data.entity.TUser;
+import com.example.application.data.service.RoleService;
 import com.example.application.data.entity.Website;
 import com.example.application.data.service.TUserService;
 import com.example.application.data.service.WebsiteService;
@@ -33,10 +34,12 @@ public class CreateUserView extends VerticalLayout {
     CreateUserForm form;
     TUserService userService;
     WebsiteService websiteService;
+    RoleService roleService;
 
-    public CreateUserView(TUserService userService, WebsiteService websiteService) {
+    public CreateUserView(TUserService userService, WebsiteService websiteService, RoleService roleService) {
         this.userService = userService;
         this.websiteService = websiteService;
+        this.roleService = roleService;
         addClassName("user-view");
         setSizeFull();
         configureGrid();
@@ -91,7 +94,7 @@ public class CreateUserView extends VerticalLayout {
     }
     private void configureForm() {
         if (form == null) {
-            form = new CreateUserForm(websiteService);
+            form = new CreateUserForm(websiteService, roleService);
             form.addSaveListener(this::saveUser);
             form.addDeleteListener(this::deleteUser);
             form.addCloseListener(e -> closeEditor());

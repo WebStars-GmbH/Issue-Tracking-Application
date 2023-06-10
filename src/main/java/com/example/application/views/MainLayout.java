@@ -1,5 +1,6 @@
 package com.example.application.views;
 
+import com.example.application.data.entity.Role;
 import com.example.application.data.service.TUserService;
 import com.example.application.security.SecurityService;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -17,7 +18,7 @@ public class MainLayout extends AppLayout {
     private final SecurityService securityService;
     public TUserService tUserService;
     public static String username;
-    public static String userRole;
+    public static Role userRole;
 
     public MainLayout(SecurityService securityService, TUserService tUserService) {
         this.securityService = securityService;
