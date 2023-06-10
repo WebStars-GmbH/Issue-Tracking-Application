@@ -6,18 +6,12 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.LinkedList;
 import java.util.List;
 
-@Entity(name="entity_team")
-@Table(name="Team")
+@Entity
 public class Team extends AbstractEntity{
-   /* @Id
-    @Column(name = "team_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long team_id;
-*/
     @NotBlank
     private String name;
 
-    @OneToMany//(mappedBy = "team")
+    @OneToMany(mappedBy = "team")
     private List<Website> websites = new LinkedList<>();
 
     @ManyToMany
@@ -31,14 +25,7 @@ public class Team extends AbstractEntity{
     public Team(String name){
         this.name = name;
     }
-  /*  public Long getTeam_id() {
-        return team_id;
-    }
 
-    public void setTeam_id(Long team_id) {
-        this.team_id = team_id;
-    }
-*/
     public String getName() {
         return name;
     }

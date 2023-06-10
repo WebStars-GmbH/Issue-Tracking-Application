@@ -49,6 +49,7 @@ public class WebsiteView extends VerticalLayout {
         grid.setColumns("website_name", "URL");
 
         grid.addColumn(website -> website.getUser() == null ? "" : website.getUser().getUsername()).setHeader("User").setSortable(true);
+        grid.addColumn(website -> website.getTeam() == null ? "" : website.getTeam().getName()).setHeader("Team").setSortable(true);
 
         grid.addColumn(website -> website.getTickets().stream()
                         .map(Ticket::getHeader)

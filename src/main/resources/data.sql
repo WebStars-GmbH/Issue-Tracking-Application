@@ -63,9 +63,11 @@ INSERT INTO "CONTACT" VALUES
                           (59, 1, 'essie.adams@iliat.cw', 'Essie', 'Adams', 8, 5),
                           (60, 1, 'gary.osborne@do.ga', 'Gary', 'Osborne', 7, 5);
 
-INSERT INTO "WEBSITE" VALUES
-                          (61, 1, 'www.test.com', 'www.test.com', NULL, NULL),
-                          (62, 1, 'www.test2.com', 'www.test2.com', NULL, NULL);
+INSERT INTO "TEAM" VALUES
+                       (201, 1, 'Team1'),
+                       (202, 1, 'Team2');
+
+
 
 
 --Insert with order: id, version, email, firstname, lastname,  password, role, username
@@ -77,6 +79,10 @@ INSERT INTO "TUSER" VALUES
                         (67, 1, 'manager@webstars.com', 'Max', 'Mustermann', 'password', 'Management', 'manager'),
                         (68, 1, 'customer@test.com', 'Max', 'Mustermann',  'password', 'Customer', 'user'),
                         (69, 1, 'customer@test2.com', 'Max', 'Mustermann',  'password', 'Customer', 'user2');
+
+INSERT INTO "WEBSITE" VALUES
+                          (61, 1, 'www.test.com', 'www.test.com', 201, 68),
+                          (62, 1, 'www.test2.com', 'www.test2.com', 202, 69);
 
 --Insert with order: id, version, assign_date, close_date, closed_by, description_text, header, history, last_update, priority, register_date, registered_by, resolution_text, status, assigned_to, website
 INSERT INTO "TICKET" VALUES
@@ -95,3 +101,6 @@ INSERT INTO "WEBSITE" VALUES
                           (79, 1, 'www.codepen.com', 'www.codepen.com', NULL, NULL),
                           (80, 1, 'www.stackoverflow.com', 'www.stackoverflow.com', NULL, NULL),
                           (81, 1, 'www.github.com', 'www.github.com', NULL, NULL);
+
+
+
