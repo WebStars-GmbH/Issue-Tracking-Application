@@ -28,7 +28,7 @@ public class MainLayout extends AppLayout {
         userRole = tUserService.findUserByUsername(username).getRole();
         String role = securityService.getAuthenticatedUser().getAuthorities().toString();
         com.vaadin.flow.component.notification.Notification notification = Notification
-                .show("Username: " + username + "; Role: " + userRole + "; Authorities: " + role);
+                .show("Username: " + username + "; Role: " + userRole.getRole_name() + "; Authorities: " + role);
 
         createHeader();
         createDrawer();

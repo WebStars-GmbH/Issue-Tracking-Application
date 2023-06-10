@@ -82,7 +82,7 @@ INSERT INTO "TUSER" VALUES
                         (63, 1, 'member0@webstars.com', 'Max', 'Mustermann', 'password', 'member0', 92),
                         (64, 1, 'member1@webstars.com', 'Max', 'Mustermann', 'password', 'member1', 92),
                         (65, 1, 'member1@webstars.com', 'Max', 'Mustermann', 'password', 'member2', 92),
-                        (66, 1, 'sysadmin@webstars.com', 'Max', 'Mustermann', 'password', 'sysadmin', 91),
+                        (66, 1, 'sysadmin@webstars.com', 'Max', 'Mustermann', 'password', 'admin', 91),
                         (67, 1, 'manager@webstars.com', 'Max', 'Mustermann', 'password', 'manager', 94),
                         (68, 1, 'customer@test.com', 'Max', 'Mustermann', 'password', 'user', 95),
                         (69, 1, 'customer@test2.com', 'Max', 'Mustermann', 'password', 'user2', 95);
@@ -93,21 +93,21 @@ INSERT INTO "WEBSITE" VALUES
 
 --Insert with order: id, version, assign_date, close_date, closed_by, description_text, header, history, last_update, priority, register_date, registered_by, resolution_text, status, assigned_to, website
 INSERT INTO "TICKET" VALUES
-                         (70, 1, NULL, NULL, NULL, 'Das ist ein nicht zugewiesenes Ticket', 'Ticket1', 'Das ist eine History', now(), 1, now(), 'user', '', 'Registered', NULL, 61),
-                         (71, 1, now(), now(), NULL, 'Das ist ein geschlossenes Ticket', 'Ticket2', 'Das ist auch eine History', now(), 0, now(), 'user2', 'Das ist die Loesung', 'Closed', 64, 62),
-                         (72, 1, NULL, NULL, NULL, 'Das ist noch ein nicht zugewiesenes Ticket', 'Ticket3', 'blabla', now(), 1, now(), 'user', '', 'Registered', NULL, 62),
-                         (73, 1, now(), now(), NULL, 'Das ist noch ein geschlossenes Ticket', 'Ticket4', '', now(), 0, now(), 'user2', 'Das ist die Loesung', 'Closed', 64, 62),
-                         (74, 1, now(), NULL, NULL, 'Das ist ein zugewiesenes Ticket', 'Ticket5', 'Das ist noch eine History', now(), 1, now(), 'user2', '', 'Registered', 65, 62);
+                         (70, 1, NULL, NULL, NULL, 'Das ist ein nicht zugewiesenes Ticket', 'Ticket1', '', now(), 1, now(), 'user', '', 'Registered', NULL, 61),
+                         (71, 1, now(), now(), NULL, 'Das ist ein geschlossenes Ticket', 'Ticket2', '', now(), 0, now(), 'user2', 'Das ist die Loesung', 'Solved', 64, 62),
+                         (72, 1, NULL, NULL, NULL, 'Das ist noch ein nicht zugewiesenes Ticket', 'Ticket3', '', now(), 1, now(), 'user', '', 'Cancelled', NULL, 62),
+                         (73, 1, now(), now(), NULL, 'Das ist noch ein geschlossenes Ticket', 'Ticket4', '', now(), 0, now(), 'user2', 'Das ist die Loesung', 'Solved', 64, 62),
+                         (74, 1, now(), NULL, NULL, 'Das ist ein zugewiesenes Ticket', 'Ticket5', '', now(), 1, now(), 'user2', '', 'Registered', 65, 62);
 
 
 INSERT INTO "WEBSITE" VALUES
-                          (75, 1, 'www.google.com', 'www.google.com', NULL, NULL),
-                          (76, 1, 'www.ewr.com', 'www.ewr.com', NULL, NULL),
-                          (77, 1, 'www.mci.com', 'www.mci.com', NULL, NULL),
-                          (78, 1, 'www.webstars.com', 'www.webstars.com', NULL, NULL),
-                          (79, 1, 'www.codepen.com', 'www.codepen.com', NULL, NULL),
-                          (80, 1, 'www.stackoverflow.com', 'www.stackoverflow.com', NULL, NULL),
-                          (81, 1, 'www.github.com', 'www.github.com', NULL, NULL);
+                          (75, 1, 'www.google.com', 'www.google.com', 201, NULL),
+                          (76, 1, 'www.ewr.com', 'www.ewr.com', 201, NULL),
+                          (77, 1, 'www.mci.com', 'www.mci.com', 202, NULL),
+                          (78, 1, 'www.webstars.com', 'www.webstars.com', 202, NULL),
+                          (79, 1, 'www.codepen.com', 'www.codepen.com', 202, NULL),
+                          (80, 1, 'www.stackoverflow.com', 'www.stackoverflow.com', 202, NULL),
+                          (81, 1, 'www.github.com', 'www.github.com', 202, NULL);
 
 
 

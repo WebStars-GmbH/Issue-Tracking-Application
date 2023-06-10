@@ -55,6 +55,8 @@ public class WebsiteView extends VerticalLayout {
                         .map(Ticket::getHeader)
                         .collect(Collectors.joining(", ")))
                 .setHeader("Tickets");
+
+        grid.getColumns().forEach(col -> col.setAutoWidth(true));
     }
 
     private void updateList() {

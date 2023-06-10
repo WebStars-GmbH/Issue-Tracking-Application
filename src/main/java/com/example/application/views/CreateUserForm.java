@@ -46,19 +46,19 @@ public class CreateUserForm extends FormLayout {
     public CreateUserForm(WebsiteService websiteService, RoleService roleService) {
         addClassName("user-form");
 
- //       role.setItems("Customer", "Support-Coordinator", "Support-Member", "System-Admin", "Management");
+
 
         binder.bindInstanceFields(this);
 
         websitesNew.setItems(websiteService.getAllWebsites());
-//        role.setItems(roleService.getAllRoles());
 
-//        role.setItems("Customer", "Support-Coordinator", "Support-Member", "System-Admin", "Management");  // Add as many roles as you need
+        role.setItems(roleService.getAllRoles());
+        role.setItemLabelGenerator(Role::getRole_name);
 
         binder.forField(websitesNew).<List<Website>> withConverter(ArrayList::new, HashSet::new).bind(TUser::getWebsites, TUser::setWebsites);
 
 
-        //role.setItemLabelGenerator(Role::getRole_name);
+
 
 
         add(firstName,

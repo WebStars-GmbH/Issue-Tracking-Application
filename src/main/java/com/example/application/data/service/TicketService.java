@@ -1,7 +1,9 @@
 package com.example.application.data.service;
 
-import com.example.application.data.entity.*;
-import com.example.application.data.repository.*;
+import com.example.application.data.entity.Ticket;
+import com.example.application.data.repository.TicketRepository;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,5 +73,8 @@ public class TicketService {
             return;
         }
         ticketRepository.save(ticket);
+        Notification notification = Notification
+                .show("Ticket '" + ticket.getHeader() + "' saved!");
+        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
     }
 }

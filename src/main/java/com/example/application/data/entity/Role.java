@@ -1,7 +1,7 @@
 package com.example.application.data.entity;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 
 import java.util.LinkedList;
 import java.util.List;

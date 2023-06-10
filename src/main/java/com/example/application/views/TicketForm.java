@@ -10,14 +10,11 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
-import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep.LabelsPosition;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -47,6 +44,8 @@ public class TicketForm extends FormLayout {
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
 
+    TextArea history = new TextArea("History");
+
     //Button closeTicket = new Button("Close");
     Binder<Ticket> binder = new BeanValidationBinder<>(Ticket.class);
 
@@ -60,6 +59,7 @@ public class TicketForm extends FormLayout {
 
         addClassName("ticket-form");
         binder.bindInstanceFields(this);
+        binder.forField(history).bind(Ticket::getHistory, null);
 
         status.setItems("Registered", "Assigned", "In Progress", "Cancelled", "Solved");
         website.setItems(websites);
@@ -68,13 +68,13 @@ public class TicketForm extends FormLayout {
         assigned_to.setItems(users);
         assigned_to.setItemLabelGenerator(TUser::getUsername);
 
-        Span history_text = new Span("Some history... TODO");//TODO
-        VerticalLayout content = new VerticalLayout(history_text);
+        /*
+        VerticalLayout content = new VerticalLayout(history);
         content.setSpacing(false);
         content.setPadding(false);
-
         Details details = new Details("History", content);
         details.setOpened(false);
+         */
 
         add(header,
                 website,
@@ -84,7 +84,7 @@ public class TicketForm extends FormLayout {
                 assigned_to,
                 status,
                 createButtonsLayout(),
-                details);
+                history);
     }
 
     private HorizontalLayout createButtonsLayout() {
@@ -132,9 +132,6 @@ public class TicketForm extends FormLayout {
 
         SaveEvent(TicketForm source, Ticket ticket) {
             super(source, ticket);
-            Notification notification = Notification
-                    .show("Ticket saved!");
-            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         }
     }
 

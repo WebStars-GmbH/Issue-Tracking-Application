@@ -118,7 +118,7 @@ public class TicketView extends VerticalLayout {
         grid.addClassNames("ticket-grid");
         grid.setSizeFull();
 
-        grid.setColumns("priority", "header", "status", "registered_by", "register_date", "description", "close_date", "solution", "last_update", "history");
+        grid.setColumns("priority", "header", "status", "registered_by", "register_date", "description", "close_date", "solution", "last_update");
 
         grid.addColumn(ticket -> ticket.getWebsite().getURL()).setHeader("Website").setSortable(true);
 
@@ -199,7 +199,7 @@ public class TicketView extends VerticalLayout {
             ticket.setLast_update(timestamp);
             String timestampString = new SimpleDateFormat("yyyy.MM.dd.HH.mm").format(timestamp);
             String u = com.example.application.views.MainLayout.username;
-            ticket.setHistory(ticket.getHistory() + timestampString + ": modified by " + u + "; "); //TODO
+            ticket.setHistory(ticket.getHistory() + timestampString + ": modified by " + u + "; " + " \n"); //TODO
         }
     }
 
