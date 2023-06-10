@@ -18,7 +18,7 @@ public class TicketViewTest {
     }
 
     @Autowired
-    private com.example.application.views.TicketView ticketView;
+    private TicketView ticketView;
 
     @Test
     public void formShownWhenContactSelected() {

@@ -38,7 +38,7 @@ public class TUser extends AbstractEntity{
     private List<Ticket> registered_tickets = new LinkedList<>();
     */
 
-    @OneToMany ( mappedBy="assigned_to")
+    @OneToMany (mappedBy="assigned_to")
     private List<Ticket> assigned_tickets = new LinkedList<>();
 
     /*
@@ -49,7 +49,7 @@ public class TUser extends AbstractEntity{
     @OneToMany(mappedBy = "tuser", fetch = FetchType.EAGER)
     private List<Website> websites = new LinkedList<>();
 
-    @ManyToMany(mappedBy = "team_members")
+    @ManyToMany(mappedBy = "team_members", fetch = FetchType.EAGER)
     private List<Team> teams = new LinkedList<>();
 
     /*public Long getId() {

@@ -61,14 +61,15 @@ public class MainLayout extends AppLayout {
                 //new RouterLink("List", ListView.class),
                 //new RouterLink("Dashboard", DashboardView.class), entfernt build fail coused by licence checker
                 new RouterLink("Tickets", TicketView.class),
-                new RouterLink("Create User", CreateUserView.class),
+                new RouterLink("Users", CreateUserView.class),
+                new RouterLink("Teams", TeamView.class),
                 new RouterLink("Websites", WebsiteView.class)
         ));
     }
 
     private void createDrawerCustomer() {
         addToDrawer(new VerticalLayout(
-                new RouterLink("Tickets", TicketView.class)
+                new RouterLink("Tickets", TeamView.class)
         ));
     }
 
