@@ -67,16 +67,23 @@ INSERT INTO "WEBSITE" VALUES
                           (61, 1, 'www.test.com', 'www.test.com', NULL, NULL),
                           (62, 1, 'www.test2.com', 'www.test2.com', NULL, NULL);
 
+--Insert with order: id, version, role_name
+INSERT INTO "ROLE" VALUES
+                       (91, 1, 'System-Admin'),
+                       (92, 1, 'Support-Member'),
+                       (93, 1, 'Support-Coordinator'),
+                       (94, 1, 'Management'),
+                       (95, 1, 'Customer');
 
---Insert with order: id, version, email, firstname, lastname,  password, role, username
+--Insert with order: id, version, email, firstname, lastname,  password, username, role
 INSERT INTO "TUSER" VALUES
-                        (63, 1, 'member0@webstars.com', 'Max', 'Mustermann', 'password', 'Support-Member', 'member0'),
-                        (64, 1, 'member1@webstars.com', 'Max', 'Mustermann', 'password', 'Support-Member', 'member1'),
-                        (65, 1, 'member1@webstars.com', 'Max', 'Mustermann', 'password', 'Support-Member', 'member2'),
-                        (66, 1, 'sysadmin@webstars.com', 'Max', 'Mustermann',  'password', 'System-Admin', 'admin'),
-                        (67, 1, 'manager@webstars.com', 'Max', 'Mustermann', 'password', 'Management', 'manager'),
-                        (68, 1, 'customer@test.com', 'Max', 'Mustermann',  'password', 'Customer', 'user'),
-                        (69, 1, 'customer@test2.com', 'Max', 'Mustermann',  'password', 'Customer', 'user2');
+                        (63, 1, 'member0@webstars.com', 'Max', 'Mustermann', 'password', 'member0', 92),
+                        (64, 1, 'member1@webstars.com', 'Max', 'Mustermann', 'password', 'member1', 92),
+                        (65, 1, 'member1@webstars.com', 'Max', 'Mustermann', 'password', 'member2', 92),
+                        (66, 1, 'sysadmin@webstars.com', 'Max', 'Mustermann', 'password', 'sysadmin', 91),
+                        (67, 1, 'manager@webstars.com', 'Max', 'Mustermann', 'password', 'manager', 94),
+                        (68, 1, 'customer@test.com', 'Max', 'Mustermann', 'password', 'user', 95),
+                        (69, 1, 'customer@test2.com', 'Max', 'Mustermann', 'password', 'user2', 95);
 
 --Insert with order: id, version, assign_date, close_date, closed_by, description_text, header, history, last_update, priority, register_date, registered_by, resolution_text, status, assigned_to, website
 INSERT INTO "TICKET" VALUES

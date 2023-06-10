@@ -1,9 +1,6 @@
 package com.example.application.data.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.LinkedList;
@@ -12,23 +9,22 @@ import java.util.List;
 // Entity in Progress
 @Entity
 public class TUser extends AbstractEntity{
-   /* @Id
-    @Column(name = "tuser_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long user_id;
-*/
+    /* @Id
+     @Column(name = "tuser_id")
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
+     private Long user_id;
+ */
     @NotBlank
     private String email;
 
     @NotBlank
     private String password;
-    @NotBlank
-    private String role;
 
+    @ManyToOne
+    @JoinColumn(name="role_id")
+    private Role role;
     @NotBlank
     private String username;
-
-
 
     @NotBlank
     private String firstname;
@@ -51,7 +47,7 @@ public class TUser extends AbstractEntity{
      */
 
     @OneToMany(mappedBy = "tuser", fetch = FetchType.EAGER)
-    private List<Website> websites = new LinkedList<>();;
+    private List<Website> websites = new LinkedList<>();
 
     @ManyToMany(mappedBy = "team_members")
     private List<Team> teams = new LinkedList<>();
@@ -80,11 +76,11 @@ public class TUser extends AbstractEntity{
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -116,24 +112,6 @@ public class TUser extends AbstractEntity{
         this.user_id = user_id;
     }
 */
-
-
-    public List<Ticket> getAssigned_to() {
-        return assigned_tickets;
-    }
-
-    public void setAssigned_to(List<Ticket> assigned_to) {
-        this.assigned_tickets = assigned_to;
-    }
-/*
-    public List<Ticket> getClosed_by() {
-        return closed_tickets;
-    }
-
-    public void setClosed_by(List<Ticket> closed_by) {
-        this.closed_tickets = closed_by;
-    }
- */
 
     public List<Team> getTeams() {
         return teams;
@@ -178,7 +156,7 @@ public class TUser extends AbstractEntity{
 //        this.role = role;
 //    }
 
-    public TUser(String firstname, String lastname, String name, String email, String password, String role, List<Website> websiteList) {
+    public TUser(String firstname, String lastname, String name, String email, String password, Role role, List<Website> websiteList) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = name;

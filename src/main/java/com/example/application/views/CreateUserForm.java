@@ -2,6 +2,8 @@ package com.example.application.views;
 
 import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Website;
+import com.example.application.data.entity.*;
+import com.example.application.data.service.RoleService;
 import com.example.application.data.service.WebsiteService;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -18,6 +20,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -32,23 +35,31 @@ public class CreateUserForm extends FormLayout {
     EmailField email = new EmailField("Email");
     PasswordField password = new PasswordField("Password");
     PasswordField passwordConfirm = new PasswordField("Confirm password");
-    ComboBox<String> role = new ComboBox<>("Role");
+    ComboBox<Role> role = new ComboBox<>("Role");
     MultiSelectComboBox<Website> websitesNew = new MultiSelectComboBox<>("Websites");
 
     Button save = new Button("Save");
     Button close = new Button("Cancel");
     Binder<TUser> binder = new BeanValidationBinder<>(TUser.class);
 
-    //@Autowired
-    public CreateUserForm(WebsiteService websiteService) {
+    @Autowired
+    public CreateUserForm(WebsiteService websiteService, RoleService roleService) {
         addClassName("user-form");
 
-        role.setItems("Customer", "Support-Coordinator", "Support-Member", "System-Admin", "Management");
-
-        websitesNew.setItems(websiteService.getAllWebsites());
+ //       role.setItems("Customer", "Support-Coordinator", "Support-Member", "System-Admin", "Management");
 
         binder.bindInstanceFields(this);
+
+        websitesNew.setItems(websiteService.getAllWebsites());
+//        role.setItems(roleService.getAllRoles());
+
+//        role.setItems("Customer", "Support-Coordinator", "Support-Member", "System-Admin", "Management");  // Add as many roles as you need
+
         binder.forField(websitesNew).<List<Website>> withConverter(ArrayList::new, HashSet::new).bind(TUser::getWebsites, TUser::setWebsites);
+
+
+        //role.setItemLabelGenerator(Role::getRole_name);
+
 
         add(firstName,
                 lastName,
