@@ -21,6 +21,9 @@ public class WebsiteService {
     public List<Website> getAllWebsites() {
         return websiteRepository.findAll();
     }
+    public List<Website> getAllWebsitesByUser(TUser user) {
+        return websiteRepository.findByUser(user);
+    }
 
     public Website findWebsiteById(Long id) {
         return websiteRepository.findById(id).orElse(null);

@@ -14,11 +14,12 @@ public class Website extends AbstractEntity{
     @NotBlank
     private String URL;
 
-    @OneToMany( mappedBy ="website")
+    @OneToMany( mappedBy ="website", fetch = FetchType.EAGER)
     private List<Ticket> tickets = new LinkedList<>();
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = TUser.class)
     @JoinColumn(name = "tuser_id")
+    //@JsonIgnoreProperties({"websites"})
     private TUser tuser;
 
     @ManyToOne
@@ -62,6 +63,10 @@ public class Website extends AbstractEntity{
 
     public void setUser(TUser tuser) {
         this.tuser = tuser;
+    }
+
+    public void deleteUser(){
+        this.tuser = null;
     }
 
     public Team getTeam() {

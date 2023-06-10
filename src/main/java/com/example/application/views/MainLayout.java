@@ -52,7 +52,8 @@ public class MainLayout extends AppLayout {
                 new RouterLink("List", ListView.class),
                 new RouterLink("Dashboard", DashboardView.class),
                 new RouterLink("Tickets", TicketView.class),
-                new RouterLink("Create User", CreateUserView.class)
+                new RouterLink("Create User", CreateUserView.class),
+                new RouterLink("Websites", WebsiteView.class)
         ));
     }
 

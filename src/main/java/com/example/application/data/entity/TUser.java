@@ -1,6 +1,9 @@
 package com.example.application.data.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.LinkedList;
@@ -48,7 +51,7 @@ public class TUser extends AbstractEntity{
      */
 
     @OneToMany(mappedBy = "tuser", fetch = FetchType.EAGER)
-    private List<Website> websites = new LinkedList<>();
+    private List<Website> websites = new LinkedList<>();;
 
     @ManyToMany(mappedBy = "team_members")
     private List<Team> teams = new LinkedList<>();

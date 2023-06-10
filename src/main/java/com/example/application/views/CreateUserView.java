@@ -1,9 +1,11 @@
 package com.example.application.views;
 
 import com.example.application.data.entity.TUser;
+import com.example.application.data.entity.Website;
 import com.example.application.data.service.TUserService;
 import com.example.application.data.service.WebsiteService;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -15,8 +17,6 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
-import com.example.application.data.entity.Website;
-
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -98,29 +98,35 @@ public class CreateUserView extends VerticalLayout {
         }
     }
 
-    private void saveUser(CreateUserForm.SaveEvent event) {
-        TUser user = event.getUser();
+    private void updateWebsites(TUser user){
+        List<Website> websitesOld = websiteService.getAllWebsitesByUser(user);
+        List<Website> websitesNew = user.getWebsites();
 
-        // Zuerst den Benutzer speichern
-        userService.saveUser(user);
-
-        // Vor dem Speichern des Benutzers alle vorhandenen Websites löschen
-        // websiteService.deleteWebsitesByUser(user);
-
-        List<Website> selectedWebsites = user.getWebsites();
-        if (!selectedWebsites.isEmpty()) {
-            for (Website website : selectedWebsites) {
-                website.setUser(user);
-
-                // Vor dem Speichern der Website den Benutzer speichern
-                userService.saveUser(website.getUser());
-
-                // Dann die Website speichern
-                websiteService.saveWebsite(website);
+        if (websitesOld != websitesNew) {
+            for (Website w : websitesOld) {
+                if (!websitesNew.contains(w)) {
+                    w.deleteUser();
+                    websiteService.saveWebsite(w);
+                }
+            }
+            for (Website w : websitesNew) {
+                if (!websitesOld.contains(w)) {
+                    w.deleteUser();
+                    w.setUser(user);
+                    websiteService.saveWebsite(w);
+                }
             }
         }
+    }
+    private void saveUser(CreateUserForm.SaveEvent event) {
+
+        TUser user = event.getUser();
+        userService.saveUser(user);
+        updateWebsites(user);
+        //userService.saveUser(user);
         updateList();
         closeEditor();
+        UI.getCurrent().getPage().reload();
     }
 
     private void deleteUser(CreateUserForm.DeleteEvent event) {

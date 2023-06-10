@@ -1,6 +1,7 @@
 package com.example.application.views;
 
-import com.example.application.data.entity.*;
+import com.example.application.data.entity.TUser;
+import com.example.application.data.entity.Website;
 import com.example.application.data.service.WebsiteService;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -8,21 +9,20 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.*;
+import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.textfield.PasswordField;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
-import com.vaadin.flow.component.textfield.EmailField;
-import com.vaadin.flow.component.textfield.TextField;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.vaadin.flow.component.listbox.MultiSelectListBox;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class CreateUserForm extends FormLayout {
@@ -33,29 +33,29 @@ public class CreateUserForm extends FormLayout {
     PasswordField password = new PasswordField("Password");
     PasswordField passwordConfirm = new PasswordField("Confirm password");
     ComboBox<String> role = new ComboBox<>("Role");
-    MultiSelectListBox<Website> website = new MultiSelectListBox<>();
+    MultiSelectComboBox<Website> websitesNew = new MultiSelectComboBox<>("Websites");
 
     Button save = new Button("Save");
     Button close = new Button("Cancel");
     Binder<TUser> binder = new BeanValidationBinder<>(TUser.class);
 
-    @Autowired
+    //@Autowired
     public CreateUserForm(WebsiteService websiteService) {
         addClassName("user-form");
 
         role.setItems("Customer", "Support-Coordinator", "Support-Member", "System-Admin", "Management");
+
+        websitesNew.setItems(websiteService.getAllWebsites());
+
         binder.bindInstanceFields(this);
-
-
-        website.setItems(websiteService.getAllWebsites());
-
+        binder.forField(websitesNew).<List<Website>> withConverter(ArrayList::new, HashSet::new).bind(TUser::getWebsites, TUser::setWebsites);
 
         add(firstName,
                 lastName,
                 username,
                 email,
                 role,
-                website,
+                websitesNew,
                 password,
                 passwordConfirm,
                 createButtonsLayout());
@@ -80,18 +80,6 @@ public class CreateUserForm extends FormLayout {
         if (binder.isValid()) {
             if (password.getValue().equals(passwordConfirm.getValue())) {
                 TUser user = binder.getBean();
-
-                // Benutzer aktualisieren
-                user.setFirstname(firstName.getValue());
-                user.setLastname(lastName.getValue());
-                user.setUsername(username.getValue());
-                user.setEmail(email.getValue());
-                user.setRole(role.getValue());
-
-                // Websites aktualisieren
-                List<Website> selectedWebsites = new ArrayList<>(website.getSelectedItems()); // Get selected websites from the multiselect list box
-                user.setWebsites(selectedWebsites);
-
                 fireEvent(new SaveEvent(this, user));
             } else {
                 passwordConfirm.setErrorMessage("Passwords do not match!");
@@ -99,7 +87,6 @@ public class CreateUserForm extends FormLayout {
             }
         }
     }
-
 
     public void setUser(TUser user) {
         binder.setBean(user);
