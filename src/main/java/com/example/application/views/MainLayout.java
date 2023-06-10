@@ -1,10 +1,12 @@
 package com.example.application.views;
 
+import com.example.application.data.service.TUserService;
 import com.example.application.security.SecurityService;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -13,17 +15,23 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 public class MainLayout extends AppLayout {
     private final SecurityService securityService;
+    public TUserService tUserService;
     public static String username;
+    public static String userRole;
 
-    public SecurityService getSecurityService() {
-        return securityService;
-    }
-
-    public MainLayout(SecurityService securityService) {
+    public MainLayout(SecurityService securityService, TUserService tUserService) {
         this.securityService = securityService;
+        this.tUserService = tUserService;
+
         username = securityService.getAuthenticatedUser().getUsername();
+        userRole = tUserService.findUserByUsername(username).getRole();
+        String role = securityService.getAuthenticatedUser().getAuthorities().toString();
+        com.vaadin.flow.component.notification.Notification notification = Notification
+                .show("Username: " + username + "; Role: " + userRole + "; Authorities: " + role);
+
         createHeader();
         createDrawer();
+        //createDrawerCustomer();
     }
 
     private void createHeader() {
@@ -49,11 +57,17 @@ public class MainLayout extends AppLayout {
 
     private void createDrawer() {
         addToDrawer(new VerticalLayout(
-                new RouterLink("List", ListView.class),
+                //new RouterLink("List", ListView.class),
                 //new RouterLink("Dashboard", DashboardView.class), entfernt build fail coused by licence checker
                 new RouterLink("Tickets", TicketView.class),
                 new RouterLink("Create User", CreateUserView.class),
                 new RouterLink("Websites", WebsiteView.class)
+        ));
+    }
+
+    private void createDrawerCustomer() {
+        addToDrawer(new VerticalLayout(
+                new RouterLink("Tickets", TicketView.class)
         ));
     }
 

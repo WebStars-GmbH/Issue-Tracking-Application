@@ -25,6 +25,10 @@ public class TUserService {
         return tUserRepository.findById(id).orElse(null);
     }
 
+    public TUser findUserByUsername(String username) {
+        return tUserRepository.getTUserByUsername(username);
+    }
+
     public void saveUser(TUser user) {
         tUserRepository.save(user);
     }

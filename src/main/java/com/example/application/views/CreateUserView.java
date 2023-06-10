@@ -123,7 +123,6 @@ public class CreateUserView extends VerticalLayout {
         TUser user = event.getUser();
         userService.saveUser(user);
         updateWebsites(user);
-        //userService.saveUser(user);
         updateList();
         closeEditor();
         UI.getCurrent().getPage().reload();

@@ -3,7 +3,6 @@ package com.example.application.views;
 import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Ticket;
 import com.example.application.data.entity.Website;
-import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
@@ -32,7 +31,7 @@ public class TicketAddForm extends FormLayout {
     Button close = new Button("Cancel");
     Binder<Ticket> binder = new BeanValidationBinder<>(Ticket.class);
 
-    public TicketAddForm(CrmService service, List<Website> websites, List<TUser>users) {
+    public TicketAddForm(List<Website> websites, List<TUser>users) {
 
         addClassName("ticket-form");
         binder.bindInstanceFields(this);

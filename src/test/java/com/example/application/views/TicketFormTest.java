@@ -53,7 +53,7 @@ public class TicketFormTest {
 
     @Test
     public void formFieldsPopulated() {
-        TicketForm form = new TicketForm(null, websites, tusers);
+        TicketForm form = new TicketForm( websites, tusers);
         form.setTicket(testTicket1);
         assertEquals("Test Ticket 1", form.header.getValue());
         assertEquals("This is a test ticket description", form.description.getValue());
@@ -66,7 +66,7 @@ public class TicketFormTest {
 
     @Test
     public void saveEventHasCorrectValues() {
-        TicketForm form = new TicketForm(null, websites, tusers);
+        TicketForm form = new TicketForm(websites, tusers);
         Ticket ticket = new Ticket();
         form.setTicket(ticket);
         form.header.setValue("Test Ticket 2");

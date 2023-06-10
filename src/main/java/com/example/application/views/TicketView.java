@@ -30,7 +30,7 @@ import java.util.List;
 @SpringComponent
 @Scope("prototype")
 @PermitAll
-@Route(value = "Tickets", layout = com.example.application.views.MainLayout.class)
+@Route(value = "", layout = com.example.application.views.MainLayout.class)
 @PageTitle("Tickets | Webst@rs Ticketing Application")
 public class TicketView extends VerticalLayout {
     Grid<Ticket> grid = new Grid<>(Ticket.class);
@@ -69,13 +69,13 @@ public class TicketView extends VerticalLayout {
     }
 
     private void configureForm() {
-        form = new TicketForm(service, service.findAllWebsites(), service.findAllTUsers());
+        form = new TicketForm(service.findAllWebsites(), service.findAllTUsersByRole("Support-Member"));
         form.setWidth("70em");
         form.addSaveListener(this::saveTicket); // <1>
         form.addDeleteListener(this::deleteTicket); // <2>
         form.addCloseListener(e -> closeEditor()); // <3>
 
-        addForm = new TicketAddForm(service, service.findAllWebsites(), service.findAllTUsers());
+        addForm = new TicketAddForm(service.findAllWebsites(), service.findAllTUsers("Support-Member"));
         addForm.setWidth("70em");
         addForm.addSaveListener(this::saveAddTicket); // <1>
         addForm.addCloseListener(e -> closeEditor()); // <3>
@@ -130,7 +130,8 @@ public class TicketView extends VerticalLayout {
         menu.addItem("View Details", event -> {        });
         menu.addItem("Edit Ticket", event -> editTicket(event.getItem().get()));
         menu.addItem("Delete Ticket", event -> ConfirmAndDelete(event.getItem().get()));
-        grid.addItemDoubleClickListener(event -> editTicket(event.getItem()));
+        grid.asSingleSelect().addValueChangeListener(event -> editTicket(event.getValue()));
+        //grid.addItemDoubleClickListener(event -> editTicket(event.getItem()));
     }
 
     private Component getToolbar() {
@@ -155,7 +156,7 @@ public class TicketView extends VerticalLayout {
         statusComboBox.setTooltipText("Please choose the status of the tickets you want to look for...");
         statusComboBox.addValueChangeListener(e -> updateListByStatus());
 
-        List<TUser> users = service.findAllTUsersByRole("team_member");
+        List<TUser> users = service.findAllTUsersByRole("Support-Member");
         assignedToComboBox.setTooltipText("Please choose the assigned users you want to look for...");
         assignedToComboBox.setItems(users);
         assignedToComboBox.setItemLabelGenerator(TUser::getUsername);

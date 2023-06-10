@@ -3,7 +3,6 @@ package com.example.application.views;
 import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Ticket;
 import com.example.application.data.entity.Website;
-import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
@@ -51,7 +50,7 @@ public class TicketForm extends FormLayout {
     //Button closeTicket = new Button("Close");
     Binder<Ticket> binder = new BeanValidationBinder<>(Ticket.class);
 
-    public TicketForm(CrmService service, List<Website> websites, List<TUser>users) {
+    public TicketForm(List<Website> websites, List<TUser>users) {
 
         setResponsiveSteps(new ResponsiveStep("0", 1, LabelsPosition.ASIDE));
         priority.setValue(2);
@@ -66,7 +65,6 @@ public class TicketForm extends FormLayout {
         website.setItems(websites);
         website.setItemLabelGenerator(Website::getWebsite_name);
 
-        if (service != null) users = service.findAllTUsersByRole("team_member");
         assigned_to.setItems(users);
         assigned_to.setItemLabelGenerator(TUser::getUsername);
 
