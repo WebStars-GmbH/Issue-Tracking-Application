@@ -74,6 +74,3 @@ workflows:
       - build_push_image_gcr:
           requires:
             - build
-      - gcp_cloudrun_deploy:
-          requires:
-            - build_push_image_gcr
