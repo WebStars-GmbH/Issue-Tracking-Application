@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
-  gcp-gcr: circleci/gcp-gcr@0.15.1
-  cloudrun: circleci/gcp-cloud-run@1.0.2
+  gcp-gcr: circleci/gcp-gcr@0.15.0
+  cloudrun: circleci/gcp-cloud-run@1.0.1
   gcp-cli: circleci/gcp-cli@2.1
 executors:
   gcloud-executor:
@@ -45,3 +45,34 @@ jobs:
             echo 'export GOOGLE_CLOUD_KEYS=$(cat $HOME/gcloud-service-key.json)' >> $BASH_ENV
             echo 'export TAG=$CIRCLE_SHA1' >> $BASH_ENV
       - gcp-gcr/gcr-auth
+      - gcp-gcr/build-image:
+          dockerfile: Dockerfile
+          google-project-id: GOOGLE_PROJECT_ID
+          registry-url: "gcr.io"
+          image: $CIRCLE_WORKFLOW_ID
+          tag: "latest"
+      - gcp-gcr/push-image:
+          google-project-id: GOOGLE_PROJECT_ID
+          image: $CIRCLE_WORKFLOW_ID
+          registry-url: "gcr.io"
+          tag: "latest"
+      - cloudrun/init
+      - cloudrun/deploy:
+          platform: 'managed'
+          image: 'gcr.io/$GOOGLE_PROJECT_ID/$CIRCLE_WORKFLOW_ID'
+          service-name: 'vaadin-ui-service'
+          region: 'europe-west6'
+          unauthenticated: true
+workflows:
+  version: 2
+  workflow:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - build_push_image_gcr:
+          requires:
+            - build
+
+

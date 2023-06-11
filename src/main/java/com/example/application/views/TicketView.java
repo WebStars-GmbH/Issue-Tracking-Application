@@ -7,12 +7,17 @@ import com.example.application.data.service.TUserService;
 import com.example.application.data.service.TicketService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
+import com.vaadin.flow.component.contextmenu.ContextMenu;
+import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -35,13 +40,13 @@ import java.util.List;
 @PageTitle("Tickets | Webst@rs Ticketing Application")
 public class TicketView extends VerticalLayout {
     Grid<Ticket> grid = new Grid<>(Ticket.class);
+
     TextField websiteFilterText = new TextField("Website");
     TextField statusFilterText = new TextField("Status");
-
     ComboBox<String> statusComboBox = new ComboBox<>("Status");
     TextField descriptionFilterText = new TextField("Description");
-
     ComboBox<TUser> assignedToComboBox = new ComboBox<>("Assigned To");
+
     TicketForm form;
     TicketAddForm addForm;
     CrmService service;
@@ -122,13 +127,33 @@ public class TicketView extends VerticalLayout {
         grid.addClassNames("ticket-grid");
         grid.setSizeFull();
 
-        grid.setColumns("priority", "header", "status", "registered_by", "register_date", "description", "close_date", "solution", "last_update");
 
+        grid.setColumns("priority", "status", "header", "description", "history", "solution", "website", "registered_by", "assigned_to", "register_date", "last_update", "close_date", "closed_by");
+/*
         grid.addColumn(ticket -> ticket.getWebsite().getURL()).setHeader("Website").setSortable(true);
 
         grid.addColumn(ticket -> ticket.getWebsite().getTeam().getName()).setHeader("Support-Team").setSortable(true);
 
         grid.addColumn(ticket -> ticket.getAssigned_to() == null ? "" : ticket.getAssigned_to().getUsername()).setHeader("Assigned to").setSortable(true);
+*/
+        grid.setColumnReorderingAllowed(true);
+
+        Button menuButton = new Button("Show/Hide");
+        menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        ColumnToggleContextMenu columnToggleContextMenu = new ColumnToggleContextMenu(menuButton);
+        columnToggleContextMenu.addColumnToggleItem("Priority", priorityColumn);
+        columnToggleContextMenu.addColumnToggleItem("Status", statusColumn);
+        columnToggleContextMenu.addColumnToggleItem("Header", headerColumn);
+        columnToggleContextMenu.addColumnToggleItem("Description", descriptionColumn);
+        columnToggleContextMenu.addColumnToggleItem("History", historyColumn);
+        columnToggleContextMenu.addColumnToggleItem("Solution", solutionColumn);
+        columnToggleContextMenu.addColumnToggleItem("Website", websiteColumn);
+        columnToggleContextMenu.addColumnToggleItem("Registered By", registeredByColumn);
+        columnToggleContextMenu.addColumnToggleItem("Assigned To", getAssignedToColumn);
+        columnToggleContextMenu.addColumnToggleItem("Register Date", registerDateColumn);
+        columnToggleContextMenu.addColumnToggleItem("Last Update", lastUpdateColumn);
+        columnToggleContextMenu.addColumnToggleItem("Closed Date", closedDateColumn);
+        columnToggleContextMenu.addColumnToggleItem("Closed By", closedByColumn);
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
@@ -138,8 +163,19 @@ public class TicketView extends VerticalLayout {
         menu.addItem("Delete Ticket", event -> ConfirmAndDelete(event.getItem().get()));
         grid.asSingleSelect().addValueChangeListener(event -> editTicket(event.getValue()));
         //grid.addItemDoubleClickListener(event -> editTicket(event.getItem()));
-    }
 
+        List<Ticket> ticket = ticketService.findAllTickets("");
+        grid.setItems(ticket);
+
+        Span title = new Span("Tickets");
+        title.getStyle().set("font-weight", "bold");
+        HorizontalLayout headerLayout = new HorizontalLayout(title, menuButton);
+        headerLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
+        headerLayout.setFlexGrow(1, title);
+
+        add(headerLayout, grid);
+
+    }
     private Component getToolbar() {
         websiteFilterText.setPlaceholder("Filter by website...");
         websiteFilterText.setTooltipText("Please type what the website name should contain...");
@@ -276,5 +312,20 @@ public class TicketView extends VerticalLayout {
                 .show("Found " + grid.getDataProvider().size(new Query<>()) + " Tickets with: Status: " + statusFilter + ", Website: " + websiteFilter + ", Description: " + descriptionFilter + ", Assigned to: " + assignedToFilter + ";");
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 
+    }
+
+    private static class ColumnToggleContextMenu extends ContextMenu {
+        public ColumnToggleContextMenu(Component target) {
+            super(target);
+            setOpenOnClick(true);
+        }
+
+        void addColumnToggleItem(String label, Grid.Column<Ticket> column) {
+            MenuItem menuItem = this.addItem(label, e -> {
+                column.setVisible(e.getSource().isChecked());
+            });
+            menuItem.setCheckable(true);
+            menuItem.setChecked(column.isVisible());
+        }
     }
 }
