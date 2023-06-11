@@ -1,0 +1,19 @@
+{
+  "name": "issue-tracking-application",
+  "version": "1.0.0",
+  "description": "Ticket System",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WebStars-GmbH/Issue-Tracking-Application.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WebStars-GmbH/Issue-Tracking-Application/issues"
+  },
+  "homepage": "https://github.com/WebStars-GmbH/Issue-Tracking-Application#readme"
+}
