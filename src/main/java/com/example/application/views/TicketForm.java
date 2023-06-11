@@ -58,6 +58,8 @@ public class TicketForm extends FormLayout {
 
         addClassName("ticket-form");
         binder.bindInstanceFields(this);
+        binder.forField(header).bind(Ticket::getHeader, null);
+        binder.forField(website).bind(Ticket::getWebsite, null);
         binder.forField(history).bind(Ticket::getHistory, null);
 
         status.setItems("Registered", "Assigned", "In Progress", "Cancelled", "Solved");

@@ -30,7 +30,6 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 @SpringComponent
@@ -252,11 +251,6 @@ public class TicketView extends VerticalLayout {
             form.setTicket(ticket);
             form.setVisible(true);
             addClassName("editing");
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            ticket.setLast_update(timestamp);
-            String timestampString = new SimpleDateFormat("yyyy.MM.dd.HH.mm").format(timestamp);
-            String u = com.example.application.views.MainLayout.username;
-            ticket.setHistory(ticket.getHistory() + timestampString + ": modified by " + u + "; " + " \n"); //TODO
         }
     }
 
@@ -283,8 +277,7 @@ public class TicketView extends VerticalLayout {
         ticket.setRegistered_by(u);
         ticket.setRegister_date(timestamp);
         ticket.setLast_update(timestamp);
-        String timestampString = new SimpleDateFormat("yyyy.MM.dd.HH.mm").format(timestamp);
-        ticket.setHistory(timestampString + ": created by " + u + "; "); //TODO
+        ticket.setHistory("Ticket registered by " + u + " \n");
     }
 
     private void updateList() {
