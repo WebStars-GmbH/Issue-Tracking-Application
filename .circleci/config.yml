@@ -74,3 +74,4 @@ workflows:
       - build_push_image_gcr:
           requires:
             - build
+
