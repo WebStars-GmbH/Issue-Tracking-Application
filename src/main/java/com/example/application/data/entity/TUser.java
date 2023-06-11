@@ -6,14 +6,10 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.LinkedList;
 import java.util.List;
 
-// Entity in Progress
+
 @Entity
 public class TUser extends AbstractEntity{
-    /* @Id
-     @Column(name = "tuser_id")
-     @GeneratedValue(strategy = GenerationType.IDENTITY)
-     private Long user_id;
- */
+
     @NotBlank
     private String email;
 
@@ -52,14 +48,7 @@ public class TUser extends AbstractEntity{
     @ManyToMany(mappedBy = "team_members")
     private List<Team> teams = new LinkedList<>();
 
-    /*public Long getId() {
-        return user_id;
-    }
 
-    public void setId(Long id) {
-        this.user_id = id;
-    }
-*/
     public String getUsername() {
         return username;
     }
@@ -104,13 +93,6 @@ public class TUser extends AbstractEntity{
             return registered_tickets;
         }
 
-   /* public Long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
-    }
 */
 
     public List<Team> getTeams() {

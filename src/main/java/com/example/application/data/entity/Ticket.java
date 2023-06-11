@@ -15,9 +15,8 @@ public class Ticket extends AbstractEntity{
     @NotNull
     @JsonIgnoreProperties({"tickets"})
     private Website website;
-    //@NotBlank
+
     private Timestamp register_date;
-    //@NotBlank
 
     private String status = "";
 
@@ -27,7 +26,6 @@ public class Ticket extends AbstractEntity{
     private Timestamp assign_date;
 
     private Timestamp close_date;
-    //@NotBlank
     private Timestamp last_update;
 
     private String registered_by;
