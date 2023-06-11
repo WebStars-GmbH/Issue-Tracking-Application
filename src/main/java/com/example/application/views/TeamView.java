@@ -1,5 +1,6 @@
 package com.example.application.views;
 
+import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Team;
 import com.example.application.data.service.CrmService;
 import com.example.application.data.service.TeamService;
@@ -15,6 +16,8 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
 
+import java.util.stream.Collectors;
+
 @SpringComponent
 @Scope("prototype")
 @PermitAll
@@ -22,8 +25,6 @@ import org.springframework.context.annotation.Scope;
 @PageTitle("Teams | Webst@rs Ticketing Application")
 public class TeamView extends VerticalLayout {
     Grid<Team> grid = new Grid<>(Team.class);
-    //TextField websiteFilterText = new TextField("Website"); //TODO
-
     TeamForm form;
     CrmService service;
     TeamService teamService;
@@ -51,7 +52,7 @@ public class TeamView extends VerticalLayout {
     }
 
     private void configureForm() {
-        form = new TeamForm(service.findAllWebsites(), service.findAllTUsers());
+        form = new TeamForm(service.findAllTUsers());
         form.setWidth("70em");
         form.addSaveListener(this::saveTeam); // <1>
         form.addDeleteListener(this::deleteTeam); // <2>
@@ -89,17 +90,15 @@ public class TeamView extends VerticalLayout {
         grid.addClassNames("team-grid");
         grid.setSizeFull();
         grid.setColumns("name");
+        grid.addColumn(team -> team.getTeam_members().stream()
+                        .map(TUser::getUsername)
+                        .collect(Collectors.joining(", ")))
+                .setHeader("Members");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
         grid.asSingleSelect().addValueChangeListener(event -> editTeam(event.getValue()));
     }
 
     private Component getToolbar() {
-        //websiteFilterText.setPlaceholder("Filter by website...");
-        //websiteFilterText.setTooltipText("Please type what the website name should contain...");
-        //websiteFilterText.setClearButtonVisible(true);
-        //websiteFilterText.setValueChangeMode(ValueChangeMode.LAZY);
-        //websiteFilterText.addValueChangeListener(e -> updateList());
-
         Button addTeamButton = new Button("Add team");
         addTeamButton.addClickListener(click -> addTeam());
 
@@ -107,7 +106,6 @@ public class TeamView extends VerticalLayout {
         toolbar.addClassName("toolbar");
         return toolbar;
     }
-
 
     public void editTeam(Team ticket) {
         if (ticket == null) {

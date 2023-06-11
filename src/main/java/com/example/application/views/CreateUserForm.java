@@ -1,8 +1,8 @@
 package com.example.application.views;
 
+import com.example.application.data.entity.Role;
 import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Website;
-import com.example.application.data.entity.*;
 import com.example.application.data.service.RoleService;
 import com.example.application.data.service.WebsiteService;
 import com.vaadin.flow.component.ComponentEvent;
@@ -10,6 +10,7 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -38,6 +39,8 @@ public class CreateUserForm extends FormLayout {
     ComboBox<Role> role = new ComboBox<>("Role");
     MultiSelectComboBox<Website> websitesNew = new MultiSelectComboBox<>("Websites");
 
+    Checkbox active = new Checkbox("Active");
+
     Button save = new Button("Save");
     Button close = new Button("Cancel");
     Binder<TUser> binder = new BeanValidationBinder<>(TUser.class);
@@ -46,20 +49,14 @@ public class CreateUserForm extends FormLayout {
     public CreateUserForm(WebsiteService websiteService, RoleService roleService) {
         addClassName("user-form");
 
-
-
         binder.bindInstanceFields(this);
 
-        websitesNew.setItems(websiteService.getAllWebsites());
+        websitesNew.setItems(websiteService.getAllWebsitesWithEmptyUser());
 
         role.setItems(roleService.getAllRoles());
         role.setItemLabelGenerator(Role::getRole_name);
 
         binder.forField(websitesNew).<List<Website>> withConverter(ArrayList::new, HashSet::new).bind(TUser::getWebsites, TUser::setWebsites);
-
-
-
-
 
         add(firstName,
                 lastName,
@@ -69,6 +66,7 @@ public class CreateUserForm extends FormLayout {
                 websitesNew,
                 password,
                 passwordConfirm,
+                active,
                 createButtonsLayout());
     }
 

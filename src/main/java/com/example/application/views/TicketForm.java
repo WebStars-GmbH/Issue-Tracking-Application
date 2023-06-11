@@ -26,6 +26,7 @@ import com.vaadin.flow.shared.Registration;
 import java.util.List;
 
 public class TicketForm extends FormLayout {
+
     TextField header = new TextField("Header");
 
     TextArea description = new TextArea("Description");
@@ -41,12 +42,10 @@ public class TicketForm extends FormLayout {
 
 
     Button save = new Button("Save");
-    Button delete = new Button("Delete");
-    Button close = new Button("Cancel");
-
+    Button delete = new Button("Delete Ticket");
+    Button close = new Button("Close");
     TextArea history = new TextArea("History");
 
-    //Button closeTicket = new Button("Close");
     Binder<Ticket> binder = new BeanValidationBinder<>(Ticket.class);
 
     public TicketForm(List<Website> websites, List<TUser>users) {
@@ -55,7 +54,7 @@ public class TicketForm extends FormLayout {
         priority.setValue(2);
         priority.setStepButtonsVisible(true);
         priority.setMin(0);
-        priority.setMax(2);
+        priority.setMax(3);
 
         addClassName("ticket-form");
         binder.bindInstanceFields(this);
@@ -87,6 +86,10 @@ public class TicketForm extends FormLayout {
                 history);
     }
 
+    public void updateAssignedTo(List<TUser> members){
+        assigned_to.setItems(members);
+    }
+
     private HorizontalLayout createButtonsLayout() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -110,7 +113,6 @@ public class TicketForm extends FormLayout {
     }
 
     public void setTicket(Ticket ticket) {
-
         binder.setBean(ticket);
     }
 

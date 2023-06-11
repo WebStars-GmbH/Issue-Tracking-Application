@@ -2,6 +2,7 @@ package com.example.application.data.service;
 
 
 import com.example.application.data.entity.TUser;
+import com.example.application.data.entity.Team;
 import com.example.application.data.repository.TUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,10 @@ public class TUserService {
     public TUser findUserByUsername(String username) {
         return tUserRepository.getTUserByUsername(username);
     }
+    public List<TUser> findUsersByTeam(Team team) {
+        return tUserRepository.getTUsersByTeam(team);
+    }
+
 
     public void saveUser(TUser user) {
         tUserRepository.save(user);

@@ -1,7 +1,10 @@
 package com.example.application.views;
 
 import com.example.application.data.entity.Role;
+import com.example.application.data.entity.TUser;
+import com.example.application.data.entity.Team;
 import com.example.application.data.service.TUserService;
+import com.example.application.data.service.TeamService;
 import com.example.application.security.SecurityService;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -14,21 +17,28 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
+import java.util.List;
+
 public class MainLayout extends AppLayout {
     private final SecurityService securityService;
     public TUserService tUserService;
+    public TeamService teamService;
     public static String username;
     public static Role userRole;
 
-    public MainLayout(SecurityService securityService, TUserService tUserService) {
+    public MainLayout(SecurityService securityService, TUserService tUserService, TeamService teamService) {
         this.securityService = securityService;
         this.tUserService = tUserService;
+        this.teamService = teamService;
+
+        Team team1 = teamService.findTeamByName("team1");
+        List<TUser> tusers = tUserService.findUsersByTeam(team1);
+        com.vaadin.flow.component.notification.Notification notification1 = Notification.show("Users: " + tusers.toString());
 
         username = securityService.getAuthenticatedUser().getUsername();
         userRole = tUserService.findUserByUsername(username).getRole();
         String role = securityService.getAuthenticatedUser().getAuthorities().toString();
-        com.vaadin.flow.component.notification.Notification notification = Notification
-                .show("Username: " + username + "; Role: " + userRole.getRole_name() + "; Authorities: " + role);
+        //Notification notification = Notification.show("Username: " + username + "; Role: " + userRole.getRole_name() + "; Authorities: " + role);
 
         createHeader();
         createDrawer();

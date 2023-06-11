@@ -3,6 +3,7 @@ package com.example.application.views;
 import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Ticket;
 import com.example.application.data.service.CrmService;
+import com.example.application.data.service.TUserService;
 import com.example.application.data.service.TicketService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -46,9 +47,12 @@ public class TicketView extends VerticalLayout {
     CrmService service;
     TicketService ticketService;
 
-    public TicketView(CrmService service, TicketService ticketService) {
+    TUserService tUserService;
+
+    public TicketView(CrmService service, TicketService ticketService, TUserService tUserService) {
         this.service = service;
         this.ticketService = ticketService;
+        this.tUserService = tUserService;
         addClassName("ticket-view");
         setSizeFull();
         configureGrid();
@@ -122,6 +126,8 @@ public class TicketView extends VerticalLayout {
 
         grid.addColumn(ticket -> ticket.getWebsite().getURL()).setHeader("Website").setSortable(true);
 
+        grid.addColumn(ticket -> ticket.getWebsite().getTeam().getName()).setHeader("Support-Team").setSortable(true);
+
         grid.addColumn(ticket -> ticket.getAssigned_to() == null ? "" : ticket.getAssigned_to().getUsername()).setHeader("Assigned to").setSortable(true);
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
@@ -192,6 +198,8 @@ public class TicketView extends VerticalLayout {
             closeEditor();
         } else {
             closeEditor();
+            //TICKETFORM: UNCOMMENT, IF YOU WANT TO FILTER SUPPORT-MEMBERS BY TEAMS ASSIGNED TO THE WEBSITE, OTHERWISE ALL SUPPORT-MEMBERS WILL BE SHOWN
+            //form.updateAssignedTo(tUserService.findUsersByTeam(ticket.getWebsite().getTeam()));
             form.setTicket(ticket);
             form.setVisible(true);
             addClassName("editing");

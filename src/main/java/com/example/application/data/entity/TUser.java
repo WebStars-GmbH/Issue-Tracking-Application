@@ -6,19 +6,17 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.LinkedList;
 import java.util.List;
 
-// Entity in Progress
 @Entity
 public class TUser extends AbstractEntity{
-    /* @Id
-     @Column(name = "tuser_id")
-     @GeneratedValue(strategy = GenerationType.IDENTITY)
-     private Long user_id;
- */
+
     @NotBlank
     private String email;
 
     @NotBlank
     private String password;
+
+    @NotBlank
+    private String passwordConfirm;
 
     @ManyToOne
     @JoinColumn(name="role_id")
@@ -32,19 +30,8 @@ public class TUser extends AbstractEntity{
     @NotBlank
     private String lastname;
 
-
-    /*
-    @OneToMany(mappedBy="registered_by", fetch = FetchType.EAGER)
-    private List<Ticket> registered_tickets = new LinkedList<>();
-    */
-
     @OneToMany (mappedBy="assigned_to")
     private List<Ticket> assigned_tickets = new LinkedList<>();
-
-    /*
-    @OneToMany(mappedBy="closed_by", fetch = FetchType.EAGER)
-    private List<Ticket> closed_tickets = new LinkedList<>();
-     */
 
     @OneToMany(mappedBy = "tuser", fetch = FetchType.EAGER)
     private List<Website> websites = new LinkedList<>();
@@ -52,14 +39,8 @@ public class TUser extends AbstractEntity{
     @ManyToMany(mappedBy = "team_members", fetch = FetchType.EAGER)
     private List<Team> teams = new LinkedList<>();
 
-    /*public Long getId() {
-        return user_id;
-    }
+    private boolean active = true;
 
-    public void setId(Long id) {
-        this.user_id = id;
-    }
-*/
     public String getUsername() {
         return username;
     }
@@ -99,19 +80,6 @@ public class TUser extends AbstractEntity{
     public void setWebsites(List<Website> websites) {
         this.websites = websites;
     }
-    /*
-        public List<Ticket> getRegistered_by() {
-            return registered_tickets;
-        }
-
-   /* public Long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
-    }
-*/
 
     public List<Team> getTeams() {
         return teams;
@@ -144,17 +112,24 @@ public class TUser extends AbstractEntity{
         this.assigned_tickets = assigned_tickets;
     }
 
-    public TUser() {
+    public String getPasswordConfirm() {
+        return passwordConfirm;
     }
 
-//    public TUser(String name, String email, String password, String role) {
-//        //this.firstname = firstname;
-//        //this.lastname = lastname;
-//        this.username = name;
-//        this.email = email;
-//        this.password = password;
-//        this.role = role;
-//    }
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public TUser() {
+    }
 
     public TUser(String firstname, String lastname, String name, String email, String password, Role role, List<Website> websiteList) {
         this.firstname = firstname;

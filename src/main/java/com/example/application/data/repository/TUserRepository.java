@@ -1,6 +1,7 @@
 package com.example.application.data.repository;
 
 import com.example.application.data.entity.TUser;
+import com.example.application.data.entity.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,5 +22,7 @@ public interface TUserRepository extends JpaRepository<TUser, Long> {
             "where lower(t.username) like lower(:searchTerm)")
     TUser getTUserByUsername(@Param("searchTerm") String searchTerm);
 
+    @Query("select u from TUser u WHERE (:searchTerm) MEMBER OF u.teams")
+    List <TUser> getTUsersByTeam(@Param("searchTerm") Team searchTerm);
 }
 

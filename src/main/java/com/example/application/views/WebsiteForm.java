@@ -2,13 +2,14 @@ package com.example.application.views;
 
 import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Team;
+import com.example.application.data.entity.Website;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.combobox.MultiSelectComboBox;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -17,34 +18,38 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
-public class TeamForm extends FormLayout {
-    TextField name = new TextField("Name");
+public class WebsiteForm extends FormLayout {
+    TextField website_name = new TextField("Name");
 
-    MultiSelectComboBox<TUser> membersCB = new MultiSelectComboBox<>("Team Members");
+    TextField url = new TextField("URL");
+
+    ComboBox<TUser> tuser = new ComboBox<>("Owner");
+
+    ComboBox<Team> team = new ComboBox<>("Team");
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
-    // Other fields omitted
-    Binder<Team> binder = new BeanValidationBinder<>(Team.class);
 
-    public TeamForm(List<TUser> members) {
-        addClassName("team-form");
+    Binder<Website> binder = new BeanValidationBinder<>(Website.class);
+
+    public WebsiteForm(List<Team> teams, List<TUser> users) {
+        addClassName("website-form");
         binder.bindInstanceFields(this);
+        binder.forField(tuser).bind(Website::getUser, Website::setUser);
 
-        binder.forField(membersCB).<List<TUser>> withConverter(ArrayList::new, HashSet::new).bind(Team::getTeam_members, Team::setTeam_members);
+        team.setItems(teams);
+        team.setItemLabelGenerator(Team::getName);
 
-        membersCB.setItems(members);
-        membersCB.setItemLabelGenerator(TUser::getUsername);
+        tuser.setItems(users);
+        tuser.setItemLabelGenerator(TUser::getUsername);
 
-
-
-        add(name,
-                membersCB,
+        add(website_name,
+                tuser,
+                team,
+                url,
                 createButtonsLayout());
     }
 
@@ -61,7 +66,8 @@ public class TeamForm extends FormLayout {
         close.addClickListener(event -> fireEvent(new CloseEvent(this))); // <3>
 
         binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid())); // <4>
-        return new HorizontalLayout(save, delete, close);
+        //return new HorizontalLayout(save, delete, close);
+        return new HorizontalLayout(save, close);
     }
 
     private void validateAndSave() {
@@ -71,49 +77,49 @@ public class TeamForm extends FormLayout {
     }
 
 
-    public void setTeam(Team team) {
-        binder.setBean(team); // <1>
+    public void setWebsite(Website website) {
+        binder.setBean(website); // <1>
     }
 
     // Events
-    public static abstract class TeamFormEvent extends ComponentEvent<TeamForm> {
-        private Team team;
+    public static abstract class WebsiteFormEvent extends ComponentEvent<WebsiteForm> {
+        private Website website;
 
-        protected TeamFormEvent(TeamForm source, Team team) {
+        protected WebsiteFormEvent(WebsiteForm source, Website website) {
             super(source, false);
-            this.team = team;
+            this.website = website;
         }
 
-        public Team getTeam() {
-            return team;
-        }
-    }
-
-    public static class SaveEvent extends TeamFormEvent {
-        SaveEvent(TeamForm source, Team team) {
-            super(source, team);
+        public Website getWebsite() {
+            return website;
         }
     }
 
-    public static class DeleteEvent extends TeamForm.TeamFormEvent {
-        DeleteEvent(TeamForm source, Team team) {
-            super(source, team);
+    public static class SaveEvent extends WebsiteFormEvent {
+        SaveEvent(WebsiteForm source, Website website) {
+            super(source, website);
+        }
+    }
+
+    public static class DeleteEvent extends WebsiteForm.WebsiteFormEvent {
+        DeleteEvent(WebsiteForm source, Website website) {
+            super(source, website);
         }
     }
 
     private void ConfirmAndDelete(){
         ConfirmDialog dialog = new ConfirmDialog();
-        dialog.setHeader("Do you want to delete this team?");
-        dialog.setText("Are you sure you want to permanently delete this team? This cannot be reversed.");
+        dialog.setHeader("Do you want to delete this Website?");
+        dialog.setText("Are you sure you want to permanently delete this Website? This cannot be reversed.");
         dialog.setCancelable(true);
-        dialog.setConfirmText("Delete Team");
+        dialog.setConfirmText("Delete Website");
         dialog.setConfirmButtonTheme("error primary");
-        dialog.addConfirmListener(event -> fireEvent(new TeamForm.DeleteEvent(this, binder.getBean())));
+        dialog.addConfirmListener(event -> fireEvent(new WebsiteForm.DeleteEvent(this, binder.getBean())));
         dialog.open();
     }
 
-    public static class CloseEvent extends TeamFormEvent {
-        CloseEvent(TeamForm source) {
+    public static class CloseEvent extends WebsiteFormEvent {
+        CloseEvent(WebsiteForm source) {
             super(source, null);
         }
     }

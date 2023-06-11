@@ -11,4 +11,8 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     @Query("select t from Team t " +
             "where lower(t.name) like lower(concat('%', :searchTerm, '%'))")
     List<Team> search(@Param("searchTerm") String searchTerm);
+
+    @Query("select t from Team t " +
+            "where lower(t.name) like lower(concat('%', :searchTerm, '%'))")
+    Team getTeamByName(@Param("searchTerm") String searchTerm);
 }

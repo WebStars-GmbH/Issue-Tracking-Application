@@ -1,8 +1,9 @@
 package com.example.application.views;
 
 import com.example.application.data.entity.TUser;
-import com.example.application.data.service.RoleService;
+import com.example.application.data.entity.Team;
 import com.example.application.data.entity.Website;
+import com.example.application.data.service.RoleService;
 import com.example.application.data.service.TUserService;
 import com.example.application.data.service.WebsiteService;
 import com.vaadin.flow.component.Component;
@@ -63,9 +64,15 @@ public class CreateUserView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassName("user-grid");
         grid.setSizeFull();
-        grid.setColumns( "firstname", "lastname", "username", "email", "role" );  // Set the columns that you want to display in your grid
+        grid.setColumns( "firstname", "lastname", "username", "email", "role", "active" );  // Set the columns that you want to display in your grid
        // grid.addColumn("websites");
         //grid.addColumn(user -> user.getWebsites().getWebsite_name().setHeader("Website").setSortable(true);
+
+        grid.addColumn(user -> user.getTeams().stream()
+                        .map(Team::getName)
+                        .collect(Collectors.joining(", ")))
+                .setHeader("Teams");
+
         grid.addColumn(user -> user.getWebsites().stream()
                         .map(Website::getWebsite_name)
                         .collect(Collectors.joining(", ")))

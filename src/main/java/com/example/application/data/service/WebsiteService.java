@@ -25,6 +25,10 @@ public class WebsiteService {
         return websiteRepository.findByUser(user);
     }
 
+    public List<Website> getAllWebsitesWithEmptyUser() {
+        return websiteRepository.findByEmptyUser();
+    }
+
     public Website findWebsiteById(Long id) {
         return websiteRepository.findById(id).orElse(null);
     }
@@ -33,8 +37,8 @@ public class WebsiteService {
         return websiteRepository.save(website);
     }
 
-    public void deleteWebsite(Long id) {
-        websiteRepository.deleteById(id);
+    public void deleteWebsite(Website website) {
+        websiteRepository.delete(website);
     }
 
     public void deleteWebsitesByUser(TUser user) {
