@@ -61,7 +61,7 @@ jobs:
           platform: 'managed'
           image: 'gcr.io/$GOOGLE_PROJECT_ID/$CIRCLE_WORKFLOW_ID'
           service-name: 'vaadin-ui-service'
-          region: 'europe-west1'
+          region: 'europe-west6'
           unauthenticated: true
 workflows:
   version: 2
