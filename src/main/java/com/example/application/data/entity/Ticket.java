@@ -38,8 +38,10 @@ public class Ticket extends AbstractEntity{
     private String closed_by;
 
     @NotBlank
+    @Column(columnDefinition = "nvarchar(MAX)")
     private String description = "";
 
+    @Column(columnDefinition = "nvarchar(MAX)")
     private String solution = "";
 
     private int priority = 0;

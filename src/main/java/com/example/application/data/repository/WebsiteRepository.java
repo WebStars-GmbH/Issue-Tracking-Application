@@ -19,4 +19,7 @@ public interface WebsiteRepository extends JpaRepository<Website, Long> {
     @Query("SELECT w FROM Website w WHERE w.tuser IS NULL")
     List<Website> findByEmptyUser();
 
+    @Query("SELECT w FROM Website w WHERE lower(w.tuser.username) LIKE lower(:username)")
+    List<Website> findByUsername(@Param("username") String username);
+
 }

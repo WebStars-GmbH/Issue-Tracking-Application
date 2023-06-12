@@ -25,6 +25,10 @@ public class WebsiteService {
         return websiteRepository.findByUser(user);
     }
 
+    public List<Website> getAllWebsitesByUsername(String user) {
+        return websiteRepository.findByUsername(user);
+    }
+
     public List<Website> getAllWebsitesWithEmptyUser() {
         return websiteRepository.findByEmptyUser();
     }

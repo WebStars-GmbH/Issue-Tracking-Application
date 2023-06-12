@@ -33,6 +33,13 @@ public class TUserService {
         return tUserRepository.getTUsersByTeam(team);
     }
 
+    public List<TUser> findAllTUsersByRole(String stringFilter){
+        if (stringFilter == null || stringFilter.isEmpty()) {
+            return tUserRepository.findAll();
+        } else {
+            return tUserRepository.searchByRole(stringFilter);
+        }
+    }
 
     public void saveUser(TUser user) {
         tUserRepository.save(user);

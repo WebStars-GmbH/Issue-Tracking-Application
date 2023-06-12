@@ -5,6 +5,7 @@ import com.example.application.data.entity.Ticket;
 import com.example.application.data.service.CrmService;
 import com.example.application.data.service.TUserService;
 import com.example.application.data.service.TicketService;
+import com.example.application.data.service.WebsiteService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -52,6 +53,8 @@ public class TicketView extends VerticalLayout {
     TicketService ticketService;
     TUserService tUserService;
 
+    WebsiteService websiteService;
+
     Grid.Column<Ticket> priorityColumn = grid.addColumn(Ticket::getPriority).setHeader("Priority").setSortable(true).setResizable(true);
     Grid.Column<Ticket> statusColumn = grid.addColumn(Ticket::getStatus).setHeader("Status").setSortable(true).setResizable(true);
     Grid.Column<Ticket> headerColumn = grid.addColumn(Ticket::getHeader).setHeader("Header").setSortable(true).setResizable(true);
@@ -66,10 +69,11 @@ public class TicketView extends VerticalLayout {
     Grid.Column<Ticket> closedDateColumn = grid.addColumn(Ticket::getClose_date).setHeader("Closed Date").setSortable(true).setResizable(true);
     Grid.Column<Ticket> closedByColumn = grid.addColumn(Ticket::getClosed_by).setHeader("Closed By").setSortable(true).setResizable(true);
 
-    public TicketView(CrmService service, TicketService ticketService, TUserService tUserService) {
+    public TicketView(CrmService service, TicketService ticketService, TUserService tUserService, WebsiteService websiteService) {
         this.service = service;
         this.ticketService = ticketService;
         this.tUserService = tUserService;
+        this.websiteService = websiteService;
         addClassName("ticket-view");
         setSizeFull();
         configureGrid();
@@ -90,13 +94,13 @@ public class TicketView extends VerticalLayout {
     }
 
     private void configureForm() {
-        form = new TicketForm(service.findAllWebsites(), service.findAllTUsersByRole("Support-Member"));
+        form = new TicketForm(websiteService.getAllWebsites(), tUserService.findAllTUsersByRole("Support-Member"));
         form.setWidth("70em");
         form.addSaveListener(this::saveTicket); // <1>
         form.addDeleteListener(this::deleteTicket); // <2>
         form.addCloseListener(e -> closeEditor()); // <3>
 
-        addForm = new TicketAddForm(service.findAllWebsites(), service.findAllTUsers("Support-Member"));
+        addForm = new TicketAddForm(websiteService.getAllWebsitesByUsername(MainLayout.username), tUserService.findAllTUsersByRole("Support-Member"));
         addForm.setWidth("70em");
         addForm.addSaveListener(this::saveAddTicket); // <1>
         addForm.addCloseListener(e -> closeEditor()); // <3>
