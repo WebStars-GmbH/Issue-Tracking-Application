@@ -143,7 +143,8 @@ public class TicketForm extends FormLayout {
 
     private void validateAndSave() {
         if(binder.isValid()) {
-            ConfirmAndSave();
+            fireEvent(new TicketForm.SaveEvent(this, binder.getBean()));
+            //ConfirmAndSave();
         }
     }
 

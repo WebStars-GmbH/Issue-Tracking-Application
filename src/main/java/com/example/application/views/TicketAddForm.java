@@ -17,7 +17,6 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.shared.Registration;
 
 import java.util.List;
@@ -43,12 +42,15 @@ public class TicketAddForm extends FormLayout {
         description.setMaxLength(1000);
         description.setHelperText("Max 1000 characters");
         description.setPlaceholder("Your description here...");
+
+        /*
         description.setValueChangeMode(ValueChangeMode.EAGER);
         description.addValueChangeListener(e -> {
             e.getSource()
                     .setHelperText(e.getValue().length() + "/" + 1000);
         });
 
+         */
         addClassName("ticket-form");
         binder.bindInstanceFields(this);
 
@@ -82,7 +84,8 @@ public class TicketAddForm extends FormLayout {
 
     private void validateAndSave() {
         if(binder.isValid()) {
-            ConfirmAndSave();
+            fireEvent(new TicketAddForm.SaveEvent(this, binder.getBean()));
+            //ConfirmAndSave();
         }
     }
 
