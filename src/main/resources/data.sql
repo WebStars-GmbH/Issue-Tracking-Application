@@ -86,6 +86,7 @@ INSERT INTO "TUSER" VALUES
                         (67, 1, true, 'manager@webstars.com', 'Max', 'Mustermann', 'password', 'password', 'manager', 94),
                         (68, 1, true, 'customer@test.com', 'Max', 'Mustermann', 'password', 'password', 'user', 95),
                         (69, 1, true, 'customer@test2.com', 'Max', 'Mustermann', 'password', 'password', 'user2', 95);
+--                         (96, 1, true, 'Coordinator@webstars.com', 'Max', 'Mustermann', 'password', 'coordinator', 93);
 
 INSERT INTO "WEBSITE" VALUES
                           (61, 1, 'www.test.com', 'www.test.com', 201, 68),

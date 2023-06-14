@@ -17,6 +17,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
+//user angelegt (password):
+// user
+// admin
+// customer
+// coordinator
+// manager
+
 import java.util.List;
 
 public class MainLayout extends AppLayout {
@@ -42,6 +49,9 @@ public class MainLayout extends AppLayout {
 
         createHeader();
         createDrawer();
+/*        if (userRole.getRole_name().equals("Customer")) {
+            createDrawerCustomer();
+        }*/
         //createDrawerCustomer();
     }
 
@@ -67,20 +77,31 @@ public class MainLayout extends AppLayout {
     }
 
     private void createDrawer() {
-        addToDrawer(new VerticalLayout(
-                //new RouterLink("List", ListView.class),
-                //new RouterLink("Dashboard", DashboardView.class), entfernt build fail coused by licence checker
-                new RouterLink("Tickets", TicketView.class),
-                new RouterLink("Users", CreateUserView.class),
-                new RouterLink("Teams", TeamView.class),
-                new RouterLink("Websites", WebsiteView.class)
-        ));
+        //Intern3t says Hashmap has too much overhead for small amount of data
+        Role userRoleEntity = tUserService.findUserByUsername(username).getRole();
+
+        if (userRoleEntity.getRole_name().equals("Customer")) {
+            addToDrawer(new VerticalLayout(
+//                    new RouterLink("Dashboard", DashboardView.class),
+                    new RouterLink("Tickets", UserTicketView.class)
+                    ));
+        } else  {
+            addToDrawer(new VerticalLayout(
+                    //                    new RouterLink("Dashboard", DashboardView.class),
+                    new RouterLink("Tickets", CompanyTicketView.class),
+                    new RouterLink("Users", CreateUserView.class),
+                    new RouterLink("Teams", TeamView.class),
+                    new RouterLink("Websites", WebsiteView.class)
+            ));
+        }
     }
 
+/*    //or like this with a new function for every role and the if in the mainlayout function
     private void createDrawerCustomer() {
         addToDrawer(new VerticalLayout(
+                new RouterLink("Tickets", UserTicketView.class)
                 new RouterLink("Tickets", TeamView.class)
         ));
-    }
+    }*/
 
 }

@@ -37,4 +37,15 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "and lower(t.website.website_name) like lower(concat('%', :websiteFilter, '%')) " +
             "and lower(t.description) like lower(concat('%', :descriptionFilter, '%'))")
     List<Ticket> searchByStatusWebsiteDescription(@Param("statusFilter") String statusFilter, @Param("websiteFilter") String websiteFilter, @Param("descriptionFilter") String descriptionFilter);
+
+    @Query ("select t from Ticket t " +
+            "where lower(t.registered_by) like lower(concat('%', :registeredFilter, '%'))")
+    List<Ticket> searchByRegisteredBy(@Param("registeredFilter") String registeredFilter);
+
+    @Query ("select t from Ticket t " +
+            "where lower(t.registered_by) like lower(concat('%', :registeredFilter, '%')) " +
+            "and lower(t.status) like lower(concat('%', :statusFilter, '%')) ")
+    List<Ticket> searchByRegisteredByStatus(@Param("registeredFilter") String registeredFilter, @Param("statusFilter") String statusFilter);
+
+
 }

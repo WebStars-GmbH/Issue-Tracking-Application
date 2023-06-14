@@ -2,6 +2,7 @@ package com.example.application.data.service;
 
 import com.example.application.data.entity.Ticket;
 import com.example.application.data.repository.TicketRepository;
+import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class TicketService {
 
     public List<Ticket> findAllTicketsByStatus(String stringFilter){
         if (stringFilter == null || stringFilter.isEmpty()) {
-            return ticketRepository.findAll();
+            return ticketRepository.searchByRegisteredBy(stringFilter);
         } else {
             return ticketRepository.searchByStatus(stringFilter);
         }
@@ -42,6 +43,14 @@ public class TicketService {
             return ticketRepository.findAll();
         } else {
             return ticketRepository.searchByAssignedTo(stringFilter);
+        }
+    }
+
+    public List<Ticket> findAllTicketsByRegisteredBy(String stringFilter){
+        if (stringFilter == null || stringFilter.isEmpty()) {
+            return ticketRepository.findAll();
+        } else {
+            return ticketRepository.searchByRegisteredBy(stringFilter);
         }
     }
 
@@ -60,6 +69,7 @@ public class TicketService {
     public List<Ticket> findAllTicketsByStatusWebsiteDescription(String statusFilter, String websiteFilter, String descriptionFilter){
         return ticketRepository.searchByStatusWebsiteDescription(statusFilter, websiteFilter, descriptionFilter);
     }
+
 
     public long countTickets() {
         return ticketRepository.count();
@@ -99,5 +109,9 @@ public class TicketService {
 
     public void addToHistory(Ticket ticket, String string){
         ticket.setHistory(ticket.getHistory() + string);
+    }
+
+    public List<Ticket> searchTicketsByStatus(String name, String status) {
+        return ticketRepository.searchByRegisteredByStatus(name, status);
     }
 }

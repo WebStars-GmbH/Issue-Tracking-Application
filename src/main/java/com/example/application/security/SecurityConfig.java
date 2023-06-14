@@ -29,13 +29,28 @@ public class SecurityConfig extends VaadinWebSecurity { // <2>
                 .username("user")
                 // password = password with this hash, don't tell anybody :-)
                 .password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
-                .roles("USER")
+                .roles("Customer")
                 .build();
         UserDetails admin = User.builder()
                 .username("admin")
                 .password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
-                .roles("USER", "ADMIN")
+                .roles("System-Admin")
                 .build();
-        return new InMemoryUserDetailsManager(user, admin); // <5>
+        UserDetails member = User.builder()
+                .username("member0")
+                .password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
+                .roles("TEAM-MEMBER")
+                .build();
+        UserDetails coordinator = User.builder()
+                .username("coordinator")
+                .password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
+                .roles("SUPPORT-COORDINATOR")
+                .build();
+        UserDetails manager = User.builder()
+                .username("manager")
+                .password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
+                .roles("MANAGER")
+                .build();
+        return new InMemoryUserDetailsManager(user, admin, member, coordinator, manager); // <5>
     }
 }

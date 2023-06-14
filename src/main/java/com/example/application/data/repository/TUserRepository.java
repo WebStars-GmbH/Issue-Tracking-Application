@@ -24,5 +24,6 @@ public interface TUserRepository extends JpaRepository<TUser, Long> {
 
     @Query("select u from TUser u WHERE (:searchTerm) MEMBER OF u.teams")
     List <TUser> getTUsersByTeam(@Param("searchTerm") Team searchTerm);
+
 }
 
