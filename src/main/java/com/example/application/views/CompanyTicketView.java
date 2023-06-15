@@ -267,11 +267,6 @@ public class CompanyTicketView extends VerticalLayout {
             form.setTicket(ticket);
             form.setVisible(true);
             addClassName("editing");
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            ticket.setLast_update(timestamp);
-            String timestampString = new SimpleDateFormat("yyyy.MM.dd.HH.mm").format(timestamp);
-            String u = MainLayout.username;
-            ticket.setHistory(ticket.getHistory() + timestampString + ": modified by " + u + "; " + " \n"); //TODO
         }
     }
 

@@ -2,7 +2,6 @@ package com.example.application.data.service;
 
 import com.example.application.data.entity.Ticket;
 import com.example.application.data.repository.TicketRepository;
-import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import org.springframework.stereotype.Service;
@@ -89,7 +88,7 @@ public class TicketService {
         String timestampString = new SimpleDateFormat("yyyy.MM.dd HH:mm").format(timestamp);
         String u = com.example.application.views.MainLayout.username;
         //addToHistory(ticket, "---Begin of Entry--- ");
-        addToHistory(ticket, timestampString + "\tUser: " + u + " \n");
+        addToHistory(ticket, timestampString + "\tModified by: " + u + " \n");
         addToHistory(ticket, "Status: " + ticket.getStatus() + "\tPriority: " + ticket.getPriority());
         if (ticket.getAssigned_to() != null) addToHistory(ticket,"\tAssigned to " + ticket.getAssigned_to().getUsername());
         if (ticket.getDescription().length() > 1) {
