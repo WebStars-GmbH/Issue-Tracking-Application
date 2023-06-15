@@ -47,6 +47,8 @@ public class CompanyTicketView extends VerticalLayout {
 
     TicketForm form;
     TicketAddForm addForm;
+
+    TicketDetailsForm viewDetailsForm;
     CrmService service;
     TicketService ticketService;
 
@@ -80,7 +82,7 @@ public class CompanyTicketView extends VerticalLayout {
     }
 
     private HorizontalLayout getContent() {
-        HorizontalLayout content = new HorizontalLayout(grid, form, addForm);
+        HorizontalLayout content = new HorizontalLayout(grid, form, addForm, viewDetailsForm);
         content.setFlexGrow(2, grid);
         content.setFlexGrow(1, form);
         content.addClassNames("content");
@@ -99,6 +101,11 @@ public class CompanyTicketView extends VerticalLayout {
         addForm.setWidth("70em");
         addForm.addSaveListener(this::saveAddTicket); // <1>
         addForm.addCloseListener(e -> closeEditor()); // <3>
+
+        viewDetailsForm = new TicketDetailsForm(service.findAllWebsites(), service.findAllTUsers("Support-Member"), true);
+        viewDetailsForm.setWidth("70em");
+        viewDetailsForm.addEditListener(e -> editTicket(grid.getSelectedItems().iterator().next()));
+        viewDetailsForm.addCloseListener(e -> closeEditor()); // <3>
     }
 
     private void saveAddTicket(TicketAddForm.SaveEvent event) {
@@ -148,7 +155,8 @@ public class CompanyTicketView extends VerticalLayout {
         menu.addItem("View Details", event -> {        });
         menu.addItem("Edit Ticket", event -> editTicket(event.getItem().get()));
         menu.addItem("Delete Ticket", event -> ConfirmAndDelete(event.getItem().get()));
-        grid.asSingleSelect().addValueChangeListener(event -> editTicket(event.getValue()));
+        grid.asSingleSelect().addValueChangeListener(event -> viewTicket(event.getValue()));
+        grid.addItemDoubleClickListener(event -> editTicket(event.getItem()));
 
         List<Ticket> ticket = ticketService.findAllTicketsByRegisteredBy(MainLayout.username);
         grid.setItems(ticket);
@@ -259,6 +267,17 @@ public class CompanyTicketView extends VerticalLayout {
         grid.setItems(ticketService.findAllTickets(""));
     }
 
+    public void viewTicket(Ticket ticket) {
+        if (ticket == null) {
+            closeEditor();
+        } else {
+            closeEditor();
+            viewDetailsForm.setTicket(ticket);
+            viewDetailsForm.setVisible(true);
+            addClassName("viewing");
+        }
+    }
+
     public void editTicket(Ticket ticket) {
         if (ticket == null) {
             closeEditor();
@@ -275,6 +294,8 @@ public class CompanyTicketView extends VerticalLayout {
         form.setVisible(false);
         addForm.setTicket(null);
         addForm.setVisible(false);
+        viewDetailsForm.setTicket(null);
+        viewDetailsForm.setVisible(false);
         removeClassName("editing");
     }
 

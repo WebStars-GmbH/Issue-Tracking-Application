@@ -7,7 +7,6 @@ import com.example.application.data.service.TicketService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
@@ -40,7 +39,7 @@ public class UserTicketView extends VerticalLayout {
     TextField descriptionFilterText = new TextField("Description");
 
 
-    TicketForm form;
+    TicketDetailsForm viewDetailsForm;
     TicketAddForm addForm;
     CrmService service;
     TicketService ticketService;
@@ -72,20 +71,19 @@ public class UserTicketView extends VerticalLayout {
     }
 
     private HorizontalLayout getContent() {
-        HorizontalLayout content = new HorizontalLayout(grid, form, addForm);
+        HorizontalLayout content = new HorizontalLayout(grid, viewDetailsForm, addForm);
         content.setFlexGrow(2, grid);
-        content.setFlexGrow(1, form);
+        content.setFlexGrow(1, viewDetailsForm);
+        content.setFlexGrow(1, addForm);
         content.addClassNames("content");
         content.setSizeFull();
         return content;
     }
 
     private void configureForm() {
-        form = new TicketForm(service.findAllWebsites(), service.findAllTUsersByRole("Support-Member"));
-        form.setWidth("70em");
-        form.addSaveListener(this::saveTicket); // <1>
-        form.addDeleteListener(this::deleteTicket); // <2>
-        form.addCloseListener(e -> closeEditor()); // <3>
+        viewDetailsForm = new TicketDetailsForm(service.findAllWebsites(), service.findAllTUsersByRole("Support-Member"), false);
+        viewDetailsForm.setWidth("70em");
+        viewDetailsForm.addCloseListener(e -> closeEditor()); // <3>
 
         addForm = new TicketAddForm(service.getAllWebsitesByUsername(MainLayout.username), service.findAllTUsers("Support-Member"));
         addForm.setWidth("70em");
@@ -95,33 +93,6 @@ public class UserTicketView extends VerticalLayout {
 
     private void saveAddTicket(TicketAddForm.SaveEvent event) {
         ticketService.saveTicket(event.getTicket());
-        updateList();
-        closeEditor();
-    }
-
-    private void saveTicket(TicketForm.SaveEvent event) {
-        ticketService.saveTicket(event.getTicket());
-        updateList();
-        closeEditor();
-    }
-
-    private void ConfirmAndDelete(Ticket ticket){
-        ConfirmDialog dialog = new ConfirmDialog();
-        dialog.setHeader("Do you want to delete this ticket?");
-        dialog.setText("Are you sure you want to permanently delete this ticket? This cannot be reversed.");
-        dialog.setCancelable(true);
-        dialog.setConfirmText("Delete Ticket");
-        dialog.setConfirmButtonTheme("error primary");
-        dialog.addConfirmListener(event -> {
-            ticketService.deleteTicket(ticket);
-            updateList();
-            form.setTicket(null);
-            form.setVisible(false);});
-        dialog.open();
-    }
-
-    private void deleteTicket(TicketForm.DeleteEvent event) {
-        ticketService.deleteTicket(event.getTicket());
         updateList();
         closeEditor();
     }
@@ -138,9 +109,9 @@ public class UserTicketView extends VerticalLayout {
 
         GridContextMenu<Ticket> menu = grid.addContextMenu();
         menu.addItem("View Details", event -> {        });
-        menu.addItem("Edit Ticket", event -> editTicket(event.getItem().get()));
-        menu.addItem("Delete Ticket", event -> ConfirmAndDelete(event.getItem().get()));
-        grid.asSingleSelect().addValueChangeListener(event -> editTicket(event.getValue()));
+        //menu.addItem("Edit Ticket", event -> editTicket(event.getItem().get()));
+        //menu.addItem("Delete Ticket", event -> ConfirmAndDelete(event.getItem().get()));
+        grid.asSingleSelect().addValueChangeListener(event -> viewTicket(event.getValue()));
 
         List<Ticket> ticket = ticketService.findAllTicketsByRegisteredBy(MainLayout.username);
         grid.setItems(ticket);
@@ -192,22 +163,11 @@ public class UserTicketView extends VerticalLayout {
     }
 
 
-    public void editTicket(Ticket ticket) {
-        if (ticket == null) {
-            closeEditor();
-        } else {
-            closeEditor();
-            form.setTicket(ticket);
-            form.setVisible(true);
-            addClassName("editing");
-        }
-    }
-
     private void closeEditor() {
-        form.setTicket(null);
-        form.setVisible(false);
         addForm.setTicket(null);
         addForm.setVisible(false);
+        viewDetailsForm.setTicket(null);
+        viewDetailsForm.setVisible(false);
         removeClassName("editing");
     }
 
@@ -268,5 +228,16 @@ public class UserTicketView extends VerticalLayout {
         List<Ticket> allTickets = ticketService.findAllTickets("");
         List<Ticket> userTickets = filterUser(allTickets);
         grid.setItems(userTickets);
+    }
+
+    public void viewTicket(Ticket ticket) {
+        if (ticket == null) {
+            closeEditor();
+        } else {
+            closeEditor();
+            viewDetailsForm.setTicket(ticket);
+            viewDetailsForm.setVisible(true);
+            addClassName("viewing");
+        }
     }
 }

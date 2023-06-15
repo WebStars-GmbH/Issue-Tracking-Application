@@ -165,5 +165,26 @@ public class Ticket extends AbstractEntity{
     public void setHistory(String history) {
         this.history = history;
     }
+
+    public String getWebsite_name(){
+        return this.website.getWebsite_name();
+    }
+    public String getAssigned_to_username(){
+        if (this.assigned_to == null) return "";
+        else return this.assigned_to.getUsername();
+    }
+
+    public String getRegisterDateString(){
+        return "" + this.register_date;
+    }
+    public String getAssignedDateString(){
+        return "" + this.assign_date;
+    }
+    public String getLastUpdateString(){
+        return "" + this.last_update;
+    }
+    public String getClosedDateString(){
+        return "" + this.close_date;
+    }
 }
 
