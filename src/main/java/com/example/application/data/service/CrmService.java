@@ -84,6 +84,10 @@ public class CrmService {
         }
     }
 
+    public List<Website> getAllWebsitesByUsername(String user) {
+        return websiteRepository.findByUsername(user);
+    }
+
     public long countTUsers() {
         return tUserRepository.count();
     }

@@ -7,7 +7,6 @@ import com.example.application.data.service.TicketService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.contextmenu.MenuItem;
@@ -88,7 +87,7 @@ public class UserTicketView extends VerticalLayout {
         form.addDeleteListener(this::deleteTicket); // <2>
         form.addCloseListener(e -> closeEditor()); // <3>
 
-        addForm = new TicketAddForm(service.findAllWebsites(), service.findAllTUsers("Support-Member"));
+        addForm = new TicketAddForm(service.getAllWebsitesByUsername(MainLayout.username), service.findAllTUsers("Support-Member"));
         addForm.setWidth("70em");
         addForm.addSaveListener(this::saveAddTicket); // <1>
         addForm.addCloseListener(e -> closeEditor()); // <3>
@@ -167,6 +166,8 @@ public class UserTicketView extends VerticalLayout {
         allTicketsButton.addClickListener(click -> updateListByRegistered(MainLayout.username));
 
         Button addTicketButton = new Button("Add ticket");
+        //<theme-editor-local-classname>
+        addTicketButton.addClassName("UserTicketView-button-1");
         addTicketButton.addClickListener(click -> addTicket());
 
         Button menuButton = new Button("Show/Hide");
