@@ -5,7 +5,6 @@ import com.example.application.data.entity.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
 import java.util.List;
 
 public interface TUserRepository extends JpaRepository<TUser, Long> {
@@ -24,6 +23,24 @@ public interface TUserRepository extends JpaRepository<TUser, Long> {
 
     @Query("select u from TUser u WHERE (:searchTerm) MEMBER OF u.teams")
     List <TUser> getTUsersByTeam(@Param("searchTerm") Team searchTerm);
+
+
+    // Suche searchterm caseinsensitiv in User entweder oder  (firstname, lastname, username, email, role, websites)
+
+    @Query("SELECT u FROM TUser u WHERE " +
+            "(LOWER(u.firstname) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+            "LOWER(u.lastname) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+            "LOWER(u.username) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+            "LOWER(u.email) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) OR " +
+            "EXISTS (SELECT w FROM u.websites w WHERE LOWER(w.website_name) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) OR " +
+            "EXISTS (SELECT r FROM u.role r WHERE LOWER(r.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
+    List<TUser> searchBySearchTerm(@Param("searchTerm") String searchTerm);
+
+
+
+
+
+
 
 }
 
