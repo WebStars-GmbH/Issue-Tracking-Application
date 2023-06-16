@@ -78,6 +78,11 @@ public class TicketService {
         ticketRepository.delete(ticket);
     }
 
+    public void setTicketStatusToCancelled(Ticket ticket) {
+        ticket.setStatus("Cancelled");
+        ticketRepository.save(ticket);
+    }
+
     public void saveTicket(Ticket ticket) {
         if (ticket == null) {
             System.err.println("Ticket is null. Are you sure you have connected your form to the application?");

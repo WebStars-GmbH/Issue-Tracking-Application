@@ -123,12 +123,12 @@ public class CompanyTicketView extends VerticalLayout {
     private void ConfirmAndDelete(Ticket ticket){
         ConfirmDialog dialog = new ConfirmDialog();
         dialog.setHeader("Do you want to delete this ticket?");
-        dialog.setText("Are you sure you want to permanently delete this ticket? This cannot be reversed.");
+        dialog.setText("Are you sure you want to permanently delete this ticket?");
         dialog.setCancelable(true);
         dialog.setConfirmText("Delete Ticket");
         dialog.setConfirmButtonTheme("error primary");
         dialog.addConfirmListener(event -> {
-            ticketService.deleteTicket(ticket);
+            ticketService.setTicketStatusToCancelled(ticket);
             updateList();
             form.setTicket(null);
             form.setVisible(false);});
@@ -136,7 +136,7 @@ public class CompanyTicketView extends VerticalLayout {
     }
 
     private void deleteTicket(TicketForm.DeleteEvent event) {
-        ticketService.deleteTicket(event.getTicket());
+        ticketService.setTicketStatusToCancelled(event.getTicket());
         updateList();
         closeEditor();
     }
