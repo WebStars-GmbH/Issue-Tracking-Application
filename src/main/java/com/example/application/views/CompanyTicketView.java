@@ -121,14 +121,16 @@ public class CompanyTicketView extends VerticalLayout {
     }
 
     private void ConfirmAndDelete(Ticket ticket){
+        closeEditor();
         ConfirmDialog dialog = new ConfirmDialog();
         dialog.setHeader("Do you want to delete this ticket?");
-        dialog.setText("Are you sure you want to permanently delete this ticket?");
+        dialog.setText("Are you sure you want to delete this ticket?");
         dialog.setCancelable(true);
         dialog.setConfirmText("Delete Ticket");
         dialog.setConfirmButtonTheme("error primary");
         dialog.addConfirmListener(event -> {
             ticketService.setTicketStatusToCancelled(ticket);
+            //ticketService.deleteTicket(ticket); UNCOMMENT if you want to permanently delete tickets
             updateList();
             form.setTicket(null);
             form.setVisible(false);});
@@ -137,6 +139,7 @@ public class CompanyTicketView extends VerticalLayout {
 
     private void deleteTicket(TicketForm.DeleteEvent event) {
         ticketService.setTicketStatusToCancelled(event.getTicket());
+        //ticketService.deleteTicket(event.getTicket()); UNCOMMENT if you want to permanently delete tickets
         updateList();
         closeEditor();
     }
@@ -152,7 +155,7 @@ public class CompanyTicketView extends VerticalLayout {
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         GridContextMenu<Ticket> menu = grid.addContextMenu();
-        menu.addItem("View Details", event -> {        });
+        menu.addItem("View Details", event -> viewTicket(event.getItem().get()));
         menu.addItem("Edit Ticket", event -> editTicket(event.getItem().get()));
         menu.addItem("Delete Ticket", event -> ConfirmAndDelete(event.getItem().get()));
         grid.asSingleSelect().addValueChangeListener(event -> viewTicket(event.getValue()));
@@ -283,6 +286,7 @@ public class CompanyTicketView extends VerticalLayout {
             closeEditor();
         } else {
             closeEditor();
+            ticket = ticketService.getTicket(ticket.getId());
             form.setTicket(ticket);
             form.setVisible(true);
             addClassName("editing");

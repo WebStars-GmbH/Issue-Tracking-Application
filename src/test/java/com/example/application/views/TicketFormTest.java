@@ -92,4 +92,23 @@ public class TicketFormTest {
         assertEquals(website1, savedTicket.getWebsite());
         assertEquals(tuser2, savedTicket.getAssigned_to());
     }
+
+    @Test
+    public void deleteEventHasCorrectValues() {
+        TicketForm form = new TicketForm(websites, tusers);
+        Ticket ticket = new Ticket();
+        form.setTicket(ticket);
+        form.header.setValue("Test Ticket 3");
+        form.description.setValue("This is a test ticket description");
+
+        AtomicReference<Ticket> deletedTicketRef = new AtomicReference<>(null);
+        form.addDeleteListener(e -> {
+            deletedTicketRef.set(e.getTicket());
+        });
+        form.delete.click();
+        Ticket deletedTicket = deletedTicketRef.get();
+
+        assertEquals("Test Ticket 3", deletedTicket.getHeader());
+        assertEquals("This is a test ticket description", deletedTicket.getDescription());
+    }
 }

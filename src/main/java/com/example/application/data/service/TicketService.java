@@ -70,6 +70,9 @@ public class TicketService {
     }
 
 
+    public Ticket getTicket(Long id){
+        return ticketRepository.getTicketById(id);
+    }
     public long countTickets() {
         return ticketRepository.count();
     }
@@ -79,6 +82,7 @@ public class TicketService {
     }
 
     public void setTicketStatusToCancelled(Ticket ticket) {
+        ticket = ticketRepository.getTicketById(ticket.getId()); //To reset to ticket values before edit...
         ticket.setStatus("Cancelled");
         ticketRepository.save(ticket);
     }

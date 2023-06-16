@@ -33,7 +33,7 @@ public class ListView extends VerticalLayout {
         configureGrid();
         configureForm();
 
-        //add(getToolbar(), getContent());
+        add(getToolbar(), getContent());
         updateList();
         closeEditor();
     }
