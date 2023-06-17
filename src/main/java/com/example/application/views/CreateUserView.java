@@ -169,10 +169,17 @@ public class CreateUserView extends VerticalLayout {
         closeEditor();
     }
     private void updateList() {
-        grid.setItems(tuserService.findAllUsers());
+        String searchTerm = filterText.getValue().trim(); // Abrufen des Suchbegriffs
+
+        if (searchTerm.isEmpty()) {
+            grid.setItems(userService.findAllUsers()); // alle Anzeigen
+        } else {
+            List<TUser> filteredUsers = userService.findUsersBySearchTerm(searchTerm); // Suche
+            grid.setItems(filteredUsers);
+        }
     }
     private Component getToolbar() {
-        filterText.setPlaceholder("Filter by name...");
+        filterText.setPlaceholder("search...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
