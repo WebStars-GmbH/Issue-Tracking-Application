@@ -7,8 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TUserRepository extends JpaRepository<TUser, Long> {
+    Optional<TUser> findByUsername(String username);
 
     @Query("select t from TUser t " +
             "where lower(t.username) like lower(concat('%', :searchTerm, '%'))")

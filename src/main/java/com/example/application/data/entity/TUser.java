@@ -140,6 +140,11 @@ public class TUser extends AbstractEntity{
         this.role = role;
         this.websites = websiteList;
     }
+
+    public TUser(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }
 
 

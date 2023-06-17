@@ -4,12 +4,15 @@ import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Team;
 import com.example.application.data.entity.Website;
 import com.example.application.data.service.RoleService;
+import com.example.application.data.service.SecurityUserDetailsService;
 import com.example.application.data.service.TUserService;
 import com.example.application.data.service.WebsiteService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -18,7 +21,9 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import jakarta.annotation.security.PermitAll;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,14 +38,20 @@ public class CreateUserView extends VerticalLayout {
     Grid<TUser> grid = new Grid<>(TUser.class);
     TextField filterText = new TextField();
     CreateUserForm form;
-    TUserService userService;
+    TUserService tuserService;
     WebsiteService websiteService;
     RoleService roleService;
 
-    public CreateUserView(TUserService userService, WebsiteService websiteService, RoleService roleService) {
-        this.userService = userService;
+    private final SecurityUserDetailsService sUDservice;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public CreateUserView(TUserService tuserService, WebsiteService websiteService, RoleService roleService, SecurityUserDetailsService sUDservice) {
+        this.tuserService = tuserService;
         this.websiteService = websiteService;
         this.roleService = roleService;
+        this.sUDservice = sUDservice;
+
         addClassName("user-view");
         setSizeFull();
         configureGrid();
@@ -64,9 +75,7 @@ public class CreateUserView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassName("user-grid");
         grid.setSizeFull();
-        grid.setColumns( "firstname", "lastname", "username", "email", "role", "active" );  // Set the columns that you want to display in your grid
-       // grid.addColumn("websites");
-        //grid.addColumn(user -> user.getWebsites().getWebsite_name().setHeader("Website").setSortable(true);
+        grid.setColumns( "firstname", "lastname", "username", "email", "role", "active" );
 
         grid.addColumn(user -> user.getTeams().stream()
                         .map(Team::getName)
@@ -77,7 +86,7 @@ public class CreateUserView extends VerticalLayout {
                         .map(Website::getWebsite_name)
                         .collect(Collectors.joining(", ")))
                 .setHeader("Websites");
-        // You can also add a click listener to handle row clicks
+
         grid.asSingleSelect().addValueChangeListener(event ->
                 editUser(event.getValue()));
     }
@@ -109,10 +118,11 @@ public class CreateUserView extends VerticalLayout {
     }
 
     private void updateWebsites(TUser user){
+        //check if the websites assigned to the user have been changed, and update all website entities if that is the case
         List<Website> websitesOld = websiteService.getAllWebsitesByUser(user);
         List<Website> websitesNew = user.getWebsites();
 
-        if (websitesOld != websitesNew) {
+        if (!websitesOld.equals(websitesNew)) {
             for (Website w : websitesOld) {
                 if (!websitesNew.contains(w)) {
                     w.deleteUser();
@@ -131,20 +141,35 @@ public class CreateUserView extends VerticalLayout {
     private void saveUser(CreateUserForm.SaveEvent event) {
 
         TUser user = event.getUser();
-        userService.saveUser(user);
+
+        String oldPassword = "";
+        if (user.getId() != null) oldPassword = tuserService.findUserById(user.getId()).getPassword(); //Check if user already exits and if password has been changed
+        if (user.getPassword() != oldPassword) {    //if so, encrypt the new password and update the DB
+            String newPassword = bCryptPasswordEncoder.encode(user.getPassword());
+            user.setPassword(newPassword);
+            user.setPasswordConfirm(newPassword);
+        }
+
+        tuserService.saveUser(user);
         updateWebsites(user);
+
         updateList();
         closeEditor();
-        UI.getCurrent().getPage().reload();
+        UI.getCurrent().getPage().reload(); //Page needs to be reloaded for all changes to take place correctly
+
+        sUDservice.createUser(user);
+        Notification notification = Notification
+                .show("User " + user.getUsername() + " updated!");
+        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
     }
 
     private void deleteUser(CreateUserForm.DeleteEvent event) {
-        userService.deleteUser(event.getUser().getId());
+        tuserService.deleteUser(event.getUser().getId());
         updateList();
         closeEditor();
     }
     private void updateList() {
-        grid.setItems(userService.findAllUsers());
+        grid.setItems(tuserService.findAllUsers());
     }
     private Component getToolbar() {
         filterText.setPlaceholder("Filter by name...");
@@ -162,7 +187,7 @@ public class CreateUserView extends VerticalLayout {
 
     private void addUser() {
         grid.asSingleSelect().clear();
-        editUser(new TUser());
+        TUser user = new TUser();
+        editUser(user);
     }
-
 }
