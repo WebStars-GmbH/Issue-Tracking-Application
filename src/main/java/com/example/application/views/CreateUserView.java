@@ -38,7 +38,7 @@ public class CreateUserView extends VerticalLayout {
     Grid<TUser> grid = new Grid<>(TUser.class);
     TextField filterText = new TextField();
     CreateUserForm form;
-    TUserService tuserService;
+    TUserService userService;
     WebsiteService websiteService;
     RoleService roleService;
 
@@ -46,8 +46,8 @@ public class CreateUserView extends VerticalLayout {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public CreateUserView(TUserService tuserService, WebsiteService websiteService, RoleService roleService, SecurityUserDetailsService sUDservice) {
-        this.tuserService = tuserService;
+    public CreateUserView(TUserService userService, WebsiteService websiteService, RoleService roleService, SecurityUserDetailsService sUDservice) {
+        this.userService = userService;
         this.websiteService = websiteService;
         this.roleService = roleService;
         this.sUDservice = sUDservice;
@@ -143,14 +143,14 @@ public class CreateUserView extends VerticalLayout {
         TUser user = event.getUser();
 
         String oldPassword = "";
-        if (user.getId() != null) oldPassword = tuserService.findUserById(user.getId()).getPassword(); //Check if user already exits and if password has been changed
+        if (user.getId() != null) oldPassword = userService.findUserById(user.getId()).getPassword(); //Check if user already exits and if password has been changed
         if (user.getPassword() != oldPassword) {    //if so, encrypt the new password and update the DB
             String newPassword = bCryptPasswordEncoder.encode(user.getPassword());
             user.setPassword(newPassword);
             user.setPasswordConfirm(newPassword);
         }
 
-        tuserService.saveUser(user);
+        userService.saveUser(user);
         updateWebsites(user);
 
         updateList();
@@ -164,7 +164,7 @@ public class CreateUserView extends VerticalLayout {
     }
 
     private void deleteUser(CreateUserForm.DeleteEvent event) {
-        tuserService.deleteUser(event.getUser().getId());
+        userService.deleteUser(event.getUser().getId());
         updateList();
         closeEditor();
     }
