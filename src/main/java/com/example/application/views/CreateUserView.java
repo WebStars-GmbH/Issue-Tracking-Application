@@ -97,6 +97,12 @@ public class CreateUserView extends VerticalLayout {
         if (user == null) {
             closeEditor();
         } else {
+            if (user.getUsername() == MainLayout.username){
+                Notification notification = Notification.show("ERROR. You're trying to edit the logged in user.");
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                closeEditor();
+                return;
+            }
             form.setUser(user);
             form.setVisible(true);
             addClassName("editing");
@@ -142,8 +148,23 @@ public class CreateUserView extends VerticalLayout {
 
         TUser user = event.getUser();
 
+        //When creating user, check if username is unique
+        if (user.getId() == null && userService.findUserByUsername(user.getUsername()) != null){
+            Notification notification = Notification.show("ERROR. Cannot create user. There already exists a user with this username.");
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return;
+        }
+
+        //When editing user, check if username is unique
+        if (user.getId() != null && userService.findUserByUsername(user.getUsername()) != null && user.getId().intValue() != userService.findUserByUsername(user.getUsername()).getId().intValue()){
+            Notification notification = Notification.show("ERROR modifying user with id " + user.getId() +". Cannot modify username. There already exists a user with this username. Userid: " + userService.findUserByUsername(user.getUsername()).getId());
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return;
+        }
+
+        //Check if user already exits and if password has been changed
         String oldPassword = "";
-        if (user.getId() != null) oldPassword = userService.findUserById(user.getId()).getPassword(); //Check if user already exits and if password has been changed
+        if (user.getId() != null) oldPassword = userService.findUserById(user.getId()).getPassword();
         if (user.getPassword() != oldPassword) {    //if so, encrypt the new password and update the DB
             String newPassword = bCryptPasswordEncoder.encode(user.getPassword());
             user.setPassword(newPassword);

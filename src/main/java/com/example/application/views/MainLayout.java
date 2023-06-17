@@ -1,8 +1,6 @@
 package com.example.application.views;
 
 import com.example.application.data.entity.Role;
-import com.example.application.data.entity.TUser;
-import com.example.application.data.entity.Team;
 import com.example.application.data.service.TUserService;
 import com.example.application.data.service.TeamService;
 import com.example.application.security.SecurityService;
@@ -10,21 +8,11 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-
-//user angelegt (password):
-// user
-// admin
-// customer
-// coordinator
-// manager
-
-import java.util.List;
 
 public class MainLayout extends AppLayout {
     private final SecurityService securityService;
@@ -38,21 +26,11 @@ public class MainLayout extends AppLayout {
         this.tUserService = tUserService;
         this.teamService = teamService;
 
-        Team team1 = teamService.findTeamByName("team1");
-        List<TUser> tusers = tUserService.findUsersByTeam(team1);
-        com.vaadin.flow.component.notification.Notification notification1 = Notification.show("Users: " + tusers.toString());
-
         username = securityService.getAuthenticatedUser().getUsername();
         userRole = tUserService.findUserByUsername(username).getRole();
-        String role = securityService.getAuthenticatedUser().getAuthorities().toString();
-        //Notification notification = Notification.show("Username: " + username + "; Role: " + userRole.getRole_name() + "; Authorities: " + role);
 
         createHeader();
         createDrawer();
-/*        if (userRole.getRole_name().equals("Customer")) {
-            createDrawerCustomer();
-        }*/
-        //createDrawerCustomer();
     }
 
     private void createHeader() {
