@@ -29,11 +29,11 @@ public class TicketService {
         }
     }
 
-    public List<Ticket> findAllTicketsByStatus(String stringFilter){
+    public List<Ticket> findAllTicketsWithStatus(String stringFilter){
         if (stringFilter == null || stringFilter.isEmpty()) {
             return ticketRepository.searchByRegisteredBy(stringFilter);
         } else {
-            return ticketRepository.searchByStatus(stringFilter);
+            return ticketRepository.searchWithStatus(stringFilter);
         }
     }
 
@@ -121,5 +121,17 @@ public class TicketService {
 
     public List<Ticket> searchTicketsByStatus(String name, String status) {
         return ticketRepository.searchByRegisteredByStatus(name, status);
+    }
+
+    public List<Ticket> findAllTicketsByStatus(String status1, String status2, String status3) {
+        return ticketRepository.searchByStatus(status1, status2, status3);
+    }
+
+    public List<Ticket> findAllTicketsByAssignedToAndStatus(String username, String status1, String status2, String status3) {
+        return ticketRepository.searchByAssignedToAndStatus(username, status1, status2, status3);
+    }
+
+    public List<Ticket> searchTicketsByUserAndStatus(String name, String status1, String status2, String status3) {
+        return ticketRepository.searchByRegisteredByStatus(name, status1, status2, status3);
     }
 }

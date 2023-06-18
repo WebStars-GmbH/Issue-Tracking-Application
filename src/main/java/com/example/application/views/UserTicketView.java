@@ -7,6 +7,7 @@ import com.example.application.data.service.TicketService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
@@ -34,7 +35,7 @@ import java.util.Objects;
 @Route(value = "UserTicketView", layout = MainLayout.class)
 @PageTitle("Tickets | Webst@rs Ticketing Application")
 public class UserTicketView extends VerticalLayout {
-    Grid<Ticket> grid = new Grid<>(Ticket.class);
+    Grid<Ticket> grid = new Grid<>(Ticket.class, false);
 
     TextField descriptionFilterText = new TextField("Description");
 
@@ -115,9 +116,9 @@ public class UserTicketView extends VerticalLayout {
 
         List<Ticket> ticket = ticketService.findAllTicketsByRegisteredBy(MainLayout.username);
         grid.setItems(ticket);
-
+/*
         Span title = new Span("Tickets");
-        title.getStyle().set("font-weight", "bold");
+        title.getStyle().set("font-weight", "bold");*/
         add(grid);
     }
     private Component getToolbar() {
@@ -128,10 +129,10 @@ public class UserTicketView extends VerticalLayout {
         descriptionFilterText.addValueChangeListener(e -> updateListByDescription());
 
         Button myOpenTicketsButton = new Button("My Open Tickets");
-        myOpenTicketsButton.addClickListener(click -> updateListByStatus(MainLayout.username, "Registered"));
+        myOpenTicketsButton.addClickListener(click -> updateListByRegisteredByAndStatus(MainLayout.username, "Registered", "Assigned", "In progress"));
 
         Button myClosedTicketsButton = new Button("My Closed Tickets");
-        myClosedTicketsButton.addClickListener(click -> updateListByStatus(MainLayout.username, "Closed"));
+        myClosedTicketsButton.addClickListener(click -> updateListByRegisteredByAndStatus(MainLayout.username, "Closed", "Cancelled", "NULL"));
 
         Button allTicketsButton = new Button("All My Tickets");
         allTicketsButton.addClickListener(click -> updateListByRegistered(MainLayout.username));
@@ -166,8 +167,6 @@ public class UserTicketView extends VerticalLayout {
     private void closeEditor() {
         addForm.setTicket(null);
         addForm.setVisible(false);
-        viewDetailsForm.setTicket(null);
-        viewDetailsForm.setVisible(false);
         removeClassName("editing");
     }
 
@@ -190,8 +189,8 @@ public class UserTicketView extends VerticalLayout {
         ticket.setHistory(timestampString + ": created by " + u + "; "); //TODO
     }
 
-    private void updateListByStatus(String name, String status) {
-        grid.setItems(ticketService.searchTicketsByStatus(name, status));
+    private void updateListByRegisteredByAndStatus(String name, String status1, String status2, String status3) {
+        grid.setItems(ticketService.searchTicketsByUserAndStatus(name, status1, status2, status3));
     }
     private void updateListByRegistered(String username) {
         grid.setItems(ticketService.findAllTicketsByRegisteredBy(username));

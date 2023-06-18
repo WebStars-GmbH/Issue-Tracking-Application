@@ -202,7 +202,7 @@ public class TicketView extends VerticalLayout {
         statusFilterText.setPlaceholder("Filter by status...");
         statusFilterText.setClearButtonVisible(true);
         statusFilterText.setValueChangeMode(ValueChangeMode.LAZY);
-        statusFilterText.addValueChangeListener(e -> updateListByStatus());
+        statusFilterText.addValueChangeListener(e -> updateListWithStatus());
 
         descriptionFilterText.setPlaceholder("Filter by description...");
         descriptionFilterText.setTooltipText("Please type what the description should contain...");
@@ -212,7 +212,7 @@ public class TicketView extends VerticalLayout {
 
         statusComboBox.setItems("Registered", "Assigned", "In progress", "Cancelled", "Solved");
         statusComboBox.setTooltipText("Please choose the status of the tickets you want to look for...");
-        statusComboBox.addValueChangeListener(e -> updateListByStatus());
+        statusComboBox.addValueChangeListener(e -> updateListWithStatus());
 
         List<TUser> users = service.findAllTUsersByRole("Support-Member");
         assignedToComboBox.setTooltipText("Please choose the assigned users you want to look for...");
@@ -232,7 +232,7 @@ public class TicketView extends VerticalLayout {
 
 
         Button registeredButton = new Button("Registered Tickets");
-        registeredButton.addClickListener(click -> updateListByStatusRegistered());
+        registeredButton.addClickListener(click -> updateListByStatusRegistered("Registered", "NULL", "NULL"));
 
         var toolbar = new HorizontalLayout(clearFieldsButton, statusComboBox, websiteFilterText, descriptionFilterText, assignedToComboBox, applyAllFiltersButton, registeredButton, addTicketButton);
         toolbar.addClassName("toolbar");
@@ -293,11 +293,11 @@ public class TicketView extends VerticalLayout {
     private void updateListByWebsite() {
         grid.setItems(ticketService.findAllTickets(websiteFilterText.getValue()));
     }
-    private void updateListByStatus() {
-        if (statusComboBox.getValue() != null) grid.setItems(ticketService.findAllTicketsByStatus(statusComboBox.getValue()));
+    private void updateListWithStatus() {
+        if (statusComboBox.getValue() != null) grid.setItems(ticketService.findAllTicketsWithStatus(statusComboBox.getValue()));
     }
-    private void updateListByStatusRegistered() {
-        grid.setItems(ticketService.findAllTicketsByStatus("Registered"));
+    private void updateListByStatusRegistered(String status1, String status2, String status3) {
+        grid.setItems(ticketService.findAllTicketsByStatus(status1, status2, status3));
     }
     private void updateListByDescription() {
         grid.setItems(ticketService.findAllTicketsByDescription(descriptionFilterText.getValue()));

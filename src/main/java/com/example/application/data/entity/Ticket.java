@@ -186,5 +186,6 @@ public class Ticket extends AbstractEntity{
     public String getClosedDateString(){
         return "" + this.close_date;
     }
+
 }
 
