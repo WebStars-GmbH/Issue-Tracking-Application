@@ -62,7 +62,7 @@ public class MainLayout extends AppLayout {
             addToDrawer(new VerticalLayout(
 //                    new RouterLink("Dashboard", DashboardView.class),
                     new RouterLink("Tickets", UserTicketView.class)
-                    ));
+            ));
         } else  {
             addToDrawer(new VerticalLayout(
                     //                    new RouterLink("Dashboard", DashboardView.class),

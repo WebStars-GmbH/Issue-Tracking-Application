@@ -73,7 +73,7 @@ public class CrmService {
     }
 
     public TUser getTUserByUsername(String stringFilter){
-            return tUserRepository.getTUserByUsername(stringFilter);
+        return tUserRepository.getTUserByUsername(stringFilter);
     }
 
     public List<TUser> findAllTUsersByRole(String stringFilter){

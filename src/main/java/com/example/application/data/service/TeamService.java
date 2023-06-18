@@ -28,7 +28,7 @@ public class TeamService {
     }
 
     public Team findTeamByName(String stringFilter){
-            return teamRepository.getTeamByName(stringFilter);
+        return teamRepository.getTeamByName(stringFilter);
     }
 
     public void deleteTeam(Team team) {

@@ -198,13 +198,13 @@ public class CompanyTicketView extends VerticalLayout {
         assignedToComboBox.addValueChangeListener(e -> updateListByAssignedTo());
 
         Button myOpenTicketsButton = new Button("My Assigned Tickets");
-     //   myOpenTicketsButton.addClickListener(click -> updateListByStatus(MainLayout.username, "Registered"));
+        //   myOpenTicketsButton.addClickListener(click -> updateListByStatus(MainLayout.username, "Registered"));
 
         Button myClosedTicketsButton = new Button("My To-Do Tickets");
-     //   myClosedTicketsButton.addClickListener(click -> updateListByStatus(MainLayout.username, "Closed"));
+        //   myClosedTicketsButton.addClickListener(click -> updateListByStatus(MainLayout.username, "Closed"));
 
         Button allMyTicketsButton = new Button("All My Tickets");
-     //   allTicketsButton.addClickListener(click -> updateListByRegistered(MainLayout.username));
+        //   allTicketsButton.addClickListener(click -> updateListByRegistered(MainLayout.username));
 
         Button allTicketsButton = new Button("All Tickets");
         allTicketsButton.addClickListener(click -> updateList());

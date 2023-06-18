@@ -17,7 +17,7 @@ public class TicketService {
 
 
     public TicketService(
-                      TicketRepository ticketRepository) {
+            TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
     }
 

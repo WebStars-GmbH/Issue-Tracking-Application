@@ -67,6 +67,5 @@ public class TUserService {
             return tUserRepository.searchBySearchTerm(searchTerm);
         }
     }
-
 }
 
