@@ -167,6 +167,8 @@ public class UserTicketView extends VerticalLayout {
     private void closeEditor() {
         addForm.setTicket(null);
         addForm.setVisible(false);
+        viewDetailsForm.setTicket(null);
+        viewDetailsForm.setVisible(false);
         removeClassName("editing");
     }
 

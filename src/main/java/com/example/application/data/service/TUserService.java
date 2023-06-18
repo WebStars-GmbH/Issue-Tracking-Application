@@ -5,6 +5,7 @@ import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Team;
 import com.example.application.data.repository.TUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,14 @@ public class TUserService {
 
     public List<TUser> findAllUsers() {
         return tUserRepository.findAll();
+    }
+
+    public List<TUser> findAllActiveUsers() {
+        return tUserRepository.findTUsersActiveTrue(true);
+    }
+
+    public List<TUser> findAllInactiveUsers() {
+        return tUserRepository.findTUsersActiveFalse(true);
     }
 
     public TUser findUserById(Long id) {
