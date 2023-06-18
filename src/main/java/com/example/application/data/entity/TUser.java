@@ -22,6 +22,7 @@ public class TUser extends AbstractEntity{
     @JoinColumn(name="role_id")
     private Role role;
     @NotBlank
+    @Column(unique = true)
     private String username;
 
     @NotBlank
@@ -139,6 +140,11 @@ public class TUser extends AbstractEntity{
         this.password = password;
         this.role = role;
         this.websites = websiteList;
+    }
+
+    public TUser(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 }
 

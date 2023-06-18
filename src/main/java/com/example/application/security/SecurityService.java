@@ -14,10 +14,12 @@ public class SecurityService {
     }
 
     public UserDetails getAuthenticatedUser() {
+        System.out.println("authenticated");
         return authenticationContext.getAuthenticatedUser(UserDetails.class).get();
     }
 
     public void logout() {
         authenticationContext.logout();
     }
+
 }

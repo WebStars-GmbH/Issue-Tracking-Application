@@ -79,13 +79,13 @@ INSERT INTO "ROLE" VALUES
 
 --Insert with order: id, version, email, firstname, lastname,  password, username, role
 INSERT INTO "TUSER" VALUES
-                        (63, 1, true, 'member0@webstars.com', 'Max', 'Mustermann', 'password', 'password', 'member0', 92),
-                        (64, 1, true, 'member1@webstars.com', 'Max', 'Mustermann', 'password', 'password', 'member1', 92),
-                        (65, 1, true, 'member1@webstars.com', 'Max', 'Mustermann', 'password', 'password', 'member2', 92),
-                        (66, 1, true, 'sysadmin@webstars.com', 'Max', 'Mustermann', 'password', 'password', 'admin', 91),
-                        (67, 1, true, 'manager@webstars.com', 'Max', 'Mustermann', 'password', 'password', 'manager', 94),
-                        (68, 1, true, 'customer@test.com', 'Max', 'Mustermann', 'password', 'password', 'user', 95),
-                        (69, 1, true, 'customer@test2.com', 'Max', 'Mustermann', 'password', 'password', 'user2', 95);
+                        (63, 1, true, 'member0@webstars.com', 'Max', 'Mustermann', '$2a$10$MwGZcyxNg0LVvWlPjRD10OXWS3axwvaYdB4Bf9v38aWuURQy1yh0O', '$2a$10$MwGZcyxNg0LVvWlPjRD10OXWS3axwvaYdB4Bf9v38aWuURQy1yh0O', 'member0', 92),
+                        (64, 1, true, 'member1@webstars.com', 'Max', 'Mustermann', '$2a$10$MwGZcyxNg0LVvWlPjRD10OXWS3axwvaYdB4Bf9v38aWuURQy1yh0O', '$2a$10$MwGZcyxNg0LVvWlPjRD10OXWS3axwvaYdB4Bf9v38aWuURQy1yh0O', 'member1', 92),
+                        (65, 1, true, 'member1@webstars.com', 'Max', 'Mustermann', '$2a$10$MwGZcyxNg0LVvWlPjRD10OXWS3axwvaYdB4Bf9v38aWuURQy1yh0O', '$2a$10$MwGZcyxNg0LVvWlPjRD10OXWS3axwvaYdB4Bf9v38aWuURQy1yh0O', 'member2', 92),
+                        (66, 1, true, 'sysadmin@webstars.com', 'Max', 'Mustermann', '$2a$10$MwGZcyxNg0LVvWlPjRD10OXWS3axwvaYdB4Bf9v38aWuURQy1yh0O', '$2a$10$MwGZcyxNg0LVvWlPjRD10OXWS3axwvaYdB4Bf9v38aWuURQy1yh0O', 'admin', 91),
+                        (67, 1, true, 'manager@webstars.com', 'Max', 'Mustermann', '$2a$10$MwGZcyxNg0LVvWlPjRD10OXWS3axwvaYdB4Bf9v38aWuURQy1yh0O', '$2a$10$MwGZcyxNg0LVvWlPjRD10OXWS3axwvaYdB4Bf9v38aWuURQy1yh0O', 'manager', 94),
+                        (68, 1, true, 'customer@test.com', 'Max', 'Mustermann', '$2a$10$MwGZcyxNg0LVvWlPjRD10OXWS3axwvaYdB4Bf9v38aWuURQy1yh0O', '$2a$10$MwGZcyxNg0LVvWlPjRD10OXWS3axwvaYdB4Bf9v38aWuURQy1yh0O', 'user', 95),
+                        (69, 1, true, 'customer@test2.com', 'Max', 'Mustermann', '$2a$10$MwGZcyxNg0LVvWlPjRD10OXWS3axwvaYdB4Bf9v38aWuURQy1yh0O', '$2a$10$MwGZcyxNg0LVvWlPjRD10OXWS3axwvaYdB4Bf9v38aWuURQy1yh0O', 'user2', 95);
 --                         (96, 1, true, 'Coordinator@webstars.com', 'Max', 'Mustermann', 'password', 'coordinator', 93);
 
 INSERT INTO "WEBSITE" VALUES
@@ -109,6 +109,5 @@ INSERT INTO "WEBSITE" VALUES
                           (79, 1, 'www.codepen.com', 'www.codepen.com', 201, NULL),
                           (80, 1, 'www.stackoverflow.com', 'www.stackoverflow.com', 201, NULL),
                           (81, 1, 'www.github.com', 'www.github.com', 201, NULL);
-
 
 

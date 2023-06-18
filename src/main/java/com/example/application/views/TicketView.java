@@ -31,10 +31,7 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @SpringComponent
 @Scope("prototype")

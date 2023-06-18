@@ -73,7 +73,7 @@ public class CrmService {
     }
 
     public TUser getTUserByUsername(String stringFilter){
-            return tUserRepository.getTUserByUsername(stringFilter);
+        return tUserRepository.getTUserByUsername(stringFilter);
     }
 
     public List<TUser> findAllTUsersByRole(String stringFilter){
@@ -82,6 +82,10 @@ public class CrmService {
         } else {
             return tUserRepository.searchByRole(stringFilter);
         }
+    }
+
+    public List<Website> getAllWebsitesByUsername(String user) {
+        return websiteRepository.findByUsername(user);
     }
 
     public long countTUsers() {

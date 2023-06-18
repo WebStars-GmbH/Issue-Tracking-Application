@@ -48,5 +48,15 @@ public class TUserService {
     public void deleteUser(Long id) {
         tUserRepository.deleteById(id);
     }
+
+
+    // Suche nach in einem TUser entweder oder (firstname, lastname, username, email, role, websites)
+    public List<TUser> findUsersBySearchTerm(String searchTerm) {
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            return tUserRepository.findAll();
+        } else {
+            return tUserRepository.searchBySearchTerm(searchTerm);
+        }
+    }
 }
 

@@ -13,8 +13,6 @@ import com.vaadin.flow.component.combobox.ComboBoxVariant;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep.LabelsPosition;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
@@ -84,7 +82,7 @@ public class TicketForm extends FormLayout {
         binder.forField(website).bind(Ticket::getWebsite, null);
         binder.forField(history).bind(Ticket::getHistory, null);
 
-        status.setItems("Registered", "Assigned", "In Progress", "Cancelled", "Solved");
+        status.setItems("Registered", "Assigned", "In Progress", "Solved");
         status.setHelperText("Choose new status");
         status.addThemeVariants(RadioGroupVariant.LUMO_HELPER_ABOVE_FIELD);
         status.getStyle().set("--vaadin-input-field-border-width", "1px");
@@ -134,7 +132,7 @@ public class TicketForm extends FormLayout {
         close.addClickShortcut(Key.ESCAPE);
 
         save.addClickListener(event -> validateAndSave());
-        delete.addClickListener(event -> ConfirmAndDelete());
+        delete.addClickListener(event -> fireEvent(new TicketForm.DeleteEvent(this, binder.getBean())));
         close.addClickListener(event -> fireEvent(new CloseEvent(this)));
         binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
 
@@ -188,9 +186,6 @@ public class TicketForm extends FormLayout {
     public static class DeleteEvent extends TicketFormEvent {
         DeleteEvent(TicketForm source, Ticket ticket) {
             super(source, ticket);
-            Notification notification = Notification
-                    .show("Ticket deleted!");
-            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         }
     }
 

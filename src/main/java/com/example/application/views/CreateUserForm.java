@@ -20,8 +20,10 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.Result;
+import com.vaadin.flow.data.binder.ValueContext;
+import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.shared.Registration;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ import java.util.List;
 
 @Component
 public class CreateUserForm extends FormLayout {
+
     TextField firstName = new TextField("First name");
     TextField lastName = new TextField("Last name");
     TextField username = new TextField("User name");
@@ -45,7 +48,7 @@ public class CreateUserForm extends FormLayout {
     Button close = new Button("Cancel");
     Binder<TUser> binder = new BeanValidationBinder<>(TUser.class);
 
-    @Autowired
+
     public CreateUserForm(WebsiteService websiteService, RoleService roleService) {
         addClassName("user-form");
 
@@ -70,6 +73,21 @@ public class CreateUserForm extends FormLayout {
                 createButtonsLayout());
     }
 
+
+    private class decrypt implements Converter<String, String> {
+        @Override
+        public Result<String> convertToModel(
+                String fieldValue, ValueContext context) {
+            return null;
+        }
+
+        @Override
+        public String convertToPresentation(
+                String string, ValueContext context) {
+            return string + "hallo";
+        }
+    }
+
     private HorizontalLayout createButtonsLayout() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -88,8 +106,7 @@ public class CreateUserForm extends FormLayout {
     private void validateAndSave() {
         if (binder.isValid()) {
             if (password.getValue().equals(passwordConfirm.getValue())) {
-                TUser user = binder.getBean();
-                fireEvent(new SaveEvent(this, user));
+                fireEvent(new SaveEvent(this, binder.getBean()));
             } else {
                 passwordConfirm.setErrorMessage("Passwords do not match!");
                 passwordConfirm.setInvalid(true);

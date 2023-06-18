@@ -47,5 +47,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "and lower(t.status) like lower(concat('%', :statusFilter, '%')) ")
     List<Ticket> searchByRegisteredByStatus(@Param("registeredFilter") String registeredFilter, @Param("statusFilter") String statusFilter);
 
-
+    @Query("select t from Ticket t " +
+            "where t.id = :searchTerm")
+    Ticket getTicketById(@Param("searchTerm") Long searchTerm);
 }
