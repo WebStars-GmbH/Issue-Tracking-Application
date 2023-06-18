@@ -1,4 +1,4 @@
-/*package com.example.application.views;
+package com.example.application.views;
 
 import com.example.application.data.entity.Ticket;
 import com.vaadin.flow.component.grid.Grid;
@@ -36,4 +36,4 @@ public class TicketViewTest {
     private Ticket getFirstItem(Grid<Ticket> grid) {
         return( (ListDataProvider<Ticket>) grid.getDataProvider()).getItems().iterator().next();
     }
-}*/
+}

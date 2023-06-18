@@ -1,4 +1,4 @@
-/*package com.example.application.views;
+package com.example.application.views;
 
 import com.example.application.data.entity.Contact;
 import com.vaadin.flow.component.grid.Grid;
@@ -38,4 +38,4 @@ public class ListViewTest {
     private Contact getFirstItem(Grid<Contact> grid) {
         return( (ListDataProvider<Contact>) grid.getDataProvider()).getItems().iterator().next();
     }
-}*/
+}
