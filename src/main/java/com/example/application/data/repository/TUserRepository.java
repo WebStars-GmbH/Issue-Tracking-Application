@@ -39,9 +39,13 @@ public interface TUserRepository extends JpaRepository<TUser, Long> {
     List<TUser> searchBySearchTerm(@Param("searchTerm") String searchTerm);
 
 
+    @Query("SELECT t FROM TUser t " +
+            "WHERE t.active = true")
+    List<TUser> findTUsersActiveTrue(@Param("active user") Boolean active);
 
-
-
+    @Query("SELECT t FROM TUser t " +
+           "WHERE t.active = false")
+    List<TUser> findTUsersActiveFalse(@Param("active user") Boolean active);
 
 
 }
