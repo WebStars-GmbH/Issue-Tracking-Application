@@ -7,10 +7,15 @@ import com.example.application.data.service.RoleService;
 import com.example.application.data.service.SecurityUserDetailsService;
 import com.example.application.data.service.TUserService;
 import com.example.application.data.service.WebsiteService;
+import com.helger.commons.annotation.VisibleForTesting;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.CheckboxGroup;
+import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -25,6 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+
+import javax.swing.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +43,10 @@ import java.util.stream.Collectors;
 @PageTitle("Create User")
 public class CreateUserView extends VerticalLayout {
     Grid<TUser> grid = new Grid<>(TUser.class);
+    //CheckboxGroup<String> showActiveInactiveUsers = new CheckboxGroup<>();
+    MultiSelectListBox<String> showActiveInactiveUsers = new MultiSelectListBox<>();
+    private final String showActiveUsers = "show active users";
+    private final String showInactiveUsers = "show inactive users";
     TextField filterText = new TextField();
     CreateUserForm form;
     TUserService userService;
@@ -169,6 +180,9 @@ public class CreateUserView extends VerticalLayout {
         closeEditor();
     }
     private void updateList() {
+        //Update List according to Checkboxes active users/inactive users
+        grid.setItems(userService.findAllActiveUsers());
+
         String searchTerm = filterText.getValue().trim(); // Abrufen des Suchbegriffs
 
         if (searchTerm.isEmpty()) {
@@ -177,14 +191,64 @@ public class CreateUserView extends VerticalLayout {
             List<TUser> filteredUsers = userService.findUsersBySearchTerm(searchTerm); // Suche
             grid.setItems(filteredUsers);
         }
+
+        /* Checkboxes active/inactive users
+        if (showActiveInactiveUsers.isSelected("active users") && showActiveInactiveUsers.isSelected("inactive users")) {
+            grid.setItems(userService.findAllUsers());
+        } else if (showActiveInactiveUsers.isSelected("active users")) {
+            grid.setItems(userService.findAllActiveUsers());
+        } else if (showActiveInactiveUsers.isSelected("inactive users")) {
+        grid.setItems(userService.findAllInactiveUsers());
+        }
+         */
+
+        //MultiSelectListBox active/inactive users
+        if (showActiveInactiveUsers.isSelected(showActiveUsers) && showActiveInactiveUsers.isSelected(showInactiveUsers)) {
+            grid.setItems(userService.findAllUsers());
+        } else if (showActiveInactiveUsers.isSelected(showActiveUsers)) {
+            grid.setItems(userService.findAllActiveUsers());
+        } else if (showActiveInactiveUsers.isSelected(showInactiveUsers)) {
+            grid.setItems(userService.findAllInactiveUsers());
+        }
+
     }
     private Component getToolbar() {
+        /*
+        Checkboxes active/inactive users
+        showActiveInactiveUsers.setLabel("show");
+        showActiveInactiveUsers.setItems("active users", "inactive users");
+        showActiveInactiveUsers.select("active users"); //default
+        showActiveInactiveUsers.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
+        add(showActiveInactiveUsers);
+        showActiveInactiveUsers.addValueChangeListener(e -> {
+            if (e.getValue().contains("active users")) {
+                updateList();
+            } else if (e.getValue().contains("inactive users")) {
+                updateList();
+            }
+        });
+        */
+
+        //MultiSelectListBox active/inactive users
+        showActiveInactiveUsers.setItems(showActiveUsers, showInactiveUsers);
+        showActiveInactiveUsers.select(showActiveUsers);
+        add(showActiveInactiveUsers);
+        showActiveInactiveUsers.addValueChangeListener(e -> {
+            if (e.getValue().contains(showActiveUsers)) {
+                updateList();
+            } else if (e.getValue().contains(showInactiveUsers)) {
+                updateList();
+            }
+        });
+
+        //Searchbar
         filterText.setPlaceholder("search...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
 
-        Button addTicketButton = new Button("Create User");
+        //Button to create new user
+        Button addTicketButton = new Button("create user");
         addTicketButton.addClickListener(click -> addUser());
 
         var toolbar = new HorizontalLayout(filterText, addTicketButton);

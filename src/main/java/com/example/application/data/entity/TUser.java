@@ -120,7 +120,7 @@ public class TUser extends AbstractEntity{
         this.passwordConfirm = passwordConfirm;
     }
 
-    public boolean isActive() {
+    public boolean getActive() {
         return active;
     }
 
