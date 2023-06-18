@@ -185,14 +185,6 @@ public class CreateUserView extends VerticalLayout {
         }
 
 
-        String oldPassword = "";
-        if (user.getId() != null) oldPassword = userService.findUserById(user.getId()).getPassword(); //Check if user already exits and if password has been changed
-        if (user.getPassword() != oldPassword) {    //if so, encrypt the new password and update the DB
-            String newPassword = bCryptPasswordEncoder.encode(user.getPassword());
-            user.setPassword(newPassword);
-            user.setPasswordConfirm(newPassword);
-        }
-
         userService.saveUser(user);
         updateWebsites(user);
 
@@ -222,8 +214,6 @@ public class CreateUserView extends VerticalLayout {
         }
         //Update List according to Checkboxes active users/inactive users
         grid.setItems(userService.findAllActiveUsers());
-
-        String searchTerm = filterText.getValue().trim(); // Abrufen des Suchbegriffs
 
         if (searchTerm.isEmpty()) {
             grid.setItems(userService.findAllUsers()); // alle Anzeigen
