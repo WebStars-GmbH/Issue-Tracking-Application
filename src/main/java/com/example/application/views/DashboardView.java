@@ -1,14 +1,8 @@
 package com.example.application.views;
 
-import com.example.application.data.service.*;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.charts.Chart;
-import com.vaadin.flow.component.charts.model.*;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.theme.lumo.LumoUtility;
 import jakarta.annotation.security.PermitAll;
 
 
@@ -17,6 +11,7 @@ import jakarta.annotation.security.PermitAll;
 @Route(value = "dashboard", layout = MainLayout.class) // <1>
 @PageTitle("Dashboard | Webst@rs Ticketing Application")
 public class DashboardView extends VerticalLayout {
+    /*
     private final CrmService service;
     private final TicketService ticketService;
     private final TUserService tUserService;
@@ -104,4 +99,6 @@ public class DashboardView extends VerticalLayout {
 
         return chart;
     }
+
+     */
 }
