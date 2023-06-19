@@ -73,4 +73,10 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     @Query("select t from Ticket t " +
             "where t.id = :searchTerm")
     Ticket getTicketById(@Param("searchTerm") Long searchTerm);
+
+    @Query ("select t from Ticket t " +
+            "where lower(t.status) like lower('Registered') " +
+            "or lower(t.status) like lower('Assigned') " +
+            "or lower(t.status) like lower('In progress') ")
+    List<Ticket> searchByOpenStatus();
 }
