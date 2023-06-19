@@ -194,8 +194,7 @@ public class CreateUserView extends VerticalLayout {
         closeEditor();
     }
     private void updateList() {
-        String searchTerm = filterText.getValue().trim(); // Abrufen des Suchbegriffs
-
+        String searchTerm = filterText.getValue().trim(); // fetch searchterm
 /*
         if (searchTerm.isEmpty()) {
             grid.setItems(userService.findAllUsers()); // alle Anzeigen
@@ -203,18 +202,18 @@ public class CreateUserView extends VerticalLayout {
             List<TUser> filteredUsers = userService.findUsersBySearchTerm(searchTerm); // Suche
             grid.setItems(filteredUsers);
         }
-
  */
+        // combination search and checkbox for inactive users
         if (searchTerm.isEmpty() && showInactiveUsers.getValue()) {
-            grid.setItems(userService.findAllUsers()); // alle User anzeigen
+            grid.setItems(userService.findAllUsers()); // all users (active + inactive)
         } else if (searchTerm.isEmpty() && !showInactiveUsers.getValue()) {
-            grid.setItems(userService.findAllActiveUsers()); // alle aktiven User anzeigen
+            grid.setItems(userService.findAllActiveUsers()); // only active users
         } else if (!searchTerm.isEmpty() && showInactiveUsers.getValue()) {
-            List<TUser> filteredUsers = userService.findAllUsersBySearchTerm(searchTerm); // Suche
-            grid.setItems(filteredUsers); // Suchergebnis in allen Usern anzeigen
+            List<TUser> filteredUsers = userService.findAllUsersBySearchTerm(searchTerm);
+            grid.setItems(filteredUsers); // all users (active + inactive) according to searchterm
         } else if (!searchTerm.isEmpty() && !showInactiveUsers.getValue()) {
             List<TUser> filteredUsers = userService.findActiveUsersBySearchTerm(searchTerm);
-            grid.setItems(filteredUsers); // Suchergebnis in aktiven Usern anzeigen
+            grid.setItems(filteredUsers); // all active users according to searchterm
         }
     }
     private Component getToolbar() {

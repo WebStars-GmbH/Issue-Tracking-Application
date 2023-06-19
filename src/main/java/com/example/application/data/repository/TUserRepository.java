@@ -28,7 +28,6 @@ public interface TUserRepository extends JpaRepository<TUser, Long> {
 
 
     // Suche searchterm caseinsensitiv in User entweder oder  (firstname, lastname, username, email, role, websites)
-
 /*    @Query("SELECT u FROM TUser u WHERE " +
             "(LOWER(u.firstname) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
             "LOWER(u.lastname) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
@@ -38,6 +37,8 @@ public interface TUserRepository extends JpaRepository<TUser, Long> {
             "EXISTS (SELECT r FROM u.role r WHERE LOWER(r.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
     List<TUser> searchBySearchTerm(@Param("searchTerm") String searchTerm);
  */
+
+    // casesensitive search by searchterm for active users
     @Query("SELECT u FROM TUser u WHERE " +
             "u.active = true AND " +
             "(LOWER(u.firstname) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
@@ -48,6 +49,7 @@ public interface TUserRepository extends JpaRepository<TUser, Long> {
             "EXISTS (SELECT r FROM u.role r WHERE u.active = true AND LOWER(r.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
     List<TUser> searchActiveBySearchTerm(@Param("searchTerm") String searchTerm);
 
+    // casesensitive search by searchterm for all (active + inactive) users
     @Query("SELECT u FROM TUser u WHERE " +
             "(LOWER(u.firstname) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
             "LOWER(u.lastname) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
@@ -57,6 +59,7 @@ public interface TUserRepository extends JpaRepository<TUser, Long> {
             "EXISTS (SELECT r FROM u.role r WHERE LOWER(r.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
     List<TUser> searchAllBySearchTerm(@Param("searchTerm") String searchTerm);
 
+    // search for active users
     @Query("SELECT t FROM TUser t " +
             "WHERE t.active = true")
     List<TUser> findTUsersActive();

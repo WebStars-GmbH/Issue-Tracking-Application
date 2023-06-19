@@ -62,7 +62,7 @@ public class TUserService {
     }
 */
 
-    // Suche nach in einem TUser entweder oder (firstname, lastname, username, email, role, websites)
+    // search in firstname, lastname, username, email, role or websites for ACTIVE users
     public List<TUser> findActiveUsersBySearchTerm(String searchTerm) {
         if (searchTerm == null || searchTerm.isEmpty()) {
             return tUserRepository.findTUsersActive();
@@ -71,6 +71,7 @@ public class TUserService {
         }
     }
 
+    // search in firstname, lastname, username, email, role or websites for ALL users (active + inactive)
     public List<TUser> findAllUsersBySearchTerm(String searchTerm) {
         if (searchTerm == null || searchTerm.isEmpty()) {
             return tUserRepository.findAll();
