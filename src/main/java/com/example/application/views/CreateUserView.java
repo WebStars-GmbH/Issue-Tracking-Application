@@ -101,8 +101,8 @@ public class CreateUserView extends VerticalLayout {
         if (user == null) {
             closeEditor();
         } else {
-            if (user.getUsername() == MainLayout.username){
-                Notification notification = Notification.show("ERROR. You're trying to edit the logged in user.");
+            if (user.getUsername().equals(MainLayout.username)){
+                Notification notification = Notification.show("ERROR. You're trying to edit the logged in user: " + MainLayout.username);
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
                 closeEditor();
                 return;
@@ -182,7 +182,7 @@ public class CreateUserView extends VerticalLayout {
         closeEditor();
         UI.getCurrent().getPage().reload(); //Page needs to be reloaded for all changes to take place correctly
 
-        sUDservice.createUser(user);
+        //sUDservice.createUser(user);
         Notification notification = Notification
                 .show("User " + user.getUsername() + " updated!");
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
