@@ -20,6 +20,8 @@ public class TicketViewTest {
     @Autowired
     private TicketView ticketView;
 
+
+
     @Test
     public void formShownWhenContactSelected() {
         Grid<Ticket> grid = ticketView.grid;
