@@ -41,6 +41,9 @@ public class MainLayout extends AppLayout {
 
         String u = securityService.getAuthenticatedUser().getUsername();
         Button logout = new Button("Log out " + u, e -> securityService.logout());
+        Boolean enabled = securityService.getAuthenticatedUser().isEnabled();
+
+        if (!enabled) return;
 
         var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
 
@@ -65,7 +68,7 @@ public class MainLayout extends AppLayout {
             ));
         } else  {
             addToDrawer(new VerticalLayout(
-                    //                    new RouterLink("Dashboard", DashboardView.class),
+                    new RouterLink("Dashboard", DashboardView.class),
                     new RouterLink("Tickets", CompanyTicketView.class),
                     new RouterLink("Users", CreateUserView.class),
                     new RouterLink("Teams", TeamView.class),

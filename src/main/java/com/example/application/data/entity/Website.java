@@ -2,6 +2,7 @@ package com.example.application.data.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import org.hibernate.annotations.Formula;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -80,6 +81,26 @@ public class Website extends AbstractEntity{
     @Override
     public String toString() {
         return website_name;
+    }
+
+    @Formula("(select count(t.id) from Ticket t where t.website_id = id)")
+    private int ticketsCount;
+
+    @Formula("(select count(t.id) from Ticket t where t.website_id = id and lower(t.status) not like lower('Solved') and lower(t.status) not like lower('Cancelled'))")
+    private int openTicketsCount;
+
+    @Formula("(select count(t.id) from Ticket t where t.website_id = id and lower(t.status) like lower('Solved'))")
+    private int solvedTicketsCount;
+    public int getTicketsCount(){
+        return ticketsCount;
+    }
+
+    public int getOpenTicketsCount(){
+        return openTicketsCount;
+    }
+
+    public int getSolvedTicketsCount(){
+        return solvedTicketsCount;
     }
 
 }

@@ -20,7 +20,7 @@ public class SecurityUserDetailsService implements UserDetailsService  {
         TUser user = tuserRepository.findByUsername(username).get();
         System.out.println("retrieved user:" + user.getUsername() +
                 user.getPassword());
-        return new MyUserPrincipal(user);
+        return new MyUserPrincipal(user, user.isActive());
     }
     public void createUser(TUser user) {
 

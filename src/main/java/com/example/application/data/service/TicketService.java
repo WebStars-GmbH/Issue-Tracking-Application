@@ -69,6 +69,10 @@ public class TicketService {
         return ticketRepository.searchByStatusWebsiteDescription(statusFilter, websiteFilter, descriptionFilter);
     }
 
+    public List<Ticket> findAllOpenTickets(){
+        return ticketRepository.searchByOpenStatus();
+    }
+
 
     public Ticket getTicket(Long id){
         return ticketRepository.getTicketById(id);
