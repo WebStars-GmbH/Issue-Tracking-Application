@@ -11,6 +11,7 @@ import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -45,17 +46,17 @@ public class UserTicketView extends VerticalLayout {
     CrmService service;
     TicketService ticketService;
 
-    Grid.Column<Ticket> statusColumn = grid.addColumn(Ticket::getStatus).setHeader("Status").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> headerColumn = grid.addColumn(Ticket::getHeader).setHeader("Header").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> descriptionColumn = grid.addColumn(Ticket::getDescription).setHeader("Description").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> historyColumn = grid.addColumn(Ticket::getHistory).setHeader("History").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> solutionColumn = grid.addColumn(Ticket::getSolution).setHeader("Solution").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> websiteColumn = grid.addColumn(Ticket::getWebsite).setHeader("Website").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> registeredByColumn = grid.addColumn(Ticket::getRegistered_by).setHeader("Registered By").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> registerDateColumn = grid.addColumn(Ticket::getRegister_date).setHeader("Register Date").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> lastUpdateColumn = grid.addColumn(Ticket::getLast_update).setHeader("Last Update").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> closedDateColumn = grid.addColumn(Ticket::getClose_date).setHeader("Closed Date").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> closedByColumn = grid.addColumn(Ticket::getClosed_by).setHeader("Closed By").setSortable(true).setResizable(true);
+    Grid.Column<Ticket> statusColumn;
+    Grid.Column<Ticket> headerColumn;
+    Grid.Column<Ticket> descriptionColumn;
+    Grid.Column<Ticket> historyColumn;
+    Grid.Column<Ticket> solutionColumn;
+    Grid.Column<Ticket> websiteColumn;
+    Grid.Column<Ticket> registeredByColumn;
+    Grid.Column<Ticket> registerDateColumn;
+    Grid.Column<Ticket> lastUpdateColumn;
+    Grid.Column<Ticket> closedDateColumn;
+    Grid.Column<Ticket> closedByColumn;
 
 
     public UserTicketView(CrmService service, TicketService ticketService) {
@@ -103,7 +104,20 @@ public class UserTicketView extends VerticalLayout {
         grid.setSizeFull();
 
 
-        grid.setColumns("status", "header", "description", "history", "solution", "website", "registered_by", "register_date", "last_update", "close_date", "closed_by");
+        grid.setColumns();
+
+
+        statusColumn = grid.addColumn(Ticket::getStatus).setHeader("Status").setSortable(true).setResizable(true);
+        headerColumn = grid.addColumn(Ticket::getHeader).setHeader("Header").setSortable(true).setResizable(true);
+        descriptionColumn = grid.addColumn(Ticket::getDescription).setHeader("Description").setSortable(true).setResizable(true);
+        historyColumn = grid.addColumn(Ticket::getHistory).setHeader("History").setSortable(true).setResizable(true);
+        solutionColumn = grid.addColumn(Ticket::getSolution).setHeader("Solution").setSortable(true).setResizable(true);
+        websiteColumn = grid.addColumn(Ticket::getWebsite).setHeader("Website").setSortable(true).setResizable(true);
+        registeredByColumn = grid.addColumn(Ticket::getRegistered_by).setHeader("Ticket Owner").setSortable(true).setResizable(true);
+        registerDateColumn = grid.addColumn(Ticket::getRegister_date).setHeader("Register Date").setSortable(true).setResizable(true);
+        lastUpdateColumn = grid.addColumn(Ticket::getLast_update).setHeader("Last Update").setSortable(true).setResizable(true);
+        closedDateColumn = grid.addColumn(Ticket::getClose_date).setHeader("Closed Date").setSortable(true).setResizable(true);
+        closedByColumn = grid.addColumn(Ticket::getClosed_by).setHeader("Closed By").setSortable(true).setResizable(true);
 
         grid.setColumnReorderingAllowed(true);
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
@@ -115,10 +129,8 @@ public class UserTicketView extends VerticalLayout {
         grid.asSingleSelect().addValueChangeListener(event -> viewTicket(event.getValue()));
 
         List<Ticket> ticket = ticketService.findAllTicketsByRegisteredBy(MainLayout.username);
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT, GridVariant.LUMO_ROW_STRIPES);
         grid.setItems(ticket);
-/*
-        Span title = new Span("Tickets");
-        title.getStyle().set("font-weight", "bold");*/
         add(grid);
     }
     private Component getToolbar() {
