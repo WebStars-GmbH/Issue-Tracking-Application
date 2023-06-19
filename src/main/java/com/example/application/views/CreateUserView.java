@@ -10,6 +10,7 @@ import com.example.application.data.service.WebsiteService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -21,6 +22,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import jakarta.annotation.security.PermitAll;
+import org.hibernate.annotations.Check;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,6 +38,7 @@ import java.util.stream.Collectors;
 @PageTitle("Create User")
 public class CreateUserView extends VerticalLayout {
     Grid<TUser> grid = new Grid<>(TUser.class);
+    Checkbox showInactiveUsers = new Checkbox();
     TextField filterText = new TextField();
     CreateUserForm form;
     TUserService userService;
@@ -60,6 +63,7 @@ public class CreateUserView extends VerticalLayout {
         add(getToolbar(), getContent());
         updateList();
         closeEditor();
+
     }
 
 
@@ -192,14 +196,32 @@ public class CreateUserView extends VerticalLayout {
     private void updateList() {
         String searchTerm = filterText.getValue().trim(); // Abrufen des Suchbegriffs
 
+/*
         if (searchTerm.isEmpty()) {
             grid.setItems(userService.findAllUsers()); // alle Anzeigen
         } else {
             List<TUser> filteredUsers = userService.findUsersBySearchTerm(searchTerm); // Suche
             grid.setItems(filteredUsers);
         }
+
+ */
+        if (searchTerm.isEmpty() && showInactiveUsers.getValue()) {
+            grid.setItems(userService.findAllUsers()); // alle User anzeigen
+        } else if (searchTerm.isEmpty() && !showInactiveUsers.getValue()) {
+            grid.setItems(userService.findAllActiveUsers()); // alle aktiven User anzeigen
+        } else if (!searchTerm.isEmpty() && showInactiveUsers.getValue()) {
+            List<TUser> filteredUsers = userService.findAllUsersBySearchTerm(searchTerm); // Suche
+            grid.setItems(filteredUsers); // Suchergebnis in allen Usern anzeigen
+        } else if (!searchTerm.isEmpty() && !showInactiveUsers.getValue()) {
+            List<TUser> filteredUsers = userService.findActiveUsersBySearchTerm(searchTerm);
+            grid.setItems(filteredUsers); // Suchergebnis in aktiven Usern anzeigen
+        }
     }
     private Component getToolbar() {
+        showInactiveUsers.setLabel("show inactive users");
+        add(showInactiveUsers);
+        showInactiveUsers.addValueChangeListener(e -> updateList());
+
         filterText.setPlaceholder("search...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
@@ -218,4 +240,6 @@ public class CreateUserView extends VerticalLayout {
         TUser user = new TUser();
         editUser(user);
     }
+
+
 }

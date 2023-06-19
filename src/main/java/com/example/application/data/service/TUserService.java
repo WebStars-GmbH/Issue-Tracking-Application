@@ -22,6 +22,8 @@ public class TUserService {
         return tUserRepository.findAll();
     }
 
+    public List<TUser> findAllActiveUsers() { return tUserRepository.findTUsersActive(); }
+
     public TUser findUserById(Long id) {
         return tUserRepository.findById(id).orElse(null);
     }
@@ -49,7 +51,7 @@ public class TUserService {
         tUserRepository.deleteById(id);
     }
 
-
+/*
     // Suche nach in einem TUser entweder oder (firstname, lastname, username, email, role, websites)
     public List<TUser> findUsersBySearchTerm(String searchTerm) {
         if (searchTerm == null || searchTerm.isEmpty()) {
@@ -58,5 +60,25 @@ public class TUserService {
             return tUserRepository.searchBySearchTerm(searchTerm);
         }
     }
+*/
+
+    // Suche nach in einem TUser entweder oder (firstname, lastname, username, email, role, websites)
+    public List<TUser> findActiveUsersBySearchTerm(String searchTerm) {
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            return tUserRepository.findTUsersActive();
+        } else {
+            return tUserRepository.searchActiveBySearchTerm(searchTerm);
+        }
+    }
+
+    public List<TUser> findAllUsersBySearchTerm(String searchTerm) {
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            return tUserRepository.findAll();
+        } else {
+            return tUserRepository.searchAllBySearchTerm(searchTerm);
+        }
+    }
+
+
 }
 
