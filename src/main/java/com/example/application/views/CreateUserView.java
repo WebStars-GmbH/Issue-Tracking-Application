@@ -22,7 +22,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import jakarta.annotation.security.PermitAll;
-import org.hibernate.annotations.Check;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -148,6 +147,7 @@ public class CreateUserView extends VerticalLayout {
                     websiteService.saveWebsite(w);
                 }
             }
+            UI.getCurrent().getPage().reload(); //Page needs to be reloaded for all changes to take place correctly
         }
     }
     private void saveUser(CreateUserForm.SaveEvent event) {
@@ -178,13 +178,11 @@ public class CreateUserView extends VerticalLayout {
         }
 
         userService.saveUser(user);
-        updateWebsites(user);
-
         updateList();
         closeEditor();
-        UI.getCurrent().getPage().reload(); //Page needs to be reloaded for all changes to take place correctly
 
-        //sUDservice.createUser(user);
+        updateWebsites(user);
+
         Notification notification = Notification
                 .show("User " + user.getUsername() + " updated!");
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
