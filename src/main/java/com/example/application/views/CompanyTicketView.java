@@ -21,8 +21,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.value.ValueChangeMode;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
@@ -36,7 +35,7 @@ import java.util.List;
 @PermitAll
 @Route(value = "CompanyTicketView", layout = MainLayout.class)
 @PageTitle("Tickets | Webst@rs Ticketing Application")
-public class CompanyTicketView extends VerticalLayout {
+public class CompanyTicketView extends VerticalLayout implements HasUrlParameter<String> {
     Grid<Ticket> grid = new Grid<>(Ticket.class);
 
     TextField websiteFilterText = new TextField("Website");
@@ -67,6 +66,16 @@ public class CompanyTicketView extends VerticalLayout {
     Grid.Column<Ticket> closedDateColumn = grid.addColumn(Ticket::getClose_date).setHeader("Closed Date").setSortable(true).setResizable(true);
     Grid.Column<Ticket> closedByColumn = grid.addColumn(Ticket::getClosed_by).setHeader("Closed By").setSortable(true).setResizable(true);
 
+
+    @Override
+    public void setParameter(BeforeEvent event,
+                             @OptionalParameter String parameter) {
+        if (parameter == null) {
+            websiteFilterText.setValue("");
+        } else {
+            websiteFilterText.setValue(parameter);
+        }
+    }
 
     public CompanyTicketView(CrmService service, TicketService ticketService) {
         this.service = service;

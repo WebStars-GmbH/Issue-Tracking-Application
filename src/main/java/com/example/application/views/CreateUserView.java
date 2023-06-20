@@ -97,11 +97,13 @@ public class CreateUserView extends VerticalLayout {
         if (user == null) {
             closeEditor();
         } else {
-            if (user.getUsername().equals(MainLayout.username)){
-                Notification notification = Notification.show("ERROR. You're trying to edit the logged in user: " + MainLayout.username);
-                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-                closeEditor();
-                return;
+            if (user.getUsername() != null){
+                if (user.getUsername().equals(MainLayout.username)){
+                    Notification notification = Notification.show("ERROR. You're trying to edit the logged in user: " + MainLayout.username);
+                    notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                    closeEditor();
+                    return;
+                }
             }
             form.setUser(user);
             form.setVisible(true);

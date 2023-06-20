@@ -1,6 +1,5 @@
 package com.example.application.views;
 
-import com.example.application.data.entity.Ticket;
 import com.example.application.data.entity.Website;
 import com.example.application.data.service.CrmService;
 import com.example.application.data.service.TUserService;
@@ -12,13 +11,12 @@ import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
-
-import java.util.stream.Collectors;
 
 @SpringComponent
 @Scope("prototype")
@@ -29,6 +27,8 @@ public class WebsiteView extends VerticalLayout {
     Grid<Website> grid = new Grid<>(Website.class);
     WebsiteForm form;
     CrmService service;
+
+
     WebsiteService websiteService;
 
     TUserService tUserService;
@@ -96,15 +96,36 @@ public class WebsiteView extends VerticalLayout {
         grid.addClassNames("website-grid");
         grid.setSizeFull();
         grid.setColumns("website_name");
-        grid.addColumn(website -> website.getTeam().getName()).setHeader("Team").setSortable(true);
-        grid.addColumn(website -> website.getUser() == null ? "" : website.getUser().getUsername()).setHeader("Owner").setSortable(true);
+
+/*
         grid.addColumn(website -> website.getTickets().stream()
                         .map(Ticket::getHeader)
                         .collect(Collectors.joining(", ")))
                 .setHeader("Tickets");
+
+ */
+
+        grid.addColumn(
+                        LitRenderer.<Website>of(LIT_TEMPLATE_HTML)
+                                .withProperty("id", website -> website.getTicketsCount())
+                                .withFunction("clickHandler", website -> {
+                                    getUI().get().navigate(CompanyTicketView.class, website.getWebsite_name());
+                                }))
+                .setHeader("Tickets").setSortable(true);
+        //grid.addColumn(website -> website.getTicketsCount()).setHeader("Tickets").setSortable(true);
+        //grid.addColumn(website -> website.getOpenTicketsCount()).setHeader("Open Tickets").setSortable(true);
+        grid.addColumn(website -> website.getTeam().getName()).setHeader("Team").setSortable(true);
+        grid.addColumn(website -> website.getUser() == null ? "" : website.getUser().getUsername()).setHeader("Owner").setSortable(true);
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
         grid.asSingleSelect().addValueChangeListener(event -> editWebsite(event.getValue()));
     }
+
+    private static final String LIT_TEMPLATE_HTML = """
+            <vaadin-button title="Go to ..."
+                           @click="${clickHandler}"
+                           theme="tertiary-inline small link">
+                ${item.id}
+            </vaadin-button>""";
 
     private Component getToolbar() {
         Button addWebsiteButton = new Button("Add Website");
