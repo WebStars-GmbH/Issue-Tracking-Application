@@ -1,39 +1,56 @@
 package com.example.application.views;
 
+import com.example.application.data.entity.Ticket;
+import com.example.application.data.entity.Website;
+import com.example.application.data.service.*;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import jakarta.annotation.security.PermitAll;
 
+import java.util.List;
 
 
 @PermitAll
-@Route(value = "dashboard", layout = MainLayout.class) // <1>
+@Route(value = "dashboard", layout = MainLayout.class)
 @PageTitle("Dashboard | Webst@rs Ticketing Application")
 public class DashboardView extends VerticalLayout {
-    /*
+
     private final CrmService service;
     private final TicketService ticketService;
     private final TUserService tUserService;
     private final WebsiteService websiteService;
     private final TeamService teamService;
 
+    Grid<Website> grid = new Grid<>(Website.class);
 
-    public DashboardView(CrmService service, TicketService ticketService, TUserService tUserService, WebsiteService websiteService, TeamService teamService) { // <2>
+
+    public DashboardView(CrmService service, TicketService ticketService, TUserService tUserService, WebsiteService websiteService, TeamService teamService) {
         this.service = service;
         this.ticketService = ticketService;
         this.tUserService = tUserService;
         this.teamService = teamService;
         this.websiteService = websiteService;
 
-        addClassName("dashboard-view");
-        setDefaultHorizontalComponentAlignment(Alignment.CENTER); // <3>
 
-        add(getWebsitesAllTicketsChart(), getWebsitesOpenTicketsChart(), getWebsitesSolvedTicketsChart());
+
+        addClassName("dashboard-view");
+        //setDefaultHorizontalComponentAlignment(Alignment.CENTER);
+        setSizeFull();
+        add(getTicketStats(), getOpenSolvedTicketStats(), getCancelledTicketStats(), getWebsiteAndTicketStats());
+        grid.setItems(websiteService.getAllWebsites());
+
+        //TODO: chart components need a Vaadin Pro server license
+        //add(getWebsitesAllTicketsChart(), getWebsitesOpenTicketsChart(), getWebsitesSolvedTicketsChart());
     }
 
     private Component getTicketStats() {
-        Span allTickets = new Span(ticketService.countTickets() + " tickets"); // <4>
+        Span allTickets = new Span(ticketService.countTickets() + " tickets");
         allTickets.addClassNames(
                 LumoUtility.FontSize.XLARGE,
                 LumoUtility.Margin.Top.MEDIUM);
@@ -41,13 +58,56 @@ public class DashboardView extends VerticalLayout {
     }
 
     private Component getOpenSolvedTicketStats() {
-        Span openTickets = new Span(ticketService.findAllOpenTickets().size() + " open tickets\t" + ticketService.findAllTicketsByStatus("Solved").size() + " solved tickets "); // <4>
-        openTickets.addClassNames(
+        List<Ticket> openTickets = ticketService.findAllOpenTickets();
+        List<Ticket> solvedTickets = ticketService.findAllTicketsByStatus("Solved");
+        if (solvedTickets.size() == 0) return null;
+        Long averageSolveTime = Long.valueOf(0);
+        for (Ticket t: solvedTickets){
+            averageSolveTime += t.getTimeBetweenRegisteredAndSolved();
+        }
+        TimeUtil tu = new TimeUtil();
+        Span openTicketsStats = new Span(openTickets.size() + " open tickets. " + solvedTickets.size() + " solved tickets. Average solve time: " + tu.millisecondsToTimeFormat(averageSolveTime/solvedTickets.size()));
+        openTicketsStats.addClassNames(
                 LumoUtility.FontSize.XLARGE,
                 LumoUtility.Margin.Top.MEDIUM);
-        return openTickets;
+        return openTicketsStats;
     }
 
+    private Component getCancelledTicketStats() {
+        List<Ticket> cancelledTickets = ticketService.findAllTicketsByStatus("Cancelled");
+        if (cancelledTickets.size() == 0) return null;
+        Long averageCancelTime = Long.valueOf(0);
+        for (Ticket t: cancelledTickets){
+            averageCancelTime += t.getTimeBetweenRegisteredAndCancelled();
+        }
+        TimeUtil tu = new TimeUtil();
+
+        Span cancelledTicketsStats = new Span(cancelledTickets.size() + " cancelled tickets. Average cancel time: " + tu.millisecondsToTimeFormat(averageCancelTime/cancelledTickets.size()));
+        cancelledTicketsStats.addClassNames(
+                LumoUtility.FontSize.XLARGE,
+                LumoUtility.Margin.Top.MEDIUM);
+        return cancelledTicketsStats;
+    }
+
+    private HorizontalLayout getWebsiteAndTicketStats() {
+        HorizontalLayout content = new HorizontalLayout(grid);
+        grid.addClassNames("website-grid");
+        grid.setSizeFull();
+        grid.setColumns("website_name");
+        grid.addColumn(website -> website.getTicketsCount()).setHeader("Tickets").setSortable(true);
+        grid.addColumn(website -> website.getOpenTicketsCount()).setHeader("Open Tickets").setSortable(true);
+        grid.addColumn(website -> website.getSolvedTicketsCount()).setHeader("Solved Tickets").setSortable(true);
+        grid.addColumn(website -> website.getAverageSolveTimeString()).setHeader("Average Solve Time").setSortable(true);
+        grid.getColumns().forEach(col -> col.setAutoWidth(true));
+        content.setFlexGrow(2, grid);
+        content.addClassNames("content");
+        content.setSizeFull();
+        return content;
+    }
+
+
+    //TODO Some beautiful charts...
+    /*
     private Chart getWebsitesOpenTicketsChart() {
         Chart chart = new Chart(ChartType.PIE);
         // Modify the default configuration a bit
@@ -99,6 +159,6 @@ public class DashboardView extends VerticalLayout {
 
         return chart;
     }
+*/
 
-     */
 }

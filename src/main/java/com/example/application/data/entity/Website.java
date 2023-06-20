@@ -1,5 +1,6 @@
 package com.example.application.data.entity;
 
+import com.example.application.data.service.TimeUtil;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.Formula;
@@ -101,6 +102,24 @@ public class Website extends AbstractEntity{
 
     public int getSolvedTicketsCount(){
         return solvedTicketsCount;
+    }
+
+    public long getAverageSolveTime(){
+        Long averageSolveTime = Long.valueOf(0);
+        int solvedTicketsCount = 0;
+        for (Ticket t : this.tickets){
+            if (t.getStatus().equals("Solved")) {
+                averageSolveTime += t.getTimeBetweenRegisteredAndSolved();
+                solvedTicketsCount += 1;
+            }
+        }
+        if (solvedTicketsCount == 0) return 0;
+        else return averageSolveTime/solvedTicketsCount;
+    }
+
+    public String getAverageSolveTimeString(){
+        TimeUtil tu = new TimeUtil();
+        return tu.millisecondsToTimeFormat(this.getAverageSolveTime());
     }
 
 }

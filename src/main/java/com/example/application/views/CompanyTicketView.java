@@ -174,7 +174,7 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         grid.setSizeFull();
 
 
-        grid.setColumns("priority", "status", "header", "description", "history", "solution", "website", "registered_by", "assigned_to", "register_date", "last_update", "close_date", "closed_by");
+        grid.setColumns("priority", "status", "header", "description", "history", "solution", "website", "registered_by", "assigned_to", "assign_date", "register_date", "last_update", "close_date", "closed_by");
 
         grid.setColumnReorderingAllowed(true);
         grid.getColumns().forEach(col -> col.setAutoWidth(true));

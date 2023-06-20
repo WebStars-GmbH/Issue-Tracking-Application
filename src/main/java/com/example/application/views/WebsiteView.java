@@ -96,15 +96,12 @@ public class WebsiteView extends VerticalLayout {
         grid.addClassNames("website-grid");
         grid.setSizeFull();
         grid.setColumns("website_name");
-
 /*
         grid.addColumn(website -> website.getTickets().stream()
                         .map(Ticket::getHeader)
                         .collect(Collectors.joining(", ")))
                 .setHeader("Tickets");
-
  */
-
         grid.addColumn(
                         LitRenderer.<Website>of(LIT_TEMPLATE_HTML)
                                 .withProperty("id", website -> website.getTicketsCount())
@@ -112,8 +109,7 @@ public class WebsiteView extends VerticalLayout {
                                     getUI().get().navigate(CompanyTicketView.class, website.getWebsite_name());
                                 }))
                 .setHeader("Tickets").setSortable(true);
-        //grid.addColumn(website -> website.getTicketsCount()).setHeader("Tickets").setSortable(true);
-        //grid.addColumn(website -> website.getOpenTicketsCount()).setHeader("Open Tickets").setSortable(true);
+        grid.addColumn(website -> website.getAverageSolveTimeString()).setHeader("Average Solve Time").setSortable(true);
         grid.addColumn(website -> website.getTeam().getName()).setHeader("Team").setSortable(true);
         grid.addColumn(website -> website.getUser() == null ? "" : website.getUser().getUsername()).setHeader("Owner").setSortable(true);
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
@@ -144,7 +140,6 @@ public class WebsiteView extends VerticalLayout {
             form.setWebsite(ticket);
             form.setVisible(true);
             addClassName("editing");
-
         }
     }
 
