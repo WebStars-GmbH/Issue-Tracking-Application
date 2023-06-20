@@ -144,6 +144,22 @@ public class CompanyTicketView extends VerticalLayout {
         closeEditor();
     }
 
+    private void ConfirmAndDeletePermanently(Ticket ticket){
+        closeEditor();
+        ConfirmDialog dialog = new ConfirmDialog();
+        dialog.setHeader("Do you want to delete this ticket?");
+        dialog.setText("Are you sure you want to delete this ticket?");
+        dialog.setCancelable(true);
+        dialog.setConfirmText("Delete Ticket");
+        dialog.setConfirmButtonTheme("error primary");
+        dialog.addConfirmListener(event -> {
+            ticketService.deleteTicket(ticket);
+            updateList();
+            form.setTicket(null);
+            form.setVisible(false);});
+        dialog.open();
+    }
+
     private void configureGrid() {
         grid.addClassNames("ticket-grid");
         grid.setSizeFull();
@@ -158,6 +174,7 @@ public class CompanyTicketView extends VerticalLayout {
         menu.addItem("View Details", event -> viewTicket(event.getItem().get()));
         menu.addItem("Edit Ticket", event -> editTicket(event.getItem().get()));
         menu.addItem("Delete Ticket", event -> ConfirmAndDelete(event.getItem().get()));
+        if (MainLayout.userRole.getRole_name().equals("System-Admin")) menu.addItem("Delete Ticket Permanently (System Admin)", event -> ConfirmAndDeletePermanently(event.getItem().get()));
         grid.asSingleSelect().addValueChangeListener(event -> viewTicket(event.getValue()));
         grid.addItemDoubleClickListener(event -> editTicket(event.getItem()));
 
@@ -285,6 +302,10 @@ public class CompanyTicketView extends VerticalLayout {
         if (ticket == null) {
             closeEditor();
         } else {
+            if (ticket.getStatus().equals("Solved") || ticket.getStatus().equals("Cancelled")){
+                Notification notification = Notification.show("This ticket cannot be edited. Status: " + ticket.getStatus());
+                return;
+            }
             closeEditor();
             ticket = ticketService.getTicket(ticket.getId());
             form.setTicket(ticket);

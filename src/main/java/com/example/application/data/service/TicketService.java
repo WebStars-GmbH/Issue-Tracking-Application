@@ -2,6 +2,7 @@ package com.example.application.data.service;
 
 import com.example.application.data.entity.Ticket;
 import com.example.application.data.repository.TicketRepository;
+import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import org.springframework.stereotype.Service;
@@ -124,7 +125,14 @@ public class TicketService {
 
             //Check if status has changed to assigned or solved, and update the timestamps accordingly
             if (!oldTicket.getStatus().equals("Assigned") && ticket.getStatus().equals("Assigned")) {ticket.setAssign_date(timestamp);}
-            if (!oldTicket.getStatus().equals("Solved") && ticket.getStatus().equals("Solved")) {ticket.setClose_date(timestamp);}
+            if (!oldTicket.getStatus().equals("Solved") && ticket.getStatus().equals("Solved")) {
+                ticket.setClose_date(timestamp);
+                ticket.setClosed_by(MainLayout.username);
+                addToHistory(ticket, "\nAssign time in seconds: " + ticket.getTimeBetweenAssignedAndSolved());
+                addToHistory(ticket, "\nSolve time in seconds: " + ticket.getTimeBetweenRegisteredAndSolved());
+                addToHistory(ticket, "\nSolve time: " + ticket.getTimeBetweenRegisteredAndSolvedAsString());
+                addToHistory(ticket, "\nSolved by " + ticket.getClosed_by());
+            }
         }
 
         ticketRepository.save(ticket);
