@@ -14,6 +14,15 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
+//user angelegt (password):
+// user
+// admin
+// member0
+// coordinator
+// manager
+
+import java.util.List;
+
 public class MainLayout extends AppLayout {
     private final SecurityService securityService;
     public TUserService tUserService;
@@ -41,9 +50,6 @@ public class MainLayout extends AppLayout {
 
         String u = securityService.getAuthenticatedUser().getUsername();
         Button logout = new Button("Log out " + u, e -> securityService.logout());
-        Boolean enabled = securityService.getAuthenticatedUser().isEnabled();
-
-        if (!enabled) return;
 
         var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
 
@@ -63,12 +69,11 @@ public class MainLayout extends AppLayout {
 
         if (userRoleEntity.getRole_name().equals("Customer")) {
             addToDrawer(new VerticalLayout(
-//                    new RouterLink("Dashboard", DashboardView.class),
+                    new RouterLink("Dashboard", DashboardView.class),
                     new RouterLink("Tickets", UserTicketView.class)
             ));
         } else  {
             addToDrawer(new VerticalLayout(
-                    new RouterLink("Contacts", ListView.class),
                     new RouterLink("Dashboard", DashboardView.class),
                     new RouterLink("Tickets", CompanyTicketView.class),
                     new RouterLink("Users", CreateUserView.class),

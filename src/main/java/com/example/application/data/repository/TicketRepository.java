@@ -42,10 +42,31 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "where lower(t.registered_by) like lower(concat('%', :registeredFilter, '%'))")
     List<Ticket> searchByRegisteredBy(@Param("registeredFilter") String registeredFilter);
 
-    @Query ("select t from Ticket t " +
-            "where lower(t.registered_by) like lower(concat('%', :registeredFilter, '%')) " +
-            "and lower(t.status) like lower(concat('%', :statusFilter, '%')) ")
-    List<Ticket> searchByRegisteredByStatus(@Param("registeredFilter") String registeredFilter, @Param("statusFilter") String statusFilter);
+    @Query("SELECT t FROM Ticket t " +
+            "WHERE lower(t.assigned_to.username) = lower(:assignedFilter) " +
+            "AND lower(t.status) IN (lower(:statusFilter1), lower(:statusFilter2), lower(:statusFilter3))")
+    List<Ticket> searchByAssignedToAndStatus(@Param("assignedFilter") String assignedFilter,
+                                             @Param("statusFilter1") String statusFilter1,
+                                             @Param("statusFilter2") String statusFilter2,
+                                             @Param("statusFilter3") String statusFilter3);
+
+    @Query("select t from Ticket t " +
+            "where lower(t.status) IN (lower(:statusFilter1), lower(:statusFilter2), lower(:statusFilter3))")
+    List<Ticket> searchByStatus(@Param("statusFilter1") String statusFilter1,
+                                @Param("statusFilter2") String statusFilter2,
+                                @Param("statusFilter3") String statusFilter3);
+
+    @Query("select t from Ticket t " +
+            "where lower(t.status) like lower(concat('%', :searchTerm, '%'))")
+    List<Ticket> searchWithStatus(@Param("searchTerm") String searchTerm);
+
+    @Query("SELECT t FROM Ticket t " +
+            "WHERE lower(t.registered_by) = lower(:registeredFilter) " +
+            "AND lower(t.status) IN (lower(:statusFilter1), lower(:statusFilter2), lower(:statusFilter3))")
+    List<Ticket> searchByRegisteredByStatus(@Param("registeredFilter") String registeredFilter,
+                                            @Param("statusFilter1") String statusFilter1,
+                                            @Param("statusFilter2") String statusFilter2,
+                                            @Param("statusFilter3") String statusFilter3);
 
     @Query("select t from Ticket t " +
             "where t.id = :searchTerm")
