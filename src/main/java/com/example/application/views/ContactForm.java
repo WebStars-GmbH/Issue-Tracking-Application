@@ -10,6 +10,7 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
@@ -68,10 +69,21 @@ public class ContactForm extends FormLayout {
 
   private void validateAndSave() {
     if(binder.isValid()) {
-      fireEvent(new SaveEvent(this, binder.getBean())); // <6>
+      ConfirmAndSave(); // <6>
     }
   }
 
+  private void ConfirmAndSave(){
+    ConfirmDialog dialog = new ConfirmDialog();
+    dialog.setHeader("Save contact?");
+    dialog.setText("Are you sure you want to save this contact?");
+    dialog.setCancelable(true);
+    dialog.setConfirmText("Yes");
+    dialog.setCancelText("No");
+    dialog.setConfirmButtonTheme("error primary");
+    dialog.addConfirmListener(event -> fireEvent(new ContactForm.SaveEvent(this, binder.getBean())));
+    dialog.open();
+  }
 
   public void setContact(Contact contact) {
     binder.setBean(contact); // <1>

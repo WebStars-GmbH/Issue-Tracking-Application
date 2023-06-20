@@ -96,22 +96,36 @@ public class TicketService {
             System.err.println("Ticket is null. Are you sure you have connected your form to the application?");
             return;
         }
+
+        //Save last update timestamp
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         ticket.setLast_update(timestamp);
         String timestampString = new SimpleDateFormat("yyyy.MM.dd HH:mm").format(timestamp);
         String u = com.example.application.views.MainLayout.username;
-        //addToHistory(ticket, "---Begin of Entry--- ");
+
         addToHistory(ticket, timestampString + "\tModified by: " + u + " \n");
         addToHistory(ticket, "Status: " + ticket.getStatus() + "\tPriority: " + ticket.getPriority());
-        if (ticket.getAssigned_to() != null) addToHistory(ticket,"\tAssigned to " + ticket.getAssigned_to().getUsername());
-        if (ticket.getDescription().length() > 1) {
-            String DescrStr = ticket.getDescription().replaceAll("(\\r|\\n)", "\t");
-            addToHistory(ticket, "\nNotes: '" + DescrStr + "'");}
-        if (ticket.getStatus() == "Solved" && ticket.getSolution().length() > 1) {
-            String SolutStr = ticket.getSolution().replaceAll("(\\r|\\n)", "\t");
-            addToHistory(ticket, "\nSolution: '" + SolutStr + "'");}
-        addToHistory(ticket, "\n\n");
-        //addToHistory(ticket, "\n---End of Entry---\n\n");
+
+        //Check if the ticket already exists
+        Ticket oldTicket = ticketRepository.getTicketById(ticket.getId());
+        if (oldTicket != null) {
+            if (ticket.getAssigned_to() != null) addToHistory(ticket,"\tAssigned to " + ticket.getAssigned_to().getUsername());
+
+            //If description has changed, add line with description to history
+            if (!oldTicket.getDescription().equals(ticket.getDescription()) && ticket.getDescription().length() > 1) {
+                String DescrStr = ticket.getDescription().replaceAll("(\\r|\\n)", "\t");
+                addToHistory(ticket, "\nNotes: '" + DescrStr + "'");}
+
+            //If ticket is solved, add line with solution to history
+            if (!oldTicket.getSolution().equals(ticket.getSolution()) && ticket.getSolution().length() > 1) {
+                String SolutStr = ticket.getSolution().replaceAll("(\\r|\\n)", "\t");
+                addToHistory(ticket, "\nSolution: '" + SolutStr + "'");}
+            addToHistory(ticket, "\n\n");
+
+            //Check if status has changed to assigned or solved, and update the timestamps accordingly
+            if (!oldTicket.getStatus().equals("Assigned") && ticket.getStatus().equals("Assigned")) {ticket.setAssign_date(timestamp);}
+            if (!oldTicket.getStatus().equals("Solved") && ticket.getStatus().equals("Solved")) {ticket.setClose_date(timestamp);}
+        }
 
         ticketRepository.save(ticket);
         Notification notification = Notification
