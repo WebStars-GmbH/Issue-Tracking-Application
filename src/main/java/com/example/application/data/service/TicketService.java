@@ -145,7 +145,19 @@ public class TicketService {
         ticket.setHistory(ticket.getHistory() + string);
     }
 
-    public List<Ticket> searchTicketsByStatus(String name, String status) {
-        return ticketRepository.searchByRegisteredByStatus(name, status);
+    public List<Ticket> searchTicketsByStatus(String name, String status1, String status2, String status3) {
+        return ticketRepository.searchByRegisteredByStatus(name, status1, status2, status3);
+    }
+
+    public List<Ticket> findAllTicketsByStatus(String status1, String status2, String status3) {
+        return ticketRepository.searchByStatus(status1, status2, status3);
+    }
+
+    public List<Ticket> findAllTicketsByAssignedToAndStatus(String username, String status1, String status2, String status3) {
+        return ticketRepository.searchByAssignedToAndStatus(username, status1, status2, status3);
+    }
+
+    public List<Ticket> searchTicketsByUserAndStatus(String name, String status1, String status2, String status3) {
+        return ticketRepository.searchByRegisteredByStatus(name, status1, status2, status3);
     }
 }
