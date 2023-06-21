@@ -1,6 +1,6 @@
 package com.example.application.data.entity;
 
-import com.example.application.data.service.TimeUtil;
+import com.example.application.data.service.TimeFormatUtility;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.Formula;
@@ -118,8 +118,7 @@ public class Website extends AbstractEntity{
     }
 
     public String getAverageSolveTimeString(){
-        TimeUtil tu = new TimeUtil();
-        return tu.millisecondsToTimeFormat(this.getAverageSolveTime());
+        return TimeFormatUtility.millisecondsToTimeFormat(this.getAverageSolveTime());
     }
 
 }

@@ -109,6 +109,7 @@ public class CreateUserView extends VerticalLayout {
                     closeEditor();
                     return;
                 }
+                user = userService.findUserById(user.getId()); //reset user data
             }
             form.setUser(user);
             form.setVisible(true);

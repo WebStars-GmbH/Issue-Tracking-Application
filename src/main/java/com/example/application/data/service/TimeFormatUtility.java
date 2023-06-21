@@ -1,7 +1,7 @@
 package com.example.application.data.service;
 
-public class TimeUtil {
-    public String millisecondsToTimeFormat(long milliseconds){
+public class TimeFormatUtility {
+    public static String millisecondsToTimeFormat(long milliseconds){
         if (milliseconds == 0) return "";
         int seconds = (int)(milliseconds / 1000);
         int minutes = seconds / 60;

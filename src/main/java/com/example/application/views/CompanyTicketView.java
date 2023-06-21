@@ -366,7 +366,7 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         ticket.setStatus("Registered");
         String u = MainLayout.username;
-        TUser tuser = service.getTUserByUsername(u);
+
         ticket.setRegistered_by(u);
         ticket.setRegister_date(timestamp);
         ticket.setLast_update(timestamp);

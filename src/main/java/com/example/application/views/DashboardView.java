@@ -65,7 +65,7 @@ public class DashboardView extends VerticalLayout {
         for (Ticket t: solvedTickets){
             averageSolveTime += t.getTimeBetweenRegisteredAndSolved();
         }
-        TimeUtil tu = new TimeUtil();
+        TimeFormatUtility tu = new TimeFormatUtility();
         Span openTicketsStats = new Span(openTickets.size() + " open tickets. " + solvedTickets.size() + " solved tickets. Average solve time: " + tu.millisecondsToTimeFormat(averageSolveTime/solvedTickets.size()));
         openTicketsStats.addClassNames(
                 LumoUtility.FontSize.XLARGE,
@@ -80,7 +80,7 @@ public class DashboardView extends VerticalLayout {
         for (Ticket t: cancelledTickets){
             averageCancelTime += t.getTimeBetweenRegisteredAndCancelled();
         }
-        TimeUtil tu = new TimeUtil();
+        TimeFormatUtility tu = new TimeFormatUtility();
 
         Span cancelledTicketsStats = new Span(cancelledTickets.size() + " cancelled tickets. Average cancel time: " + tu.millisecondsToTimeFormat(averageCancelTime/cancelledTickets.size()));
         cancelledTicketsStats.addClassNames(
