@@ -202,14 +202,5 @@ public class Ticket extends AbstractEntity{
         return (this.last_update.getTime() - this.register_date.getTime());
     }
 
-    public String getTimeBetweenRegisteredAndSolvedAsString(){
-        if (close_date == null) return null;
-        long milliseconds = this.close_date.getTime() - this.register_date.getTime();
-        int seconds = (int)(milliseconds / 1000);
-        int minutes = seconds / 60;
-        int hours = minutes / 60;
-        int days = hours / 24;
-        return (days + " days, " + (hours-(days*24)) + " hours, " + (minutes-(hours*60)) + " minutes, " + (seconds-(minutes*60)) + " seconds");
-    }
 }
 

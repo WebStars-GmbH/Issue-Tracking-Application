@@ -14,7 +14,6 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -198,6 +197,7 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         menu.addItem("View Details", event -> viewTicket(event.getItem().get()));
         menu.addItem("Edit Ticket", event -> editTicket(event.getItem().get()));
         menu.addItem("Delete Ticket", event -> ConfirmAndDelete(event.getItem().get()));
+        if (MainLayout.userRole.getRole_name().equals("System-Admin")) menu.addItem("Delete Ticket Permanently (System Admin)", event -> ConfirmAndDeletePermanently(event.getItem().get()));
         grid.asSingleSelect().addValueChangeListener(event -> viewTicket(event.getValue()));
         grid.addItemDoubleClickListener(event -> editTicket(event.getItem()));
 
@@ -366,12 +366,12 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         ticket.setStatus("Registered");
         String u = MainLayout.username;
-        TUser tuser = service.getTUserByUsername(u);//TODO
+        TUser tuser = service.getTUserByUsername(u);
         ticket.setRegistered_by(u);
         ticket.setRegister_date(timestamp);
         ticket.setLast_update(timestamp);
         String timestampString = new SimpleDateFormat("yyyy.MM.dd.HH.mm").format(timestamp);
-        ticket.setHistory(timestampString + ": created by " + u + "; "); //TODO
+        ticket.setHistory(timestampString + ": created by " + u + "; \n");
     }
 
 
