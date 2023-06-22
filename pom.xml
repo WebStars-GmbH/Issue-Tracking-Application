@@ -117,7 +117,7 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>prepare-frontend</goal>
+
                         </goals>
                     </execution>
                 </executions>
