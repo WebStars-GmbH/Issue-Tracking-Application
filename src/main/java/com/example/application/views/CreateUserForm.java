@@ -16,6 +16,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -26,6 +27,8 @@ import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.shared.Registration;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -33,7 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 
 @Component
-public class CreateUserForm extends FormLayout {
+public class CreateUserForm extends FormLayout  {
 
     TextField firstName = new TextField("First name");
     TextField lastName = new TextField("Last name");
