@@ -14,6 +14,15 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
+//user angelegt (password):
+// user
+// admin
+// member0
+// coordinator
+// manager
+
+import java.util.List;
+
 public class MainLayout extends AppLayout {
     private final SecurityService securityService;
     public TUserService tUserService;

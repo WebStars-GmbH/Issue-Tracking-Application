@@ -15,6 +15,8 @@ import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -56,6 +58,7 @@ public class CreateUserView extends VerticalLayout {
     private final SecurityUserDetailsService sUDservice;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     public CreateUserView(TUserService userService, WebsiteService websiteService, RoleService roleService, SecurityUserDetailsService sUDservice) {
         this.userService = userService;
@@ -182,6 +185,7 @@ public class CreateUserView extends VerticalLayout {
             user.setPasswordConfirm(newPassword);
         }
 
+
         userService.saveUser(user);
         updateWebsites(user);
 
@@ -201,10 +205,16 @@ public class CreateUserView extends VerticalLayout {
         closeEditor();
     }
     private void updateList() {
+        String searchTerm = filterText.getValue().trim(); // Abrufen des Suchbegriffs
+
+        if (searchTerm.isEmpty()) {
+            grid.setItems(userService.findAllUsers()); // alle Anzeigen
+        } else {
+            List<TUser> filteredUsers = userService.findUsersBySearchTerm(searchTerm); // Suche
+            grid.setItems(filteredUsers);
+        }
         //Update List according to Checkboxes active users/inactive users
         grid.setItems(userService.findAllActiveUsers());
-
-        String searchTerm = filterText.getValue().trim(); // Abrufen des Suchbegriffs
 
         if (searchTerm.isEmpty()) {
             grid.setItems(userService.findAllUsers()); // alle Anzeigen
@@ -234,6 +244,7 @@ public class CreateUserView extends VerticalLayout {
 
     }
     private Component getToolbar() {
+        filterText.setPlaceholder("search...");
         /*
         Checkboxes active/inactive users
         showActiveInactiveUsers.setLabel("show");

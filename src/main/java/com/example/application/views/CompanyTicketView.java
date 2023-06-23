@@ -12,10 +12,12 @@ import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -53,19 +55,19 @@ public class CompanyTicketView extends VerticalLayout {
     TicketService ticketService;
 
 
-    Grid.Column<Ticket> priorityColumn = grid.addColumn(Ticket::getPriority).setHeader("Priority").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> statusColumn = grid.addColumn(Ticket::getStatus).setHeader("Status").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> headerColumn = grid.addColumn(Ticket::getHeader).setHeader("Header").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> descriptionColumn = grid.addColumn(Ticket::getDescription).setHeader("Description").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> historyColumn = grid.addColumn(Ticket::getHistory).setHeader("History").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> solutionColumn = grid.addColumn(Ticket::getSolution).setHeader("Solution").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> websiteColumn = grid.addColumn(Ticket::getWebsite).setHeader("Website").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> registeredByColumn = grid.addColumn(Ticket::getRegistered_by).setHeader("Registered By").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> assignedToColumn = grid.addColumn(Ticket::getAssigned_to).setHeader("Assigned To").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> registerDateColumn = grid.addColumn(Ticket::getRegister_date).setHeader("Register Date").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> lastUpdateColumn = grid.addColumn(Ticket::getLast_update).setHeader("Last Update").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> closedDateColumn = grid.addColumn(Ticket::getClose_date).setHeader("Closed Date").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> closedByColumn = grid.addColumn(Ticket::getClosed_by).setHeader("Closed By").setSortable(true).setResizable(true);
+    Grid.Column<Ticket> priorityColumn;
+    Grid.Column<Ticket> statusColumn;
+    Grid.Column<Ticket> headerColumn;
+    Grid.Column<Ticket> descriptionColumn;
+    Grid.Column<Ticket> historyColumn;
+    Grid.Column<Ticket> solutionColumn;
+    Grid.Column<Ticket> websiteColumn;
+    Grid.Column<Ticket> registeredByColumn;
+    Grid.Column<Ticket> assignedToColumn;
+    Grid.Column<Ticket> registerDateColumn;
+    Grid.Column<Ticket> lastUpdateColumn;
+    Grid.Column<Ticket> closedDateColumn;
+    Grid.Column<Ticket> closedByColumn;
 
 
     public CompanyTicketView(CrmService service, TicketService ticketService) {
@@ -149,7 +151,21 @@ public class CompanyTicketView extends VerticalLayout {
         grid.setSizeFull();
 
 
-        grid.setColumns("priority", "status", "header", "description", "history", "solution", "website", "registered_by", "assigned_to", "register_date", "last_update", "close_date", "closed_by");
+        grid.setColumns();
+
+        priorityColumn = grid.addColumn(Ticket::getPriority).setHeader("Priority").setSortable(true).setResizable(true);
+        statusColumn = grid.addColumn(Ticket::getStatus).setHeader("Status").setSortable(true).setResizable(true);
+        headerColumn = grid.addColumn(Ticket::getHeader).setHeader("Header").setSortable(true).setResizable(true);
+        descriptionColumn = grid.addColumn(Ticket::getDescription).setHeader("Description").setSortable(true).setResizable(true);
+        historyColumn = grid.addColumn(Ticket::getHistory).setHeader("History").setSortable(true).setResizable(true);
+        solutionColumn = grid.addColumn(Ticket::getSolution).setHeader("Solution").setSortable(true).setResizable(true);
+        websiteColumn = grid.addColumn(Ticket::getWebsite).setHeader("Website").setSortable(true).setResizable(true);
+        registeredByColumn = grid.addColumn(Ticket::getRegistered_by).setHeader("Ticket Owner").setSortable(true).setResizable(true);
+        assignedToColumn = grid.addColumn(ticket -> ticket.getAssigned_to() == null ? "" : ticket.getAssigned_to().getUsername()).setHeader("Assigned to").setSortable(true).setResizable(true);
+        registerDateColumn = grid.addColumn(Ticket::getRegister_date).setHeader("Register Date").setSortable(true).setResizable(true);
+        lastUpdateColumn = grid.addColumn(Ticket::getLast_update).setHeader("Last Update").setSortable(true).setResizable(true);
+        closedDateColumn = grid.addColumn(Ticket::getClose_date).setHeader("Closed Date").setSortable(true).setResizable(true);
+        closedByColumn = grid.addColumn(Ticket::getClosed_by).setHeader("Closed By").setSortable(true).setResizable(true);
 
         grid.setColumnReorderingAllowed(true);
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
@@ -164,8 +180,7 @@ public class CompanyTicketView extends VerticalLayout {
         List<Ticket> ticket = ticketService.findAllTicketsByRegisteredBy(MainLayout.username);
         grid.setItems(ticket);
 
-        Span title = new Span("Tickets");
-        title.getStyle().set("font-weight", "bold");
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT, GridVariant.LUMO_ROW_STRIPES);
         add(grid);
     }
 
@@ -179,7 +194,7 @@ public class CompanyTicketView extends VerticalLayout {
         statusFilterText.setPlaceholder("Filter by status...");
         statusFilterText.setClearButtonVisible(true);
         statusFilterText.setValueChangeMode(ValueChangeMode.LAZY);
-        statusFilterText.addValueChangeListener(e -> updateListByStatus());
+        statusFilterText.addValueChangeListener(e -> updateListWithStatus());
 
         descriptionFilterText.setPlaceholder("Filter by description...");
         descriptionFilterText.setTooltipText("Please type what the description should contain...");
@@ -189,7 +204,7 @@ public class CompanyTicketView extends VerticalLayout {
 
         statusComboBox.setItems("Registered", "Assigned", "In progress", "Cancelled", "Solved");
         statusComboBox.setTooltipText("Please choose the status of the tickets you want to look for...");
-        statusComboBox.addValueChangeListener(e -> updateListByStatus());
+        statusComboBox.addValueChangeListener(e -> updateListWithStatus());
 
         List<TUser> users = service.findAllTUsersByRole("Support-Member");
         assignedToComboBox.setTooltipText("Please choose the assigned users you want to look for...");
@@ -197,14 +212,14 @@ public class CompanyTicketView extends VerticalLayout {
         assignedToComboBox.setItemLabelGenerator(TUser::getUsername);
         assignedToComboBox.addValueChangeListener(e -> updateListByAssignedTo());
 
-        Button myOpenTicketsButton = new Button("My Assigned Tickets");
-        //   myOpenTicketsButton.addClickListener(click -> updateListByStatus(MainLayout.username, "Registered"));
+        Button myAssignedTicketsButton = new Button("My Assigned Tickets");
+        myAssignedTicketsButton.addClickListener(click -> updateListAssignedToAndByStatus(MainLayout.username, "Registered", "NULL", "NULL"));
 
-        Button myClosedTicketsButton = new Button("My To-Do Tickets");
-        //   myClosedTicketsButton.addClickListener(click -> updateListByStatus(MainLayout.username, "Closed"));
+        Button myToDoTicketsButton = new Button("My To-Do Tickets");
+        myToDoTicketsButton.addClickListener(click -> updateListAssignedToAndByStatus(MainLayout.username, "Assigned", "In progress", "Registered"));
 
         Button allMyTicketsButton = new Button("All My Tickets");
-        //   allTicketsButton.addClickListener(click -> updateListByRegistered(MainLayout.username));
+        allMyTicketsButton.addClickListener(click -> updateListByAssignedToMe());
 
         Button allTicketsButton = new Button("All Tickets");
         allTicketsButton.addClickListener(click -> updateList());
@@ -219,10 +234,13 @@ public class CompanyTicketView extends VerticalLayout {
         applyAllFiltersButton.addClickListener(click -> updateListByAllFilters());
 
         Button registeredButton = new Button("Registered Tickets");
-        registeredButton.addClickListener(click -> updateListByStatusRegistered());
+        registeredButton.addClickListener(click -> updateListByStatus("Registered", "NULL", "NULL"));
 
         Button allAssignedButton = new Button("All Assigned Tickets");
-        allAssignedButton.addClickListener(click -> updateListByStatus());
+        allAssignedButton.addClickListener(click -> updateListByStatus("Assigned", "NULL", "NULL"));
+
+        Button allOpenTicketsButton = new Button("All Open Tickets");
+        allOpenTicketsButton.addClickListener(click -> updateListByStatus("Assigned", "In progress", "Registered"));
 
 
         Button menuButton = new Button("Show/Hide");
@@ -243,21 +261,28 @@ public class CompanyTicketView extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("Closed By", closedByColumn);
 
 
+        HorizontalLayout headerLayout = new HorizontalLayout(clearFieldsButton, descriptionFilterText, statusFilterText, websiteFilterText, assignedToComboBox, addTicketButton, menuButton);
+        headerLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
+        headerLayout.addClassName("seerch-row");
+
         HorizontalLayout toolbar;
         if (String.valueOf(MainLayout.userRole).equals("System-Admin")) {
-            toolbar = new HorizontalLayout(clearFieldsButton, descriptionFilterText, statusFilterText, websiteFilterText, assignedToComboBox, allTicketsButton, addTicketButton, menuButton);
+            toolbar = new HorizontalLayout(myAssignedTicketsButton, myToDoTicketsButton, allMyTicketsButton, allTicketsButton, registeredButton, allAssignedButton, allOpenTicketsButton);
         } else if (String.valueOf(MainLayout.userRole).equals("Support-Member")) {
-            toolbar = new HorizontalLayout(clearFieldsButton, descriptionFilterText, statusFilterText, websiteFilterText, assignedToComboBox, myOpenTicketsButton, myClosedTicketsButton, allMyTicketsButton, allTicketsButton, addTicketButton, menuButton);
+            toolbar = new HorizontalLayout(myAssignedTicketsButton, myToDoTicketsButton, allMyTicketsButton, allOpenTicketsButton, allTicketsButton);
         } else if (String.valueOf(MainLayout.userRole).equals("Support-Coordinator")) {
-            toolbar = new HorizontalLayout(clearFieldsButton, descriptionFilterText, statusFilterText, websiteFilterText, assignedToComboBox, allAssignedButton, allTicketsButton, addTicketButton, menuButton);
+            toolbar = new HorizontalLayout(registeredButton, allOpenTicketsButton);
         } else if (String.valueOf(MainLayout.userRole).equals("Manager")) {
-            toolbar = new HorizontalLayout(descriptionFilterText, allTicketsButton, addTicketButton, menuButton);
+            toolbar = new HorizontalLayout(descriptionFilterText, allTicketsButton, addTicketButton);
         } else {
             toolbar = new HorizontalLayout(menuButton);
         }
-        toolbar.setAlignItems(Alignment.BASELINE);
         toolbar.addClassName("toolbar");
-        return toolbar;
+
+        VerticalLayout verticalToolbar = new VerticalLayout(headerLayout, toolbar);
+        verticalToolbar.setAlignItems(Alignment.BASELINE);
+        verticalToolbar.addClassName("verticalToolbar");
+        return verticalToolbar;
     }
 
     private void clearFields() {
@@ -326,17 +351,23 @@ public class CompanyTicketView extends VerticalLayout {
     private void updateListByWebsite() {
         grid.setItems(ticketService.findAllTickets(websiteFilterText.getValue()));
     }
-    private void updateListByStatus() {
-        if (statusComboBox.getValue() != null) grid.setItems(ticketService.findAllTicketsByStatus(statusComboBox.getValue()));
+    private void updateListWithStatus() {
+        if (statusComboBox.getValue() != null) grid.setItems(ticketService.findAllTicketsWithStatus(statusComboBox.getValue()));
     }
-    private void updateListByStatusRegistered() {
-        grid.setItems(ticketService.findAllTicketsByStatus("Registered"));
+    private void updateListByStatus(String status1, String status2, String status3) {
+        grid.setItems(ticketService.findAllTicketsByStatus(status1, status2, status3));
     }
     private void updateListByDescription() {
         grid.setItems(ticketService.findAllTicketsByDescription(descriptionFilterText.getValue()));
     }
     private void updateListByAssignedTo() {
         if (assignedToComboBox.getValue() != null) grid.setItems(ticketService.findAllTicketsByAssignedTo(assignedToComboBox.getValue().getUsername()));
+    }
+    private void updateListByAssignedToMe() {
+        grid.setItems(ticketService.findAllTicketsByAssignedTo(MainLayout.username));
+    }
+    private void updateListAssignedToAndByStatus(String username, String status1, String status2, String status3) {
+        grid.setItems(ticketService.findAllTicketsByAssignedToAndStatus(username, status1, status2, status3));
     }
 
     private void updateListByAllFilters() {
@@ -381,5 +412,4 @@ public class CompanyTicketView extends VerticalLayout {
         grid.setItems(ticketService.findAllTickets(""));
     }
 
-    //use to show only records for a certain user, function above has to be deleted
 }
