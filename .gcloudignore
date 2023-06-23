@@ -12,5 +12,3 @@ vendor/
 node_modules/
 extension/
 tests/
-.*.sh
-.*.md
