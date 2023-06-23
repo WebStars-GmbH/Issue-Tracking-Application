@@ -72,10 +72,10 @@ public class CreateUserForm extends FormLayout {
             if (!EmailCheckUtility.isValid(email.getValue())) email.setHelperText("Not a valid email address...");
             else email.setHelperText("");
 
-            if (!password.getValue().equals(passwordConfirm.getValue())) password.setHelperText("Passwords don't match");
+            if (!password.getValue().equals(passwordConfirm.getValue())) passwordConfirm.setHelperText("Passwords don't match");
             else password.setHelperText("");
 
-            if (!binder.isValid()) save.setText("...");
+            if (!binder.isValid() || !password.getValue().equals(passwordConfirm.getValue())) save.setText("...");
             else save.setText("Save");
         });
 
