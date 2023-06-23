@@ -16,10 +16,14 @@ import org.springframework.context.annotation.Scope;
 public class LandingPage extends VerticalLayout  {
 
     public LandingPage() {
+
+
         //Image from resources
-        Image logo = new Image("images/logo.png", "Webst@rs Ticketing Application Logo");
+        Image logo = new Image("images/webstarsRobotpng.png", "Webst@rs Ticketing Application Logo");
         // adapt width to the available space
-        logo.setMaxWidth("100%");
+        logo.setMaxWidth("80%");
+        logo.setSizeFull();
         add(logo);
     }
 }
+
