@@ -85,7 +85,7 @@ public class UserTicketView extends VerticalLayout {
         viewDetailsForm.setWidth("70em");
         viewDetailsForm.addCloseListener(e -> closeEditor()); // <3>
 
-        addForm = new TicketAddForm(service.getAllWebsitesByUsername(MainLayout.username), service.findAllTUsers("Support-Member"));
+        addForm = new TicketAddForm(service.getAllWebsitesByUsername(MainLayout.username));
         addForm.setWidth("70em");
         addForm.addSaveListener(this::saveAddTicket); // <1>
         addForm.addCloseListener(e -> closeEditor()); // <3>

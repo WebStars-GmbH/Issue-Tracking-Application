@@ -1,6 +1,5 @@
 package com.example.application.views;
 
-import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Ticket;
 import com.example.application.data.entity.Website;
 import com.vaadin.flow.component.ComponentEvent;
@@ -32,7 +31,7 @@ public class TicketAddForm extends FormLayout {
     Button close = new Button("Cancel");
     Binder<Ticket> binder = new BeanValidationBinder<>(Ticket.class);
 
-    public TicketAddForm(List<Website> websites, List<TUser>users) {
+    public TicketAddForm(List<Website> websites) {
 
         header.setMinLength(1);
         header.setMaxLength(50);

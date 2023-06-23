@@ -3,6 +3,7 @@ package com.example.application.views;
 import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Ticket;
 import com.example.application.data.service.CrmService;
+import com.example.application.data.service.TUserService;
 import com.example.application.data.service.TicketService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -51,6 +52,7 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
     TicketDetailsForm viewDetailsForm;
     CrmService service;
     TicketService ticketService;
+    TUserService tUserService;
 
 
     Grid.Column<Ticket> priorityColumn;
@@ -77,9 +79,10 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         }
     }
 
-    public CompanyTicketView(CrmService service, TicketService ticketService) {
+    public CompanyTicketView(CrmService service, TicketService ticketService, TUserService tUserService) {
         this.service = service;
         this.ticketService = ticketService;
+        this.tUserService = tUserService;
         addClassName("ticket-view");
         setSizeFull();
         configureGrid();
@@ -106,7 +109,7 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         form.addDeleteListener(this::deleteTicket); // <2>
         form.addCloseListener(e -> closeEditor()); // <3>
 
-        addForm = new TicketAddForm(service.findAllWebsites(), service.findAllTUsers("Support-Member"));
+        addForm = new TicketAddForm(service.findAllWebsites());
         addForm.setWidth("70em");
         addForm.addSaveListener(this::saveAddTicket); // <1>
         addForm.addCloseListener(e -> closeEditor()); // <3>
@@ -195,8 +198,29 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
 
         GridContextMenu<Ticket> menu = grid.addContextMenu();
         menu.addItem("View Details", event -> viewTicket(event.getItem().get()));
-        menu.addItem("Edit Ticket", event -> editTicket(event.getItem().get()));
-        menu.addItem("Delete Ticket", event -> ConfirmAndDelete(event.getItem().get()));
+        menu.addItem("Edit Ticket", event -> {
+                    Ticket t = event.getItem().isPresent() ? event.getItem().get() : null;
+                    if (t == null) return;
+                    if (MainLayout.userRole.getRole_name().equals("System-Admin") || MainLayout.userRole.getRole_name().equals("Support-Coordinator")) editTicket(t);
+                    else if (t.getAssigned_to() != null && t.getAssigned_to().getUsername().equals(MainLayout.username)) editTicket(t);
+                    else {
+                        Notification n = Notification.show("This ticket is not assigned to you. Editing is not allowed.");
+                        n.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                    }
+                }
+        );
+        menu.addItem("Delete Ticket",
+            event -> {
+                Ticket t = event.getItem().isPresent() ? event.getItem().get() : null;
+                if (t == null) return;
+                if (MainLayout.userRole.getRole_name().equals("System-Admin") || MainLayout.userRole.getRole_name().equals("Support-Coordinator")) ConfirmAndDelete(t);
+                else if (t.getAssigned_to() != null && t.getAssigned_to().getUsername().equals(MainLayout.username)) ConfirmAndDelete(t);
+                else {
+                    Notification n = Notification.show("This ticket is not assigned to you. Deleting is not allowed.");
+                    n.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                }
+            }
+        );
         if (MainLayout.userRole.getRole_name().equals("System-Admin")) menu.addItem("Delete Ticket Permanently (System Admin)", event -> ConfirmAndDeletePermanently(event.getItem().get()));
         grid.asSingleSelect().addValueChangeListener(event -> viewTicket(event.getValue()));
         grid.addItemDoubleClickListener(event -> editTicket(event.getItem()));
@@ -338,7 +362,10 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
                 return;
             }
             closeEditor();
+
             ticket = ticketService.getTicket(ticket.getId());
+            //TICKETFORM: UNCOMMENT, IF YOU WANT TO FILTER SUPPORT-MEMBERS BY TEAMS ASSIGNED TO THE WEBSITE, OTHERWISE ALL SUPPORT-MEMBERS WILL BE SHOWN
+            form.updateAssignedTo(tUserService.findUsersByTeam(ticket.getWebsite().getTeam()));
             form.setTicket(ticket);
             form.setVisible(true);
             addClassName("editing");
