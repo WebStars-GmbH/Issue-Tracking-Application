@@ -12,7 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Use the @PWA annotation make the application installable on phones, tablets
  * and some desktop browsers.
  *
- * 
+ *
  */
 @SpringBootApplication
 @Theme(value = "flowcrmtutorial")
