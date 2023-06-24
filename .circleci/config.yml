@@ -35,7 +35,7 @@ jobs:
     executor: gcp-gcr/default
     machine:
       image: ubuntu-2004:202010-01
-      
+
     steps:
       - checkout
       - run:
@@ -45,6 +45,7 @@ jobs:
             echo ${GCP_PROJECT_KEY} | base64 --decode --ignore-garbage > $HOME/gcloud-service-key.json
             echo 'export GOOGLE_CLOUD_KEYS=$(cat $HOME/gcloud-service-key.json)' >> $BASH_ENV
             echo 'export TAG=$CIRCLE_SHA1' >> $BASH_ENV
+            mvn -Dvaadin.offlineKey='eyJraWQiOiI1NDI3NjRlNzAwMDkwOGU2NWRjM2ZjMWRhYmY0ZTJjZDI4OTY2NzU4IiwidHlwIjoiSldUIiwiYWxnIjoiRVM1MTIifQ.eyJhbGxvd2VkUHJvZHVjdHMiOlsidmFhZGluLWNvbGxhYm9yYXRpb24tZW5naW5lIiwidmFhZGluLXRlc3RiZW5jaCIsInZhYWRpbi1kZXNpZ25lciIsInZhYWRpbi1jaGFydCIsInZhYWRpbi1ib2FyZCIsInZhYWRpbi1jb25maXJtLWRpYWxvZyIsInZhYWRpbi1jb29raWUtY29uc2VudCIsInZhYWRpbi1yaWNoLXRleHQtZWRpdG9yIiwidmFhZGluLWdyaWQtcHJvIiwidmFhZGluLW1hcCIsInZhYWRpbi1zcHJlYWRzaGVldC1mbG93IiwidmFhZGluLWNydWQiLCJ2YWFkaW4tY2xhc3NpYy1jb21wb25lbnRzIiwidmFhZGluLXBvcnRsZXQiLCJ2YWFkaW4tb3NnaSIsInZhYWRpbi1kc3B1Ymxpc2hlciIsImZsb3ctcG9seW1lci10ZW1wbGF0ZSJdLCJzdWIiOiJmYWQxYmExYS0zYWUyLTQxMzYtYjczNS1mMGViNTcxNThjM2EiLCJ2ZXIiOjEsImlzcyI6IlZhYWRpbiIsIm5hbWUiOiJNYXJ0aW4gU2VwcGkiLCJhbGxvd2VkRmVhdHVyZXMiOlsiY2VydGlmaWNhdGlvbnMiLCJzcHJlYWRzaGVldCIsInRlc3RiZW5jaCIsImRlc2lnbmVyIiwiY2hhcnRzIiwiYm9hcmQiLCJhcHBzdGFydGVyIiwicHJpbWUtcHJvZHVjdHMtMjAyMjEwIiwidmlkZW90cmFpbmluZyIsInByby1wcm9kdWN0cy0yMDIyMTAiXSwibWFjaGluZV9pZCI6bnVsbCwic3Vic2NyaXB0aW9uIjoiVmFhZGluIFBybyBMZWdhY3kgVHJpYWwiLCJidWlsZF90eXBlcyI6WyJwcm9kdWN0aW9uIl0sImV4cCI6MTcxODkyODAwMCwiaWF0IjoxNjg3NTQ3MzU1LCJhY2NvdW50IjoiTWFuYWdlbWVudCBDZW50ZXIgSW5uc2JydWNrIn0.AXIVs-CsaLDzSRK6R1n8MkNtYRgvEIrAk-G6N5-VmGmnDbwsTScJpn6Tk-jpA9r-o86DWTJwlr7Uk2vuJZEfbPYWAI7Yv70SatwhUFqdulMWUlcBRpGLfGyxdPjW_PC4FOWjl-Ko-6nzyTM7Nk40Xpa6wnsK84hYCzwWolhfXXQaAPPy' $MAVEN_CLI_OPTS clean package -Pproduction -e
       - gcp-gcr/gcr-auth
       - gcp-gcr/build-image:
           dockerfile: Dockerfile
