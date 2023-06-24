@@ -1,0 +1,12 @@
+runtime: java
+env: flex
+runtime_config:
+  operating_system: ubuntu22
+  runtime_version: 17
+handlers:
+  - url: /.*
+    script: this field is required, but ignored
+
+automatic_scaling:
+  min_num_instances: 1
+  max_num_instances: 7
