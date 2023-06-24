@@ -42,7 +42,7 @@ public class DashboardView extends VerticalLayout {
         addClassName("dashboard-view");
         //setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         setSizeFull();
-        add(getTicketStats(), getOpenSolvedTicketStats(), getCancelledTicketStats(), getWebsiteAndTicketStats());
+        add(getTicketStats(), getOpenSolvedTicketStats(), getCancelledTicketStats(), getRatiosSolvedCancelledinClosed(), getWebsiteAndTicketStats());
         grid.setItems(websiteService.getAllWebsites());
 
         //TODO: chart components need a Vaadin Pro server license
@@ -88,6 +88,19 @@ public class DashboardView extends VerticalLayout {
                 LumoUtility.Margin.Top.MEDIUM);
         return cancelledTicketsStats;
     }
+
+    private Component getRatiosSolvedCancelledinClosed() {
+        List<Ticket> solvedTickets = ticketService.findAllTicketsByStatus("Solved");
+        List<Ticket> cancelledTickets = ticketService.findAllTicketsByStatus("Cancelled");
+        var ratioSolvedInClosed = (float) solvedTickets.size() / ((float) solvedTickets.size() + (float) cancelledTickets.size());
+        var ratioCancelledInClosed = (float) cancelledTickets.size() / ((float) solvedTickets.size() + (float) cancelledTickets.size());
+        Span ratioSolvedVsCancelledTickets = new Span(ratioSolvedInClosed + "% of the closed tickets are solved. " + ratioCancelledInClosed + "% of the closed tickets are cancelled.");
+        ratioSolvedVsCancelledTickets.addClassNames(
+                LumoUtility.FontSize.XLARGE,
+                LumoUtility.Margin.Top.MEDIUM);
+        return ratioSolvedVsCancelledTickets;
+    }
+
 
     private HorizontalLayout getWebsiteAndTicketStats() {
         HorizontalLayout content = new HorizontalLayout(grid);
