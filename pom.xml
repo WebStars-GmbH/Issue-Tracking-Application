@@ -40,6 +40,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>com.google.cloud.sql</groupId>
+                <artifactId>postgres-socket-factory</artifactId>
+                <version>1.12.0</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -48,6 +54,11 @@
             <groupId>com.vaadin</groupId>
             <!-- Replace artifactId with vaadin-core to use only free components -->
             <artifactId>vaadin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.cloud.sql</groupId>
+            <artifactId>postgres-socket-factory</artifactId>
+            <version>1.12.0</version>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
@@ -63,6 +74,7 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+
 
 
         <dependency>
@@ -111,6 +123,16 @@
                     <maxAttempts>240</maxAttempts>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>2.4.4</version>
+                <configuration>
+                    <projectId>webstars-389315</projectId>
+                    <version>GCLOUD_CONFIG</version>
+                </configuration>
+
+            </plugin>
 
             <plugin>
                 <groupId>com.vaadin</groupId>
@@ -144,6 +166,7 @@
                     </exclusions>
                 </dependency>
 
+
             </dependencies>
             <build>
                 <plugins>
@@ -160,6 +183,11 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <plugin>
+                        <groupId>com.google.cloud.tools</groupId>
+                        <artifactId>appengine-maven-plugin</artifactId>
+                        <version>2.4.4</version>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -168,6 +196,11 @@
             <id>it</id>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>com.google.cloud.tools</groupId>
+                        <artifactId>appengine-maven-plugin</artifactId>
+                        <version>2.4.4</version>
+                    </plugin>
                     <plugin>
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -188,6 +221,8 @@
                             </execution>
                         </executions>
                     </plugin>
+
+
 
                     <!-- Runs the integration tests (*IT) after the server is started -->
                     <plugin>
