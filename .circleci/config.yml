@@ -60,7 +60,7 @@ jobs:
       - cloudrun/deploy:
           platform: 'managed'
           image: 'gcr.io/$GOOGLE_PROJECT_ID/$CIRCLE_WORKFLOW_ID'
-          service-name: 'issue-tracking-application'
+          service-name: 'vaadin-ui-service'
           region: 'europe-west1'
           unauthenticated: true
 workflows:
@@ -74,5 +74,6 @@ workflows:
       - build_push_image_gcr:
           requires:
             - build
+
 
 
