@@ -7,14 +7,12 @@ executors:
   gcloud-executor:
     docker:
       - image: google/cloud-sdk
-      - platform: linux/amd64
   machine-executor:
     machine: true
 jobs:
   build:
     docker:
       - image: maven:3.8.1-openjdk-17-slim
-      - platform: linux/amd64
     environment:
       MAVEN_CLI_OPTS: "--batch-mode"
     steps:
@@ -53,7 +51,6 @@ jobs:
           registry-url: "gcr.io"
           image: $CIRCLE_WORKFLOW_ID
           tag: "latest"
-
       - gcp-gcr/push-image:
           google-project-id: GOOGLE_PROJECT_ID
           image: $CIRCLE_WORKFLOW_ID
