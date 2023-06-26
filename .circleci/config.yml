@@ -59,10 +59,10 @@ jobs:
       - checkout
       - cloudrun/init
       - cloudrun/build:
-            tag: gcr.io/$GOOGLE_PROJECT_ID/$CIRCLE_WORKFLOW_ID
+            tag: gcr.io/${GOOGLE_PROJECT_ID}
       - cloudrun/deploy:
           platform: managed
-          image: gcr.io/$GOOGLE_PROJECT_ID/$CIRCLE_WORKFLOW_ID
+          image: gcr.io/${GOOGLE_PROJECT_ID}
           service-name: vaadin-ui-service
           region: europe-west6
           unauthenticated: true
