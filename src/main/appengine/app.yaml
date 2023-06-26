@@ -2,6 +2,7 @@ runtime: java
 env: flex
 runtime_config:
   runtime_version: 17
+
 handlers:
   - url: /.*
     script: this field is required, but ignored
