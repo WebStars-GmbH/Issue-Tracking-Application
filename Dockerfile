@@ -12,14 +12,14 @@ USER myuser
 
 # Copy pom.xml and prefetch dependencies so a repeated build can continue from the next step with existing dependencies
 COPY --chown=myuser pom.xml ./
-RUN mvn dependency:go-offline -Pproduction -Dvaadin.offlineKey=VAADIN_OFFLINE_KEY
+RUN mvn dependency:go-offline -Pproduction -Dvaadin.proKey=<prenner.products@gmail.com>/<pro-a2a283a4-f629-477c-8bb1-61322f7e44cb>
 
 # Copy all needed project files to a folder
 COPY --chown=myuser:myuser src src
 COPY --chown=myuser:myuser frontend frontend
 
 # Build the production package, assuming that we validated the version before so no need for running tests again.
-RUN mvn clean package -DskipTests -Pproduction -Dvaadin.offlineKey=VAADIN_OFFLINE_KEY
+RUN mvn clean package -DskipTests -Pproduction -Dvaadin.proKey=<prenner.products@gmail.com>/<pro-a2a283a4-f629-477c-8bb1-61322f7e44cb>
 
 # Running stage: the part that is used for running the application
 FROM maven:3.8.1-openjdk-17-slim
