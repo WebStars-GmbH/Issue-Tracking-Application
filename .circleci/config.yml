@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   gcp-gcr: circleci/gcp-gcr@0.15.0
-  cloudrun: circleci/gcp-cloud-run@x.y
+  cloudrun: circleci/gcp-cloud-run@1.0.1
   gcp-cli: circleci/gcp-cli@2.1
 executors:
   gcloud-executor:
