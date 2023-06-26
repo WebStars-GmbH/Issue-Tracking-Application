@@ -30,5 +30,4 @@ COPY --from=build /usr/src/app/target/*.jar /usr/app/app.jar
 RUN useradd -m myuser
 USER myuser
 EXPOSE 8080
-ENV PORT 8080 ENV HOST 0.0.0.0
 CMD java -jar /usr/app/app.jar
