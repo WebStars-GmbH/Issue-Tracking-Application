@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   gcp-gcr: circleci/gcp-gcr@0.15.0
-  cloudrun: circleci/gcp-cloud-run@1.0.1
+  cloudrun: circleci/gcp-cloud-run@x.y
   gcp-cli: circleci/gcp-cli@2.1
 executors:
   gcloud-executor:
@@ -58,11 +58,13 @@ jobs:
           tag: "latest"
       - checkout
       - cloudrun/init
+      - cloudrun/build:
+            tag: gcr.io/$GOOGLE_PROJECT_ID/$CIRCLE_WORKFLOW_ID
       - cloudrun/deploy:
-          platform: 'managed'
-          image: 'gcr.io/$GOOGLE_PROJECT_ID/$CIRCLE_WORKFLOW_ID'
-          service-name: 'vaadin-ui-service'
-          region: 'europe-west6'
+          platform: managed
+          image: gcr.io/$GOOGLE_PROJECT_ID/$CIRCLE_WORKFLOW_ID
+          service-name: vaadin-ui-service
+          region: europe-west6
           unauthenticated: true
 workflows:
   version: 2
