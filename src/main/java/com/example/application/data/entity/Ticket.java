@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity
 public class Ticket extends AbstractEntity{
@@ -53,8 +54,8 @@ public class Ticket extends AbstractEntity{
     public Ticket(){}
 
     //Getters and Setters
-    public Timestamp getRegister_date() {
-        return register_date;
+    public LocalDate getRegister_date() {
+        return register_date.toLocalDateTime().toLocalDate();
     }
 
     public void setRegister_date(Timestamp register_date) {
@@ -77,24 +78,27 @@ public class Ticket extends AbstractEntity{
         this.header = header;
     }
 
-    public Timestamp getAssign_date() {
-        return assign_date;
+    public LocalDate getAssign_date() {
+        return assign_date.toLocalDateTime().toLocalDate();
     }
 
     public void setAssign_date(Timestamp assign_date) {
         this.assign_date = assign_date;
     }
 
-    public Timestamp getClose_date() {
-        return close_date;
+    public LocalDate getClose_date() {
+        if (close_date == null) {
+            return null;
+        }
+        return close_date.toLocalDateTime().toLocalDate();
     }
 
     public void setClose_date(Timestamp close_date) {
         this.close_date = close_date;
     }
 
-    public Timestamp getLast_update() {
-        return last_update;
+    public LocalDate getLast_update() {
+        return last_update.toLocalDateTime().toLocalDate();
     }
 
     public void setLast_update(Timestamp last_update) {
