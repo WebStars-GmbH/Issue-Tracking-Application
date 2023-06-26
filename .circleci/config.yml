@@ -56,7 +56,6 @@ jobs:
           image: $CIRCLE_WORKFLOW_ID
           registry-url: "gcr.io"
           tag: "latest"
-
 workflows:
   version: 2
   workflow:
