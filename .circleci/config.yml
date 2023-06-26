@@ -51,6 +51,7 @@ jobs:
           registry-url: "gcr.io"
           image: $CIRCLE_WORKFLOW_ID
           tag: "latest"
+          build-args: '--platform linux/amd64 -t {project-name}'
       - gcp-gcr/push-image:
           google-project-id: GOOGLE_PROJECT_ID
           image: $CIRCLE_WORKFLOW_ID
@@ -60,7 +61,7 @@ jobs:
       - cloudrun/deploy:
           platform: 'managed'
           image: 'gcr.io/$GOOGLE_PROJECT_ID/$CIRCLE_WORKFLOW_ID'
-          service-name: 'vaadin-ui-service'
+          service-name: 'webstarsrun'
           region: 'europe-west6'
           unauthenticated: true
 workflows:
