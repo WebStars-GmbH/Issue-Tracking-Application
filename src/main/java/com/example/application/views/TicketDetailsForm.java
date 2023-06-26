@@ -9,6 +9,8 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -79,7 +81,16 @@ public class TicketDetailsForm extends FormLayout {
         edit.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         close.addClickShortcut(Key.ESCAPE);
-        edit.addClickListener(event -> fireEvent(new EditEvent(this)));
+        edit.addClickListener(event -> {
+                    Ticket t = binder.getBean();
+                    if (t == null) return;
+                    if (MainLayout.userRole.getRole_name().equals("System-Admin") || MainLayout.userRole.getRole_name().equals("Support-Coordinator")) fireEvent(new EditEvent(this));
+                    else if (t.getAssigned_to() != null && t.getAssigned_to().getUsername().equals(MainLayout.username)) fireEvent(new EditEvent(this));
+                    else {
+                        Notification n = Notification.show("This ticket is not assigned to you. Editing is not allowed.");
+                        n.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                    }
+                });
         close.addClickListener(event -> fireEvent(new CloseEvent(this)));
         if (showEditButton) return new HorizontalLayout(edit, close);
         else return new HorizontalLayout(close);

@@ -13,7 +13,6 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -87,7 +86,7 @@ public class UserTicketView extends VerticalLayout {
         viewDetailsForm.setWidth("70em");
         viewDetailsForm.addCloseListener(e -> closeEditor()); // <3>
 
-        addForm = new TicketAddForm(service.getAllWebsitesByUsername(MainLayout.username), service.findAllTUsers("Support-Member"));
+        addForm = new TicketAddForm(service.getAllWebsitesByUsername(MainLayout.username));
         addForm.setWidth("70em");
         addForm.addSaveListener(this::saveAddTicket); // <1>
         addForm.addCloseListener(e -> closeEditor()); // <3>
@@ -195,12 +194,12 @@ public class UserTicketView extends VerticalLayout {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         ticket.setStatus("Registered");
         String u = MainLayout.username;
-        TUser tuser = service.getTUserByUsername(u);//TODO
+        TUser tuser = service.getTUserByUsername(u);
         ticket.setRegistered_by(u);
         ticket.setRegister_date(timestamp);
         ticket.setLast_update(timestamp);
         String timestampString = new SimpleDateFormat("yyyy.MM.dd.HH.mm").format(timestamp);
-        ticket.setHistory(timestampString + ": created by " + u + "; "); //TODO
+        ticket.setHistory(timestampString + ": created by " + u + "; \n");
     }
 
     private void updateListByRegisteredByAndStatus(String name, String status1, String status2, String status3) {

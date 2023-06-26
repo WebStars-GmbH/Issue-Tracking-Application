@@ -128,10 +128,9 @@ public class TicketService {
             if (!oldTicket.getStatus().equals("Solved") && ticket.getStatus().equals("Solved")) {
                 ticket.setClose_date(timestamp);
                 ticket.setClosed_by(MainLayout.username);
-                addToHistory(ticket, "\nAssign time in seconds: " + ticket.getTimeBetweenAssignedAndSolved());
-                addToHistory(ticket, "\nSolve time in seconds: " + ticket.getTimeBetweenRegisteredAndSolved());
-                addToHistory(ticket, "\nSolve time: " + ticket.getTimeBetweenRegisteredAndSolvedAsString());
-                addToHistory(ticket, "\nSolved by " + ticket.getClosed_by());
+                addToHistory(ticket, "\nAssign time: " + TimeFormatUtility.millisecondsToTimeFormat(ticket.getTimeBetweenAssignedAndSolved()));
+                addToHistory(ticket, "\nSolve time: " + TimeFormatUtility.millisecondsToTimeFormat(ticket.getTimeBetweenRegisteredAndSolved()));
+                addToHistory(ticket, "\nSolved by: " + ticket.getClosed_by());
             }
         }
 

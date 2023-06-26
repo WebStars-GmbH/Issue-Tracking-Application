@@ -189,22 +189,18 @@ public class Ticket extends AbstractEntity{
 
     public long getTimeBetweenAssignedAndSolved(){
         if (assign_date == null || close_date == null) return 0;
-        return (this.close_date.getTime() - this.assign_date.getTime())/1000;
+        return (this.close_date.getTime() - this.assign_date.getTime());
     }
 
     public long getTimeBetweenRegisteredAndSolved(){
         if (close_date == null) return 0;
-        return (this.close_date.getTime() - this.register_date.getTime())/1000;
+        return (this.close_date.getTime() - this.register_date.getTime());
     }
 
-    public String getTimeBetweenRegisteredAndSolvedAsString(){
-        if (close_date == null) return null;
-        long milliseconds = this.close_date.getTime() - this.register_date.getTime();
-        int seconds = (int)(milliseconds / 1000);
-        int minutes = seconds / 60;
-        int hours = minutes / 60;
-        int days = hours / 24;
-        return (days + " days, " + (hours-(days*24)) + " hours, " + (minutes-(hours*60)) + " minutes, " + (seconds-(minutes*60)) + " seconds");
+    public long getTimeBetweenRegisteredAndCancelled(){
+        if (!this.getStatus().equals("Cancelled")) return 0;
+        return (this.last_update.getTime() - this.register_date.getTime());
     }
+
 }
 

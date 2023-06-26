@@ -3,6 +3,8 @@ package com.example.application.views;
 import com.example.application.data.entity.Company;
 import com.example.application.data.entity.Contact;
 import com.example.application.data.entity.Status;
+import com.vaadin.testbench.unit.internal.MockVaadin;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -44,6 +46,12 @@ public class ContactFormTest {
         marcUsher.setEmail("marc@usher.com");
         marcUsher.setStatus(status1);
         marcUsher.setCompany(company2);
+        MockVaadin.setup();
+    }
+
+    @AfterEach
+    public void teardown(){
+        MockVaadin.tearDown();
     }
 
     @Test
@@ -72,7 +80,16 @@ public class ContactFormTest {
         form.addSaveListener(e -> {
             savedContactRef.set(e.getContact());
         });
+
         form.save.click();
+
+        form.dialog.open();
+
+        form.dialog.getElement().setProperty("confirm-button", 0);
+
+        //Component confirmButton = SlotUtils.getChildInSlot(form.dialog, "confirm-button");
+        //((Button) confirmButton).click();
+
         Contact savedContact = savedContactRef.get();
 
         assertEquals("John", savedContact.getFirstName());
@@ -81,6 +98,6 @@ public class ContactFormTest {
         assertEquals(company1, savedContact.getCompany());
         assertEquals(status2, savedContact.getStatus());
     }
+*/
 
- */
 }

@@ -28,6 +28,8 @@ public class ContactForm extends FormLayout {
   ComboBox<Status> status = new ComboBox<>("Status");
   ComboBox<Company> company = new ComboBox<>("Company");
 
+  ConfirmDialog dialog = new ConfirmDialog();
+
   Button save = new Button("Save");
   Button delete = new Button("Delete");
   Button close = new Button("Cancel");
@@ -74,7 +76,7 @@ public class ContactForm extends FormLayout {
   }
 
   private void ConfirmAndSave(){
-    ConfirmDialog dialog = new ConfirmDialog();
+
     dialog.setHeader("Save contact?");
     dialog.setText("Are you sure you want to save this contact?");
     dialog.setCancelable(true);
