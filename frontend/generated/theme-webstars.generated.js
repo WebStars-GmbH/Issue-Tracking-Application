@@ -119,9 +119,9 @@ export const applyTheme = (target) => {
   injectGlobalCss(stylesCss.toString(), target);
     
   
-  if (!document['_vaadintheme_flowcrmtutorial_componentCss']) {
+  if (!document['_vaadintheme_webstars_componentCss']) {
     
-    document['_vaadintheme_flowcrmtutorial_componentCss'] = true;
+    document['_vaadintheme_webstars_componentCss'] = true;
   }
   injectGlobalCss(typography.cssText, target, true);
 injectGlobalCss(color.cssText, target, true);

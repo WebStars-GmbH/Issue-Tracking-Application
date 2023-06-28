@@ -14,7 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  */
 @SpringBootApplication
-@Theme(value = "flowcrmtutorial")
+@Theme(value = "webstars")
 @PWA(
         name = "Vaadin CRM",
         shortName = "CRM",
