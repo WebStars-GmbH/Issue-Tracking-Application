@@ -52,7 +52,7 @@ jobs:
       - cloudrun/deploy:
           platform: managed
           image: gcr.io/${GOOGLE_PROJECT_ID}
-          service-name: vaadin-ui-service
+          service-name: vaadin-ui-service-00017-yik
           region: europe-west6
           unauthenticated: true
 workflows:
