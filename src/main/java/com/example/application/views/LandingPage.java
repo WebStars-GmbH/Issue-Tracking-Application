@@ -19,10 +19,9 @@ public class LandingPage extends VerticalLayout  {
 
 
         //Image from resources
-        Image logo = new Image("images/webstarsRobotpng.png", "Webst@rs Ticketing Application Logo");
+        Image logo = new Image("images/blue.png", "Webst@rs Ticketing Application Logo");
         // adapt width to the available space
-        logo.setMaxWidth("80%");
-        logo.setSizeFull();
+        logo.addClassName("background-image");
         add(logo);
     }
 }
