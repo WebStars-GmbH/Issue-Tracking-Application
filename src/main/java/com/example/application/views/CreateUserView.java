@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@org.springframework.stereotype.Component
 @SpringComponent
 @Scope("prototype")
 @PermitAll

@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.stream.Collectors;
 
+@org.springframework.stereotype.Component
 @SpringComponent
 @Scope("prototype")
 @PermitAll
