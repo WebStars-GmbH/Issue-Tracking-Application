@@ -5,11 +5,13 @@ import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Team;
 import com.example.application.data.repository.TUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Component
 public class TUserService {
     private final TUserRepository tUserRepository;
 

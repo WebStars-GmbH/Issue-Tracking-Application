@@ -33,6 +33,7 @@ import org.springframework.context.annotation.Scope;
 import java.sql.Timestamp;
 import java.util.List;
 
+@org.springframework.stereotype.Component
 @SpringComponent
 @Scope("prototype")
 @PermitAll

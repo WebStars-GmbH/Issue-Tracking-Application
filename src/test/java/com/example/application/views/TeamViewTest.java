@@ -30,6 +30,4 @@ class TeamViewTest {
     private Team getFirstItem(Grid<Team> grid) {
         return((ListDataProvider<Team>) grid.getDataProvider()).getItems().iterator().next();
     }
-
-
 }
