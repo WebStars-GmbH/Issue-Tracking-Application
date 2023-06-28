@@ -63,7 +63,7 @@ public class MainLayout extends AppLayout {
         }
     }
     private final SecurityService securityService;
-    public TUserService tUserService;
+    public static TUserService tUserService;
     public TeamService teamService;
     public static String username;
     public static Role userRole;
@@ -132,7 +132,19 @@ public class MainLayout extends AppLayout {
                     new RouterLink("Dashboard", DashboardView.class),
                     new RouterLink("Tickets", UserTicketView.class)
             ));
-        } else  {
+ /* alternative if other internal roles than sys-admin should not see the list of users > if used line new RouterLink("Users", CreateUserView.class), in following else-block has to be deleted
+        } else if (userRoleEntity.getRole_name().equals("System-Admin")) {
+            addToDrawer(new VerticalLayout(
+                    new RouterLink("Dashboard", DashboardView.class),
+                    new RouterLink("Tickets", CompanyTicketView.class),
+                    new RouterLink("Users", CreateUserView.class),
+                    new RouterLink("Teams", TeamView.class),
+                    new RouterLink("Websites", WebsiteView.class)
+            ));
+
+  */
+        }
+        else  {
             addToDrawer(new VerticalLayout(
                     new RouterLink("Dashboard", DashboardView.class),
                     new RouterLink("Tickets", CompanyTicketView.class),

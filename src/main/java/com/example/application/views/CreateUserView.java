@@ -1,5 +1,6 @@
 package com.example.application.views;
 
+import com.example.application.data.entity.Role;
 import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Team;
 import com.example.application.data.entity.Website;
@@ -43,6 +44,9 @@ public class CreateUserView extends VerticalLayout {
     TextField filterText = new TextField();
     CreateUserForm form;
     TUserService userService;
+
+    //public static String username;
+
     WebsiteService websiteService;
     RoleService roleService;
 
@@ -92,11 +96,16 @@ public class CreateUserView extends VerticalLayout {
                         .collect(Collectors.joining(", ")))
                 .setHeader("Websites");
 
-        grid.asSingleSelect().addValueChangeListener(event ->
+/*        grid.asSingleSelect().addValueChangeListener(event ->
                 editUser(event.getValue()));
-    }
+*/
+        // only System-Admin can edit users
+        if (userService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("System-Admin")) {
+            grid.asSingleSelect().addValueChangeListener(event ->
+                    editUser(event.getValue()));
+        }
 
-
+   }
 
     private void editUser(TUser user) {
         if (user == null) {
@@ -198,7 +207,8 @@ public class CreateUserView extends VerticalLayout {
     }
     private void updateList() {
         String searchTerm = filterText.getValue().trim(); // fetch searchterm
-/*
+
+/* old search without checkbox for inactive users
         if (searchTerm.isEmpty()) {
             grid.setItems(userService.findAllUsers()); // alle Anzeigen
         } else {
@@ -206,6 +216,7 @@ public class CreateUserView extends VerticalLayout {
             grid.setItems(filteredUsers);
         }
  */
+
         // combination search and checkbox for inactive users
         if (searchTerm.isEmpty() && showInactiveUsers.getValue()) {
             grid.setItems(userService.findAllUsers()); // all users (active + inactive)
@@ -229,12 +240,20 @@ public class CreateUserView extends VerticalLayout {
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
 
-        Button addTicketButton = new Button("Create User");
-        addTicketButton.addClickListener(click -> addUser());
+        //only System-Admin can create new users, other internal roles can only search the user list
+        if (userService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("System-Admin")) {
+            Button addTicketButton = new Button("Create User");
+            addTicketButton.addClickListener(click -> addUser());
 
-        var toolbar = new HorizontalLayout(filterText, addTicketButton);
-        toolbar.addClassName("toolbar");
-        return toolbar;
+            var toolbar = new HorizontalLayout(filterText, addTicketButton);
+            toolbar.addClassName("toolbar");
+            return toolbar;
+        } else {
+            var toolbar = new HorizontalLayout(filterText);
+            toolbar.addClassName("toolbar");
+            return toolbar;
+        }
+
     }
 
     private void addUser() {
