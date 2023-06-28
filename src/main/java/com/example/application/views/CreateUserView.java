@@ -97,9 +97,7 @@ public class CreateUserView extends VerticalLayout {
                         .collect(Collectors.joining(", ")))
                 .setHeader("Websites");
 
-/*        grid.asSingleSelect().addValueChangeListener(event ->
-                editUser(event.getValue()));
-*/
+
         // only System-Admin can edit users
         if (userService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("System-Admin")) {
             grid.asSingleSelect().addValueChangeListener(event ->

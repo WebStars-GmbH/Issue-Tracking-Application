@@ -132,7 +132,8 @@ public class MainLayout extends AppLayout {
                     new RouterLink("Dashboard", DashboardView.class),
                     new RouterLink("Tickets", UserTicketView.class)
             ));
- /* alternative if other internal roles than sys-admin should not see the list of users > if used line new RouterLink("Users", CreateUserView.class), in following else-block has to be deleted
+
+ /* alternative if other internal roles than System-Admin should not see the list of users > if used line new RouterLink("Users", CreateUserView.class), in following else-block has to be deleted
         } else if (userRoleEntity.getRole_name().equals("System-Admin")) {
             addToDrawer(new VerticalLayout(
                     new RouterLink("Dashboard", DashboardView.class),
@@ -141,8 +142,7 @@ public class MainLayout extends AppLayout {
                     new RouterLink("Teams", TeamView.class),
                     new RouterLink("Websites", WebsiteView.class)
             ));
-
-  */
+*/
         }
         else  {
             addToDrawer(new VerticalLayout(
