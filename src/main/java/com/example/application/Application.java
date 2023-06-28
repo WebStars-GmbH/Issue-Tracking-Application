@@ -20,8 +20,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         shortName = "CRM",
         offlinePath="offline.html",
         offlineResources = { "images/offline.png" }
-
-
 )
 public class Application implements AppShellConfigurator {
 
