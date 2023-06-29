@@ -15,6 +15,7 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -22,8 +23,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.Query;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.function.SerializableBiConsumer;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import jakarta.annotation.security.PermitAll;
@@ -31,7 +34,6 @@ import org.springframework.context.annotation.Scope;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
@@ -182,10 +184,10 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         grid.setSizeFull();
 
 
-        grid.setColumns();
+        grid.setColumns("id");
 
         priorityColumn = grid.addColumn(Ticket::getPriority).setHeader("Priority").setSortable(true).setResizable(true);
-        statusColumn = grid.addColumn(Ticket::getStatus).setHeader("Status").setSortable(true).setResizable(true);
+        statusColumn = grid.addColumn(createStatusComponentRenderer()).setHeader("Status").setAutoWidth(true).setComparator(Ticket::getStatus);
         headerColumn = grid.addColumn(Ticket::getHeader).setHeader("Header").setSortable(true).setResizable(true);
         descriptionColumn = grid.addColumn(Ticket::getDescription).setHeader("Description").setSortable(true).setResizable(true);
         historyColumn = grid.addColumn(Ticket::getHistory).setHeader("History").setSortable(true).setResizable(true);
@@ -214,16 +216,16 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
                 }
         );
         menu.addItem("Delete Ticket",
-            event -> {
-                Ticket t = event.getItem().isPresent() ? event.getItem().get() : null;
-                if (t == null) return;
-                if (MainLayout.userRole.getRole_name().equals("System-Admin") || MainLayout.userRole.getRole_name().equals("Support-Coordinator")) ConfirmAndDelete(t);
-                else if (t.getAssigned_to() != null && t.getAssigned_to().getUsername().equals(MainLayout.username)) ConfirmAndDelete(t);
-                else {
-                    Notification n = Notification.show("This ticket is not assigned to you. Deleting is not allowed.");
-                    n.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                event -> {
+                    Ticket t = event.getItem().isPresent() ? event.getItem().get() : null;
+                    if (t == null) return;
+                    if (MainLayout.userRole.getRole_name().equals("System-Admin") || MainLayout.userRole.getRole_name().equals("Support-Coordinator")) ConfirmAndDelete(t);
+                    else if (t.getAssigned_to() != null && t.getAssigned_to().getUsername().equals(MainLayout.username)) ConfirmAndDelete(t);
+                    else {
+                        Notification n = Notification.show("This ticket is not assigned to you. Deleting is not allowed.");
+                        n.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                    }
                 }
-            }
         );
         if (MainLayout.userRole.getRole_name().equals("System-Admin")) menu.addItem("Delete Ticket Permanently (System Admin)", event -> ConfirmAndDeletePermanently(event.getItem().get()));
         menu.addItem("Edit Ticket", event -> editTicket(event.getItem().get()));
@@ -236,6 +238,22 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
 
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT, GridVariant.LUMO_ROW_STRIPES);
         add(grid);
+    }
+
+    private static final SerializableBiConsumer<Span, Ticket> statusComponentUpdater = (span, ticket) -> {
+        String status = ticket.getStatus();
+        String theme = "";
+        if (status.equals("Solved")) theme = String.format("badge %s", "success");
+        else if (status.equals("Cancelled")) theme = String.format("badge %s", "error");
+        else if (status.equals("Registered")) theme = String.format("badge %s", "warning");
+        else if (status.equals("Assigned")) theme = String.format("badge %s", "contrast");
+        else if (status.equals("In Progress")) theme = String.format("badge");
+        span.getElement().setAttribute("theme", theme);
+        span.setText(status);
+    };
+
+    private static ComponentRenderer<Span, Ticket> createStatusComponentRenderer() {
+        return new ComponentRenderer<>(Span::new, statusComponentUpdater);
     }
 
     private Component getToolbar() {

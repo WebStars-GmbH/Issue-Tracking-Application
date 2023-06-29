@@ -1,7 +1,7 @@
 
 # Stage that builds the application, a prerequisite for the running stage
 FROM maven:3.8.1-openjdk-17-slim as build
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt-get update -qq && apt-get install -qq --no-install-recommends nodejs
 
 # Stop running as root at this point
@@ -23,7 +23,7 @@ RUN mvn clean package -DskipTests -Pproduction -Dvaadin.proKey=prenner.products@
 
 # Running stage: the part that is used for running the application
 FROM maven:3.8.1-openjdk-17-slim
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt-get update -qq && apt-get install -qq --no-install-recommends nodejs
 
 COPY --from=build /usr/src/app/target/*.jar /usr/app/app.jar

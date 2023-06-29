@@ -1,6 +1,5 @@
 package com.example.application.views;
 
-import com.example.application.data.entity.Role;
 import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Team;
 import com.example.application.data.entity.Website;
@@ -13,12 +12,15 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.function.SerializableBiConsumer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
@@ -27,7 +29,6 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,7 +86,14 @@ public class CreateUserView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassName("user-grid");
         grid.setSizeFull();
-        grid.setColumns( "firstname", "lastname", "username", "email", "role", "active" );
+        grid.setColumns("id");
+
+        grid.addColumn(createUsernameComponentRenderer()).setHeader("Username").setAutoWidth(true).setComparator(TUser::getUsername);
+
+        grid.addColumn(user -> user.getRole().getRole_name()).setHeader("Role").setAutoWidth(true).setSortable(true);
+        grid.addColumn(user -> user.getFirstname()).setHeader("First Name").setAutoWidth(true);
+        grid.addColumn(user -> user.getLastname()).setHeader("Last Name").setAutoWidth(true);
+        grid.addColumn(user -> user.getEmail()).setHeader("E-mail Address").setAutoWidth(true);
 
         grid.addColumn(user -> user.getTeams().stream()
                         .map(Team::getName)
@@ -95,7 +103,10 @@ public class CreateUserView extends VerticalLayout {
         grid.addColumn(user -> user.getWebsites().stream()
                         .map(Website::getWebsite_name)
                         .collect(Collectors.joining(", ")))
-                .setHeader("Websites");
+                .setHeader("Associated Websites");
+
+        grid.addColumn(createStatusComponentRenderer()).setHeader("Status")
+                .setAutoWidth(true).setComparator(TUser::isActive);
 
 
         // only System-Admin can edit users
@@ -104,7 +115,28 @@ public class CreateUserView extends VerticalLayout {
                     editUser(event.getValue()));
         }
 
-   }
+    }
+
+    private static final SerializableBiConsumer<Span, TUser> statusComponentUpdater = (span, tUser) -> {
+        String theme = String.format("badge %s", tUser.isActive() ? "success" : "error");
+        span.getElement().setAttribute("theme", theme);
+        span.setText(tUser.isActive() ? "Active": "Inactive");
+    };
+
+    private static ComponentRenderer<Span, TUser> createStatusComponentRenderer() {
+        return new ComponentRenderer<>(Span::new, statusComponentUpdater);
+    }
+
+    private static final SerializableBiConsumer<Span, TUser> usernameComponentUpdater = (span, tUser) -> {
+        String theme = String.format("badge");
+        if (tUser.getUsername().equals(MainLayout.username)) theme = String.format("badge %s", "primary");
+        span.getElement().setAttribute("theme", theme);
+        span.setText(tUser.getUsername());
+    };
+
+    private static ComponentRenderer<Span, TUser> createUsernameComponentRenderer() {
+        return new ComponentRenderer<>(Span::new, usernameComponentUpdater);
+    }
 
     private void editUser(TUser user) {
         if (user == null) {

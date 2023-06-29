@@ -25,4 +25,3 @@ public class LandingPage extends VerticalLayout  {
         add(logo);
     }
 }
-

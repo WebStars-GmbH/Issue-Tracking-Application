@@ -65,4 +65,3 @@ public interface TUserRepository extends JpaRepository<TUser, Long> {
     List<TUser> findTUsersActive();
 
 }
-
