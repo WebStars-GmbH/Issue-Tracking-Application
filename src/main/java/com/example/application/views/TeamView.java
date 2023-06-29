@@ -2,7 +2,7 @@ package com.example.application.views;
 
 import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Team;
-import com.example.application.data.service.CrmService;
+import com.example.application.data.service.TUserService;
 import com.example.application.data.service.TeamService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -27,18 +27,21 @@ import java.util.stream.Collectors;
 public class TeamView extends VerticalLayout {
     Grid<Team> grid = new Grid<>(Team.class);
     TeamForm form;
-    CrmService service;
+
     TeamService teamService;
 
-    public TeamView(CrmService service, TeamService teamService) {
-        this.service = service;
+    TUserService tUserService;
+
+    public TeamView(TeamService teamService, TUserService tUserService) {
         this.teamService = teamService;
+        this.tUserService = tUserService;
         addClassName("team-view");
         setSizeFull();
         configureGrid();
         configureForm();
 
-        add(getToolbar(), getContent());
+        if (tUserService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("System-Admin") || tUserService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("Support-Coordinator")) add(getToolbar(), getContent());
+        else add(getContent());
         updateList();
         closeEditor();
     }
@@ -53,7 +56,7 @@ public class TeamView extends VerticalLayout {
     }
 
     private void configureForm() {
-        form = new TeamForm(service.findAllTUsers());
+        form = new TeamForm(tUserService.findAllTUsersByRole("Support-Member"));
         form.setWidth("70em");
         form.addSaveListener(this::saveTeam); // <1>
         form.addDeleteListener(this::deleteTeam); // <2>
@@ -96,7 +99,7 @@ public class TeamView extends VerticalLayout {
                         .collect(Collectors.joining(", ")))
                 .setHeader("Members");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
-        grid.asSingleSelect().addValueChangeListener(event -> editTeam(event.getValue()));
+        if (tUserService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("System-Admin") || tUserService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("Support-Coordinator")) grid.asSingleSelect().addValueChangeListener(event -> editTeam(event.getValue()));
     }
 
     private Component getToolbar() {
