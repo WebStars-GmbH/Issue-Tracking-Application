@@ -183,15 +183,14 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         grid.addClassNames("ticket-grid");
         grid.setSizeFull();
 
-
         grid.setColumns("id");
 
         priorityColumn = grid.addColumn(Ticket::getPriority).setHeader("Priority").setSortable(true).setResizable(true);
         statusColumn = grid.addColumn(createStatusComponentRenderer()).setHeader("Status").setAutoWidth(true).setComparator(Ticket::getStatus);
         headerColumn = grid.addColumn(Ticket::getHeader).setHeader("Header").setSortable(true).setResizable(true);
-        descriptionColumn = grid.addColumn(Ticket::getDescription).setHeader("Description").setSortable(true).setResizable(true);
-        historyColumn = grid.addColumn(Ticket::getHistory).setHeader("History").setSortable(true).setResizable(true);
-        solutionColumn = grid.addColumn(Ticket::getSolution).setHeader("Solution").setSortable(true).setResizable(true);
+        descriptionColumn = grid.addColumn(Ticket::getDescription).setHeader("Description").setResizable(true);
+        historyColumn = grid.addColumn(Ticket::getHistory).setHeader("History").setResizable(true);
+        solutionColumn = grid.addColumn(Ticket::getSolution).setHeader("Solution").setResizable(true);
         websiteColumn = grid.addColumn(Ticket::getWebsite).setHeader("Website").setSortable(true).setResizable(true);
         registeredByColumn = grid.addColumn(Ticket::getRegistered_by).setHeader("Ticket Owner").setSortable(true).setResizable(true);
         assignedToColumn = grid.addColumn(ticket -> ticket.getAssigned_to() == null ? "" : ticket.getAssigned_to().getUsername()).setHeader("Assigned to").setSortable(true).setResizable(true);

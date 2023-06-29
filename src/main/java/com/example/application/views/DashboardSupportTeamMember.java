@@ -66,7 +66,7 @@ public class DashboardSupportTeamMember extends VerticalLayout {
     }
 
     private Component getSupportTeamMemberStats() {
-        addClassName("dashboard-view");
+
         String stats = ("User: " + MainLayout.username + "<br>Name: " + tUserService.findUserByUsername(MainLayout.username).getFirstname() + " " + tUserService.findUserByUsername(MainLayout.username).getLastname() + "<br><br>");
         stats += openTickets.size() + " open tickets<br>";
         if (solvedTickets.size() != 0) {
@@ -84,7 +84,7 @@ public class DashboardSupportTeamMember extends VerticalLayout {
     }
 
     private Chart getMemberChartPie() {
-        addClassName("dashboard-view");
+
         Chart chart = new Chart(ChartType.PIE);
 
         Configuration conf = chart.getConfiguration();
@@ -93,6 +93,9 @@ public class DashboardSupportTeamMember extends VerticalLayout {
         PlotOptionsPie plotOptions = new PlotOptionsPie();
         plotOptions.setDepth(45);
         conf.setPlotOptions(plotOptions);
+
+        conf.getTitle().getStyle().setColor(SolidColor.GRAY);
+        conf.getChart().setBackgroundColor(new SolidColor(255,255,255,0));
 
         // In 3D!
         Options3d options3d = new Options3d();
@@ -108,13 +111,16 @@ public class DashboardSupportTeamMember extends VerticalLayout {
         return chart;
     }
     private Chart getMemberChartSpeed() {
-        addClassName("dashboard-view");
+
         Chart chart = new Chart(ChartType.GAUGE);
 
         Configuration conf = chart.getConfiguration();
         conf.setTitle("Average Solve Time");
         conf.getPane().setStartAngle(-135);
         conf.getPane().setEndAngle(135);
+
+        conf.getTitle().getStyle().setColor(SolidColor.GRAY);
+        conf.getChart().setBackgroundColor(new SolidColor(255,255,255,0));
 
         YAxis yaxis = new YAxis();
         yaxis.setTitle("Days");

@@ -44,7 +44,8 @@ public class WebsiteView extends VerticalLayout {
         configureGrid();
         configureForm();
 
-        add(getToolbar(), getContent());
+        if (tUserService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("System-Admin")) add(getToolbar(), getContent());
+        else add(getContent());
         updateList();
         closeEditor();
     }
@@ -118,7 +119,7 @@ public class WebsiteView extends VerticalLayout {
         */
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
-        grid.asSingleSelect().addValueChangeListener(event -> editWebsite(event.getValue()));
+        if (tUserService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("System-Admin")) grid.asSingleSelect().addValueChangeListener(event -> editWebsite(event.getValue()));
     }
 
     private static final String LIT_TEMPLATE_HTML = """
