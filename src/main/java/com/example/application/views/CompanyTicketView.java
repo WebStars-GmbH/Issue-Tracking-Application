@@ -285,7 +285,9 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
 
 
         Button myAssignedTicketsButton = new Button("My Assigned Tickets");
+        myAssignedTicketsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_PRIMARY);
         myAssignedTicketsButton.addClickListener(click -> updateListAssignedToAndByStatus(MainLayout.username, "Registered", "NULL", "NULL"));
+
 
         Button myToDoTicketsButton = new Button("My To-Do Tickets");
         myToDoTicketsButton.addClickListener(click -> updateListAssignedToAndByStatus(MainLayout.username, "Assigned", "In progress", "Registered"));
@@ -316,6 +318,8 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
 
         Button menuButton = new Button("Show/Hide");
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+
         CompanyTicketView.ColumnToggleContextMenu columnToggleContextMenu = new CompanyTicketView.ColumnToggleContextMenu(menuButton);
         columnToggleContextMenu.addColumnToggleItem("Priority", priorityColumn);
         columnToggleContextMenu.addColumnToggleItem("Status", statusColumn);

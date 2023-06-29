@@ -18,7 +18,7 @@ public class LandingPage extends VerticalLayout  {
     public LandingPage() {
 
         //Image from resources
-        Image logo = new Image("images/blue.png", "Webst@rs Ticketing Application Logo");
+        Image logo = new Image("images/webstarsRobotpng.png", "Webst@rs Ticketing Application Logo");
         // adapt width to the available space
         logo.addClassName("background-image");
         add(logo);
