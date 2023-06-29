@@ -123,6 +123,15 @@ public class MainLayout extends AppLayout {
             ));
 */
         }
+        else if (userRoleEntity.getRole_name().equals("Support-Member")) {
+            addToDrawer(new VerticalLayout(
+                    new RouterLink("My Statistics", DashboardSupportTeamMember.class),
+                    new RouterLink("My Tickets", CompanyTicketView.class),
+                    new RouterLink("View Users", CreateUserView.class),
+                    new RouterLink("View Teams", TeamView.class),
+                    new RouterLink("View Websites", WebsiteView.class)
+            ));
+        }
         else  {
             addToDrawer(new VerticalLayout(
                     new RouterLink("Dashboard", DashboardView.class),
