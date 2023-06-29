@@ -228,8 +228,8 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
                 }
         );
         if (MainLayout.userRole.getRole_name().equals("System-Admin")) menu.addItem("Delete Ticket Permanently (System Admin)", event -> ConfirmAndDeletePermanently(event.getItem().get()));
-        menu.addItem("Edit Ticket", event -> editTicket(event.getItem().get()));
-        menu.addItem("Delete Ticket", event -> ConfirmAndDelete(event.getItem().get()));
+        //menu.addItem("Edit Ticket", event -> editTicket(event.getItem().get()));
+        //menu.addItem("Delete Ticket", event -> ConfirmAndDelete(event.getItem().get()));
         grid.asSingleSelect().addValueChangeListener(event -> viewTicket(event.getValue()));
         grid.addItemDoubleClickListener(event -> editTicket(event.getItem()));
 
