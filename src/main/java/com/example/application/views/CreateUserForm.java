@@ -50,9 +50,20 @@ public class CreateUserForm extends FormLayout {
     Button close = new Button("Cancel");
     Binder<TUser> binder = new BeanValidationBinder<>(TUser.class);
 
+    public void updateFields(WebsiteService websiteService){
+        websitesNew.setItems(websiteService.getAllWebsitesWithEmptyUser());
+    }
 
     public CreateUserForm(WebsiteService websiteService, RoleService roleService) {
         addClassName("user-form");
+
+        username.setRequiredIndicatorVisible(true);
+        firstName.setRequiredIndicatorVisible(true);
+        lastName.setRequiredIndicatorVisible(true);
+        email.setRequiredIndicatorVisible(true);
+        password.setRequiredIndicatorVisible(true);
+        passwordConfirm.setRequiredIndicatorVisible(true);
+        role.setRequiredIndicatorVisible(true);
 
         binder.bindInstanceFields(this);
 
@@ -73,7 +84,7 @@ public class CreateUserForm extends FormLayout {
             else email.setHelperText("");
 
             if (!password.getValue().equals(passwordConfirm.getValue())) passwordConfirm.setHelperText("Passwords don't match");
-            else password.setHelperText("");
+            else passwordConfirm.setHelperText("");
 
             if (!binder.isValid() || !password.getValue().equals(passwordConfirm.getValue())) save.setText("...");
             else save.setText("Save");

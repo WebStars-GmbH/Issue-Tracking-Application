@@ -108,8 +108,8 @@ public class MainLayout extends AppLayout {
 
         if (userRoleEntity.getRole_name().equals("Customer")) {
             addToDrawer(new VerticalLayout(
-                    new RouterLink("Dashboard", DashboardView.class),
-                    new RouterLink("Tickets", UserTicketView.class)
+                    //new RouterLink("Dashboard", DashboardView.class),
+                    new RouterLink("My Tickets", UserTicketView.class)
             ));
 
  /* alternative if other internal roles than System-Admin should not see the list of users > if used line new RouterLink("Users", CreateUserView.class), in following else-block has to be deleted

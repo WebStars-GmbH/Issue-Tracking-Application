@@ -2,6 +2,7 @@ package com.example.application.data.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +21,7 @@ public class TUser extends AbstractEntity{
 
     @ManyToOne
     @JoinColumn(name="role_id")
+    @NotNull
     private Role role;
     @NotBlank
     @Column(unique = true)

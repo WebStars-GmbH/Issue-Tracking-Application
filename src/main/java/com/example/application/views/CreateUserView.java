@@ -8,7 +8,6 @@ import com.example.application.data.service.SecurityUserDetailsService;
 import com.example.application.data.service.TUserService;
 import com.example.application.data.service.WebsiteService;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
@@ -22,7 +21,6 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.function.SerializableBiConsumer;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import jakarta.annotation.security.PermitAll;
@@ -39,7 +37,6 @@ import java.util.stream.Collectors;
 @PermitAll
 @Route(value = "CreateUser", layout = MainLayout.class)
 @PageTitle("Create User")
-@PreserveOnRefresh
 public class CreateUserView extends VerticalLayout {
     Grid<TUser> grid = new Grid<>(TUser.class);
     Checkbox showInactiveUsers = new Checkbox();
@@ -190,11 +187,14 @@ public class CreateUserView extends VerticalLayout {
                     websiteService.saveWebsite(w);
                 }
             }
-            UI.getCurrent().getPage().reload(); //Page needs to be reloaded for all changes to take place correctly
+
+            form.updateFields(websiteService);
+            //userService.saveUser(user);
+            //updateList();
+            //UI.getCurrent().getPage().reload(); //Page needs to be reloaded for all changes to take place correctly
         }
     }
     private void saveUser(CreateUserForm.SaveEvent event) {
-
         TUser user = event.getUser();
 
         //When creating user, check if username is unique
@@ -219,12 +219,12 @@ public class CreateUserView extends VerticalLayout {
             user.setPassword(newPassword);
             user.setPasswordConfirm(newPassword);
         }
-
         userService.saveUser(user);
-        updateList();
-        closeEditor();
 
         updateWebsites(user);
+
+        updateList();
+        closeEditor();
 
         Notification notification = Notification
                 .show("User " + user.getUsername() + " updated!");
