@@ -1,6 +1,5 @@
 package com.example.application.views;
 
-import com.example.application.data.entity.Role;
 import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Team;
 import com.example.application.data.entity.Website;
@@ -8,15 +7,11 @@ import com.example.application.data.service.RoleService;
 import com.example.application.data.service.SecurityUserDetailsService;
 import com.example.application.data.service.TUserService;
 import com.example.application.data.service.WebsiteService;
-import com.helger.commons.annotation.VisibleForTesting;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -31,10 +26,7 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
 
-
-import javax.swing.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,7 +52,6 @@ public class CreateUserView extends VerticalLayout {
     private final SecurityUserDetailsService sUDservice;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-
 
     public CreateUserView(TUserService userService, WebsiteService websiteService, RoleService roleService, SecurityUserDetailsService sUDservice) {
         this.userService = userService;
@@ -111,7 +102,7 @@ public class CreateUserView extends VerticalLayout {
                     editUser(event.getValue()));
         }
 
-   }
+    }
 
     private void editUser(TUser user) {
         if (user == null) {
@@ -195,7 +186,6 @@ public class CreateUserView extends VerticalLayout {
             user.setPasswordConfirm(newPassword);
         }
 
-
         userService.saveUser(user);
         updateList();
         closeEditor();
@@ -242,36 +232,6 @@ public class CreateUserView extends VerticalLayout {
         add(showInactiveUsers);
         showInactiveUsers.addValueChangeListener(e -> updateList());
 
-        filterText.setPlaceholder("search...");
-        /*
-        Checkboxes active/inactive users
-        showActiveInactiveUsers.setLabel("show");
-        showActiveInactiveUsers.setItems("active users", "inactive users");
-        showActiveInactiveUsers.select("active users"); //default
-        showActiveInactiveUsers.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
-        add(showActiveInactiveUsers);
-        showActiveInactiveUsers.addValueChangeListener(e -> {
-            if (e.getValue().contains("active users")) {
-                updateList();
-            } else if (e.getValue().contains("inactive users")) {
-                updateList();
-            }
-        });
-        */
-
-        //MultiSelectListBox active/inactive users
-        showActiveInactiveUsers.setItems(showActiveUsers, showInactiveUsers);
-        showActiveInactiveUsers.select(showActiveUsers);
-        add(showActiveInactiveUsers);
-        showActiveInactiveUsers.addValueChangeListener(e -> {
-            if (e.getValue().contains(showActiveUsers)) {
-                updateList();
-            } else if (e.getValue().contains(showInactiveUsers)) {
-                updateList();
-            }
-        });
-
-        //Searchbar
         filterText.setPlaceholder("search...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);

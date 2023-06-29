@@ -39,15 +39,15 @@ public class Ticket extends AbstractEntity{
     private String closed_by;
 
     @NotBlank
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = "nvarchar(MAX)")
     private String description = "";
 
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = "nvarchar(MAX)")
     private String solution = "";
 
     private int priority = 0;
 
-    @Column(nullable = true, columnDefinition = "text")
+    @Column(nullable = true, columnDefinition = "nvarchar(MAX)")
     private String history = "";
 
     //Constructors
@@ -207,4 +207,3 @@ public class Ticket extends AbstractEntity{
     }
 
 }
-

@@ -15,38 +15,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.dom.ThemeList;
 import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import com.vaadin.flow.component.applayout.AppLayout;
-
-
-//user angelegt (password):
-// user
-// admin
-// member0
-// coordinator
-// manager
-
-import java.util.List;
-
-//user angelegt (password):
-// user
-// admin
-// member0
-// coordinator
-// manager
-
-import java.util.List;
-
-//user angelegt (password):
-// user
-// admin
-// member0
-// coordinator
-// manager
-
-import java.util.List;
 
 public class MainLayout extends AppLayout {
     // Dark Theme
@@ -173,4 +143,3 @@ public class MainLayout extends AppLayout {
     }*/
 
 }
-

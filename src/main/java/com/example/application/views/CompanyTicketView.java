@@ -31,7 +31,6 @@ import org.springframework.context.annotation.Scope;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
@@ -214,16 +213,16 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
                 }
         );
         menu.addItem("Delete Ticket",
-            event -> {
-                Ticket t = event.getItem().isPresent() ? event.getItem().get() : null;
-                if (t == null) return;
-                if (MainLayout.userRole.getRole_name().equals("System-Admin") || MainLayout.userRole.getRole_name().equals("Support-Coordinator")) ConfirmAndDelete(t);
-                else if (t.getAssigned_to() != null && t.getAssigned_to().getUsername().equals(MainLayout.username)) ConfirmAndDelete(t);
-                else {
-                    Notification n = Notification.show("This ticket is not assigned to you. Deleting is not allowed.");
-                    n.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                event -> {
+                    Ticket t = event.getItem().isPresent() ? event.getItem().get() : null;
+                    if (t == null) return;
+                    if (MainLayout.userRole.getRole_name().equals("System-Admin") || MainLayout.userRole.getRole_name().equals("Support-Coordinator")) ConfirmAndDelete(t);
+                    else if (t.getAssigned_to() != null && t.getAssigned_to().getUsername().equals(MainLayout.username)) ConfirmAndDelete(t);
+                    else {
+                        Notification n = Notification.show("This ticket is not assigned to you. Deleting is not allowed.");
+                        n.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                    }
                 }
-            }
         );
         if (MainLayout.userRole.getRole_name().equals("System-Admin")) menu.addItem("Delete Ticket Permanently (System Admin)", event -> ConfirmAndDeletePermanently(event.getItem().get()));
         menu.addItem("Edit Ticket", event -> editTicket(event.getItem().get()));
@@ -248,7 +247,7 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         statusFilterText.setPlaceholder("Filter by status...");
         statusFilterText.setClearButtonVisible(true);
         statusFilterText.setValueChangeMode(ValueChangeMode.LAZY);
-        statusFilterText.addValueChangeListener(e -> updateListWithStatus());
+        statusFilterText.addValueChangeListener(e -> updateListByStatus());
 
         descriptionFilterText.setPlaceholder("Filter by description...");
         descriptionFilterText.setTooltipText("Please type what the description should contain...");
@@ -258,7 +257,7 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
 
         statusComboBox.setItems("Registered", "Assigned", "In progress", "Cancelled", "Solved");
         statusComboBox.setTooltipText("Please choose the status of the tickets you want to look for...");
-        statusComboBox.addValueChangeListener(e -> updateListWithStatus());
+        statusComboBox.addValueChangeListener(e -> updateListByStatus());
 
         List<TUser> users = service.findAllTUsersByRole("Support-Member");
         assignedToComboBox.setTooltipText("Please choose the assigned users you want to look for...");
@@ -313,10 +312,6 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         columnToggleContextMenu.addColumnToggleItem("Last Update", lastUpdateColumn);
         columnToggleContextMenu.addColumnToggleItem("Closed Date", closedDateColumn);
         columnToggleContextMenu.addColumnToggleItem("Closed By", closedByColumn);
-
-        HorizontalLayout headerLayout = new HorizontalLayout(clearFieldsButton, descriptionFilterText, statusFilterText, websiteFilterText, assignedToComboBox, addTicketButton, menuButton);
-        headerLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
-        headerLayout.addClassName("seerch-row");
 
         HorizontalLayout headerLayout = new HorizontalLayout(clearFieldsButton, descriptionFilterText, statusFilterText, websiteFilterText, assignedToComboBox, addTicketButton, menuButton);
         headerLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
@@ -415,8 +410,8 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
     private void updateListByWebsite() {
         grid.setItems(ticketService.findAllTickets(websiteFilterText.getValue()));
     }
-    private void updateListWithStatus() {
-        if (statusComboBox.getValue() != null) grid.setItems(ticketService.findAllTicketsWithStatus(statusComboBox.getValue()));
+    private void updateListByStatus() {
+        if (statusComboBox.getValue() != null) grid.setItems(ticketService.findAllTicketsByStatus(statusComboBox.getValue()));
     }
     private void updateListByStatus(String status1, String status2, String status3) {
         grid.setItems(ticketService.findAllTicketsByStatus(status1, status2, status3));
