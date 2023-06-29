@@ -2,6 +2,8 @@ import './vaadin-featureflags.js';
 
 import './index';
 
-import './theme-flowcrmtutorial.global.generated.js';
+import 'Frontend/generated/jar-resources/vaadin-dev-tools/vaadin-dev-tools.js';
+
+import './theme-webstars.global.generated.js';
 import { applyTheme } from './theme.js';
 applyTheme(document);

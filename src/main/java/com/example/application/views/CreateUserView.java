@@ -1,5 +1,6 @@
 package com.example.application.views;
 
+import com.example.application.data.entity.Role;
 import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Team;
 import com.example.application.data.entity.Website;
@@ -11,9 +12,7 @@ import com.helger.commons.annotation.VisibleForTesting;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.checkbox.CheckboxGroup;
-import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
-import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -25,33 +24,36 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 
 import javax.swing.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@org.springframework.stereotype.Component
 @SpringComponent
 @Scope("prototype")
 @PermitAll
 @Route(value = "CreateUser", layout = MainLayout.class)
 @PageTitle("Create User")
+@PreserveOnRefresh
 public class CreateUserView extends VerticalLayout {
     Grid<TUser> grid = new Grid<>(TUser.class);
-    //CheckboxGroup<String> showActiveInactiveUsers = new CheckboxGroup<>();
-    MultiSelectListBox<String> showActiveInactiveUsers = new MultiSelectListBox<>();
-    private final String showActiveUsers = "show active users";
-    private final String showInactiveUsers = "show inactive users";
+    Checkbox showInactiveUsers = new Checkbox();
     TextField filterText = new TextField();
     CreateUserForm form;
     TUserService userService;
+
+    //public static String username;
+
     WebsiteService websiteService;
     RoleService roleService;
 
@@ -74,6 +76,7 @@ public class CreateUserView extends VerticalLayout {
         add(getToolbar(), getContent());
         updateList();
         closeEditor();
+
     }
 
 
@@ -101,21 +104,27 @@ public class CreateUserView extends VerticalLayout {
                         .collect(Collectors.joining(", ")))
                 .setHeader("Websites");
 
-        grid.asSingleSelect().addValueChangeListener(event ->
-                editUser(event.getValue()));
-    }
 
+        // only System-Admin can edit users
+        if (userService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("System-Admin")) {
+            grid.asSingleSelect().addValueChangeListener(event ->
+                    editUser(event.getValue()));
+        }
 
+   }
 
     private void editUser(TUser user) {
         if (user == null) {
             closeEditor();
         } else {
-            if (user.getUsername() == MainLayout.username){
-                Notification notification = Notification.show("ERROR. You're trying to edit the logged in user.");
-                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-                closeEditor();
-                return;
+            if (user.getUsername() != null){
+                if (user.getUsername().equals(MainLayout.username)){
+                    Notification notification = Notification.show("ERROR. You're trying to edit the logged in user: " + MainLayout.username);
+                    notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                    closeEditor();
+                    return;
+                }
+                user = userService.findUserById(user.getId()); //reset user data
             }
             form.setUser(user);
             form.setVisible(true);
@@ -156,6 +165,7 @@ public class CreateUserView extends VerticalLayout {
                     websiteService.saveWebsite(w);
                 }
             }
+            UI.getCurrent().getPage().reload(); //Page needs to be reloaded for all changes to take place correctly
         }
     }
     private void saveUser(CreateUserForm.SaveEvent event) {
@@ -187,13 +197,11 @@ public class CreateUserView extends VerticalLayout {
 
 
         userService.saveUser(user);
-        updateWebsites(user);
-
         updateList();
         closeEditor();
-        UI.getCurrent().getPage().reload(); //Page needs to be reloaded for all changes to take place correctly
 
-        sUDservice.createUser(user);
+        updateWebsites(user);
+
         Notification notification = Notification
                 .show("User " + user.getUsername() + " updated!");
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
@@ -205,45 +213,35 @@ public class CreateUserView extends VerticalLayout {
         closeEditor();
     }
     private void updateList() {
-        String searchTerm = filterText.getValue().trim(); // Abrufen des Suchbegriffs
+        String searchTerm = filterText.getValue().trim(); // fetch searchterm
 
+/* old search without checkbox for inactive users
         if (searchTerm.isEmpty()) {
             grid.setItems(userService.findAllUsers()); // alle Anzeigen
         } else {
             List<TUser> filteredUsers = userService.findUsersBySearchTerm(searchTerm); // Suche
             grid.setItems(filteredUsers);
         }
-        //Update List according to Checkboxes active users/inactive users
-        grid.setItems(userService.findAllActiveUsers());
+ */
 
-        if (searchTerm.isEmpty()) {
-            grid.setItems(userService.findAllUsers()); // alle Anzeigen
-        } else {
-            List<TUser> filteredUsers = userService.findUsersBySearchTerm(searchTerm); // Suche
-            grid.setItems(filteredUsers);
+        // combination search and checkbox for inactive users
+        if (searchTerm.isEmpty() && showInactiveUsers.getValue()) {
+            grid.setItems(userService.findAllUsers()); // all users (active + inactive)
+        } else if (searchTerm.isEmpty() && !showInactiveUsers.getValue()) {
+            grid.setItems(userService.findAllActiveUsers()); // only active users
+        } else if (!searchTerm.isEmpty() && showInactiveUsers.getValue()) {
+            List<TUser> filteredUsers = userService.findAllUsersBySearchTerm(searchTerm);
+            grid.setItems(filteredUsers); // all users (active + inactive) according to searchterm
+        } else if (!searchTerm.isEmpty() && !showInactiveUsers.getValue()) {
+            List<TUser> filteredUsers = userService.findActiveUsersBySearchTerm(searchTerm);
+            grid.setItems(filteredUsers); // all active users according to searchterm
         }
-
-        /* Checkboxes active/inactive users
-        if (showActiveInactiveUsers.isSelected("active users") && showActiveInactiveUsers.isSelected("inactive users")) {
-            grid.setItems(userService.findAllUsers());
-        } else if (showActiveInactiveUsers.isSelected("active users")) {
-            grid.setItems(userService.findAllActiveUsers());
-        } else if (showActiveInactiveUsers.isSelected("inactive users")) {
-        grid.setItems(userService.findAllInactiveUsers());
-        }
-         */
-
-        //MultiSelectListBox active/inactive users
-        if (showActiveInactiveUsers.isSelected(showActiveUsers) && showActiveInactiveUsers.isSelected(showInactiveUsers)) {
-            grid.setItems(userService.findAllUsers());
-        } else if (showActiveInactiveUsers.isSelected(showActiveUsers)) {
-            grid.setItems(userService.findAllActiveUsers());
-        } else if (showActiveInactiveUsers.isSelected(showInactiveUsers)) {
-            grid.setItems(userService.findAllInactiveUsers());
-        }
-
     }
     private Component getToolbar() {
+        showInactiveUsers.setLabel("show inactive users");
+        add(showInactiveUsers);
+        showInactiveUsers.addValueChangeListener(e -> updateList());
+
         filterText.setPlaceholder("search...");
         /*
         Checkboxes active/inactive users
@@ -279,13 +277,20 @@ public class CreateUserView extends VerticalLayout {
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
 
-        //Button to create new user
-        Button addTicketButton = new Button("create user");
-        addTicketButton.addClickListener(click -> addUser());
+        //only System-Admin can create new users, other internal roles can only search the user list
+        if (userService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("System-Admin")) {
+            Button addTicketButton = new Button("Create User");
+            addTicketButton.addClickListener(click -> addUser());
 
-        var toolbar = new HorizontalLayout(filterText, addTicketButton);
-        toolbar.addClassName("toolbar");
-        return toolbar;
+            var toolbar = new HorizontalLayout(filterText, addTicketButton);
+            toolbar.addClassName("toolbar");
+            return toolbar;
+        } else {
+            var toolbar = new HorizontalLayout(filterText);
+            toolbar.addClassName("toolbar");
+            return toolbar;
+        }
+
     }
 
     private void addUser() {
@@ -293,4 +298,6 @@ public class CreateUserView extends VerticalLayout {
         TUser user = new TUser();
         editUser(user);
     }
+
+
 }

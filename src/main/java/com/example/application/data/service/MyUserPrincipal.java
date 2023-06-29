@@ -10,9 +10,12 @@ import java.util.Collections;
 
 public class MyUserPrincipal implements UserDetails {
     private TUser user;
+    private boolean enabled = true;
 
-    public MyUserPrincipal(TUser user) {
+    public MyUserPrincipal(TUser user, boolean active) {
+
         this.user = user;
+        this.enabled = active;
     }
 
     @Override
@@ -48,6 +51,6 @@ public class MyUserPrincipal implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }

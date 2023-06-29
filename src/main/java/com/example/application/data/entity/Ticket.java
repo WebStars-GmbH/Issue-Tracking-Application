@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity
 public class Ticket extends AbstractEntity{
@@ -53,8 +54,8 @@ public class Ticket extends AbstractEntity{
     public Ticket(){}
 
     //Getters and Setters
-    public Timestamp getRegister_date() {
-        return register_date;
+    public LocalDate getRegister_date() {
+        return register_date.toLocalDateTime().toLocalDate();
     }
 
     public void setRegister_date(Timestamp register_date) {
@@ -77,24 +78,27 @@ public class Ticket extends AbstractEntity{
         this.header = header;
     }
 
-    public Timestamp getAssign_date() {
-        return assign_date;
+    public LocalDate getAssign_date() {
+        return assign_date.toLocalDateTime().toLocalDate();
     }
 
     public void setAssign_date(Timestamp assign_date) {
         this.assign_date = assign_date;
     }
 
-    public Timestamp getClose_date() {
-        return close_date;
+    public LocalDate getClose_date() {
+        if (close_date == null) {
+            return null;
+        }
+        return close_date.toLocalDateTime().toLocalDate();
     }
 
     public void setClose_date(Timestamp close_date) {
         this.close_date = close_date;
     }
 
-    public Timestamp getLast_update() {
-        return last_update;
+    public LocalDate getLast_update() {
+        return last_update.toLocalDateTime().toLocalDate();
     }
 
     public void setLast_update(Timestamp last_update) {
@@ -186,5 +190,21 @@ public class Ticket extends AbstractEntity{
     public String getClosedDateString(){
         return "" + this.close_date;
     }
+
+    public long getTimeBetweenAssignedAndSolved(){
+        if (assign_date == null || close_date == null) return 0;
+        return (this.close_date.getTime() - this.assign_date.getTime());
+    }
+
+    public long getTimeBetweenRegisteredAndSolved(){
+        if (close_date == null) return 0;
+        return (this.close_date.getTime() - this.register_date.getTime());
+    }
+
+    public long getTimeBetweenRegisteredAndCancelled(){
+        if (!this.getStatus().equals("Cancelled")) return 0;
+        return (this.last_update.getTime() - this.register_date.getTime());
+    }
+
 }
 

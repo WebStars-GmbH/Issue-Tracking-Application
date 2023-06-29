@@ -5,12 +5,13 @@ import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Team;
 import com.example.application.data.repository.TUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Component
 public class TUserService {
     private final TUserRepository tUserRepository;
 
@@ -23,13 +24,7 @@ public class TUserService {
         return tUserRepository.findAll();
     }
 
-    public List<TUser> findAllActiveUsers() {
-        return tUserRepository.findTUsersActiveTrue(true);
-    }
-
-    public List<TUser> findAllInactiveUsers() {
-        return tUserRepository.findTUsersActiveFalse(true);
-    }
+    public List<TUser> findAllActiveUsers() { return tUserRepository.findTUsersActive(); }
 
     public TUser findUserById(Long id) {
         return tUserRepository.findById(id).orElse(null);
@@ -58,7 +53,7 @@ public class TUserService {
         tUserRepository.deleteById(id);
     }
 
-
+/*
     // Suche nach in einem TUser entweder oder (firstname, lastname, username, email, role, websites)
     public List<TUser> findUsersBySearchTerm(String searchTerm) {
         if (searchTerm == null || searchTerm.isEmpty()) {
@@ -67,5 +62,26 @@ public class TUserService {
             return tUserRepository.searchBySearchTerm(searchTerm);
         }
     }
+*/
+
+    // search in firstname, lastname, username, email, role or websites for ACTIVE users
+    public List<TUser> findActiveUsersBySearchTerm(String searchTerm) {
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            return tUserRepository.findTUsersActive();
+        } else {
+            return tUserRepository.searchActiveBySearchTerm(searchTerm);
+        }
+    }
+
+    // search in firstname, lastname, username, email, role or websites for ALL users (active + inactive)
+    public List<TUser> findAllUsersBySearchTerm(String searchTerm) {
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            return tUserRepository.findAll();
+        } else {
+            return tUserRepository.searchAllBySearchTerm(searchTerm);
+        }
+    }
+
+
 }
 

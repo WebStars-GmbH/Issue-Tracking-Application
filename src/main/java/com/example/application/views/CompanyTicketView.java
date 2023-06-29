@@ -3,6 +3,7 @@ package com.example.application.views;
 import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Ticket;
 import com.example.application.data.service.CrmService;
+import com.example.application.data.service.TUserService;
 import com.example.application.data.service.TicketService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -14,7 +15,6 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -22,23 +22,27 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.Query;
+import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 
+@org.springframework.stereotype.Component
 @SpringComponent
 @Scope("prototype")
 @PermitAll
 @Route(value = "CompanyTicketView", layout = MainLayout.class)
 @PageTitle("Tickets | Webst@rs Ticketing Application")
-public class CompanyTicketView extends VerticalLayout {
+public class CompanyTicketView extends VerticalLayout implements HasUrlParameter<String> {
     Grid<Ticket> grid = new Grid<>(Ticket.class);
 
     TextField websiteFilterText = new TextField("Website");
@@ -53,6 +57,7 @@ public class CompanyTicketView extends VerticalLayout {
     TicketDetailsForm viewDetailsForm;
     CrmService service;
     TicketService ticketService;
+    TUserService tUserService;
 
 
     Grid.Column<Ticket> priorityColumn;
@@ -69,10 +74,20 @@ public class CompanyTicketView extends VerticalLayout {
     Grid.Column<Ticket> closedDateColumn;
     Grid.Column<Ticket> closedByColumn;
 
+    @Override
+    public void setParameter(BeforeEvent event,
+                             @OptionalParameter String parameter) {
+        if (parameter == null) {
+            websiteFilterText.setValue("");
+        } else {
+            websiteFilterText.setValue(parameter);
+        }
+    }
 
-    public CompanyTicketView(CrmService service, TicketService ticketService) {
+    public CompanyTicketView(CrmService service, TicketService ticketService, TUserService tUserService) {
         this.service = service;
         this.ticketService = ticketService;
+        this.tUserService = tUserService;
         addClassName("ticket-view");
         setSizeFull();
         configureGrid();
@@ -99,7 +114,7 @@ public class CompanyTicketView extends VerticalLayout {
         form.addDeleteListener(this::deleteTicket); // <2>
         form.addCloseListener(e -> closeEditor()); // <3>
 
-        addForm = new TicketAddForm(service.findAllWebsites(), service.findAllTUsers("Support-Member"));
+        addForm = new TicketAddForm(service.findAllWebsites());
         addForm.setWidth("70em");
         addForm.addSaveListener(this::saveAddTicket); // <1>
         addForm.addCloseListener(e -> closeEditor()); // <3>
@@ -146,6 +161,22 @@ public class CompanyTicketView extends VerticalLayout {
         closeEditor();
     }
 
+    private void ConfirmAndDeletePermanently(Ticket ticket){
+        closeEditor();
+        ConfirmDialog dialog = new ConfirmDialog();
+        dialog.setHeader("Do you want to delete this ticket?");
+        dialog.setText("Are you sure you want to delete this ticket?");
+        dialog.setCancelable(true);
+        dialog.setConfirmText("Delete Ticket");
+        dialog.setConfirmButtonTheme("error primary");
+        dialog.addConfirmListener(event -> {
+            ticketService.deleteTicket(ticket);
+            updateList();
+            form.setTicket(null);
+            form.setVisible(false);});
+        dialog.open();
+    }
+
     private void configureGrid() {
         grid.addClassNames("ticket-grid");
         grid.setSizeFull();
@@ -162,16 +193,39 @@ public class CompanyTicketView extends VerticalLayout {
         websiteColumn = grid.addColumn(Ticket::getWebsite).setHeader("Website").setSortable(true).setResizable(true);
         registeredByColumn = grid.addColumn(Ticket::getRegistered_by).setHeader("Ticket Owner").setSortable(true).setResizable(true);
         assignedToColumn = grid.addColumn(ticket -> ticket.getAssigned_to() == null ? "" : ticket.getAssigned_to().getUsername()).setHeader("Assigned to").setSortable(true).setResizable(true);
-        registerDateColumn = grid.addColumn(Ticket::getRegister_date).setHeader("Register Date").setSortable(true).setResizable(true);
-        lastUpdateColumn = grid.addColumn(Ticket::getLast_update).setHeader("Last Update").setSortable(true).setResizable(true);
-        closedDateColumn = grid.addColumn(Ticket::getClose_date).setHeader("Closed Date").setSortable(true).setResizable(true);
+        registerDateColumn = grid.addColumn(new LocalDateRenderer<>(Ticket::getRegister_date, () -> DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))).setHeader("Register Date").setSortable(true).setResizable(true);
+        lastUpdateColumn = grid.addColumn(new LocalDateRenderer<>(Ticket::getLast_update, () -> DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))).setHeader("Last Update").setSortable(true).setResizable(true);
+        closedDateColumn = grid.addColumn(new LocalDateRenderer<>(Ticket::getClose_date, () -> DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))).setHeader("Closed Date").setSortable(true).setResizable(true);
         closedByColumn = grid.addColumn(Ticket::getClosed_by).setHeader("Closed By").setSortable(true).setResizable(true);
-
         grid.setColumnReorderingAllowed(true);
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         GridContextMenu<Ticket> menu = grid.addContextMenu();
         menu.addItem("View Details", event -> viewTicket(event.getItem().get()));
+        menu.addItem("Edit Ticket", event -> {
+                    Ticket t = event.getItem().isPresent() ? event.getItem().get() : null;
+                    if (t == null) return;
+                    if (MainLayout.userRole.getRole_name().equals("System-Admin") || MainLayout.userRole.getRole_name().equals("Support-Coordinator")) editTicket(t);
+                    else if (t.getAssigned_to() != null && t.getAssigned_to().getUsername().equals(MainLayout.username)) editTicket(t);
+                    else {
+                        Notification n = Notification.show("This ticket is not assigned to you. Editing is not allowed.");
+                        n.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                    }
+                }
+        );
+        menu.addItem("Delete Ticket",
+            event -> {
+                Ticket t = event.getItem().isPresent() ? event.getItem().get() : null;
+                if (t == null) return;
+                if (MainLayout.userRole.getRole_name().equals("System-Admin") || MainLayout.userRole.getRole_name().equals("Support-Coordinator")) ConfirmAndDelete(t);
+                else if (t.getAssigned_to() != null && t.getAssigned_to().getUsername().equals(MainLayout.username)) ConfirmAndDelete(t);
+                else {
+                    Notification n = Notification.show("This ticket is not assigned to you. Deleting is not allowed.");
+                    n.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                }
+            }
+        );
+        if (MainLayout.userRole.getRole_name().equals("System-Admin")) menu.addItem("Delete Ticket Permanently (System Admin)", event -> ConfirmAndDeletePermanently(event.getItem().get()));
         menu.addItem("Edit Ticket", event -> editTicket(event.getItem().get()));
         menu.addItem("Delete Ticket", event -> ConfirmAndDelete(event.getItem().get()));
         grid.asSingleSelect().addValueChangeListener(event -> viewTicket(event.getValue()));
@@ -212,6 +266,7 @@ public class CompanyTicketView extends VerticalLayout {
         assignedToComboBox.setItemLabelGenerator(TUser::getUsername);
         assignedToComboBox.addValueChangeListener(e -> updateListByAssignedTo());
 
+
         Button myAssignedTicketsButton = new Button("My Assigned Tickets");
         myAssignedTicketsButton.addClickListener(click -> updateListAssignedToAndByStatus(MainLayout.username, "Registered", "NULL", "NULL"));
 
@@ -242,7 +297,6 @@ public class CompanyTicketView extends VerticalLayout {
         Button allOpenTicketsButton = new Button("All Open Tickets");
         allOpenTicketsButton.addClickListener(click -> updateListByStatus("Assigned", "In progress", "Registered"));
 
-
         Button menuButton = new Button("Show/Hide");
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         CompanyTicketView.ColumnToggleContextMenu columnToggleContextMenu = new CompanyTicketView.ColumnToggleContextMenu(menuButton);
@@ -260,6 +314,9 @@ public class CompanyTicketView extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("Closed Date", closedDateColumn);
         columnToggleContextMenu.addColumnToggleItem("Closed By", closedByColumn);
 
+        HorizontalLayout headerLayout = new HorizontalLayout(clearFieldsButton, descriptionFilterText, statusFilterText, websiteFilterText, assignedToComboBox, addTicketButton, menuButton);
+        headerLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
+        headerLayout.addClassName("seerch-row");
 
         HorizontalLayout headerLayout = new HorizontalLayout(clearFieldsButton, descriptionFilterText, statusFilterText, websiteFilterText, assignedToComboBox, addTicketButton, menuButton);
         headerLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
@@ -310,8 +367,15 @@ public class CompanyTicketView extends VerticalLayout {
         if (ticket == null) {
             closeEditor();
         } else {
+            if (ticket.getStatus().equals("Solved") || ticket.getStatus().equals("Cancelled")){
+                Notification notification = Notification.show("This ticket cannot be edited. Status: " + ticket.getStatus());
+                return;
+            }
             closeEditor();
+
             ticket = ticketService.getTicket(ticket.getId());
+            //TICKETFORM: UNCOMMENT, IF YOU WANT TO FILTER SUPPORT-MEMBERS BY TEAMS ASSIGNED TO THE WEBSITE, OTHERWISE ALL SUPPORT-MEMBERS WILL BE SHOWN
+            form.updateAssignedTo(tUserService.findUsersByTeam(ticket.getWebsite().getTeam()));
             form.setTicket(ticket);
             form.setVisible(true);
             addClassName("editing");
@@ -339,12 +403,12 @@ public class CompanyTicketView extends VerticalLayout {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         ticket.setStatus("Registered");
         String u = MainLayout.username;
-        TUser tuser = service.getTUserByUsername(u);//TODO
+
         ticket.setRegistered_by(u);
         ticket.setRegister_date(timestamp);
         ticket.setLast_update(timestamp);
         String timestampString = new SimpleDateFormat("yyyy.MM.dd.HH.mm").format(timestamp);
-        ticket.setHistory(timestampString + ": created by " + u + "; "); //TODO
+        ticket.setHistory(timestampString + ": created by " + u + "; \n");
     }
 
 
@@ -411,5 +475,4 @@ public class CompanyTicketView extends VerticalLayout {
     private void updateList() {
         grid.setItems(ticketService.findAllTickets(""));
     }
-
 }

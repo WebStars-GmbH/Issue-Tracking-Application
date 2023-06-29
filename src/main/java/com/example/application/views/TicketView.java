@@ -33,6 +33,7 @@ import org.springframework.context.annotation.Scope;
 import java.sql.Timestamp;
 import java.util.List;
 
+@org.springframework.stereotype.Component
 @SpringComponent
 @Scope("prototype")
 @PermitAll
@@ -100,7 +101,7 @@ public class TicketView extends VerticalLayout {
         form.addDeleteListener(this::deleteTicket); // <2>
         form.addCloseListener(e -> closeEditor()); // <3>
 
-        addForm = new TicketAddForm(websiteService.getAllWebsitesByUsername(MainLayout.username), tUserService.findAllTUsersByRole("Support-Member"));
+        addForm = new TicketAddForm(websiteService.getAllWebsitesByUsername(MainLayout.username));
         addForm.setWidth("70em");
         addForm.addSaveListener(this::saveAddTicket); // <1>
         addForm.addCloseListener(e -> closeEditor()); // <3>
