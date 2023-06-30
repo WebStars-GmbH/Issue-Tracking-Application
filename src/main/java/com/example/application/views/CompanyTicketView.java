@@ -2,9 +2,9 @@ package com.example.application.views;
 
 import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Ticket;
-import com.example.application.data.service.CrmService;
 import com.example.application.data.service.TUserService;
 import com.example.application.data.service.TicketService;
+import com.example.application.data.service.WebsiteService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -57,7 +57,7 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
     TicketAddForm addForm;
 
     TicketDetailsForm viewDetailsForm;
-    CrmService service;
+    WebsiteService websiteService;
     TicketService ticketService;
     TUserService tUserService;
 
@@ -86,8 +86,8 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         }
     }
 
-    public CompanyTicketView(CrmService service, TicketService ticketService, TUserService tUserService) {
-        this.service = service;
+    public CompanyTicketView(TicketService ticketService, TUserService tUserService, WebsiteService websiteService) {
+        this.websiteService = websiteService;
         this.ticketService = ticketService;
         this.tUserService = tUserService;
         addClassName("ticket-view");
@@ -110,18 +110,18 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
     }
 
     private void configureForm() {
-        form = new TicketForm(service.findAllWebsites(), service.findAllTUsersByRole("Support-Member"));
+        form = new TicketForm(websiteService.getAllWebsites(), tUserService.findAllTUsersByRole("Support-Member"));
         form.setWidth("70em");
         form.addSaveListener(this::saveTicket); // <1>
         form.addDeleteListener(this::deleteTicket); // <2>
         form.addCloseListener(e -> closeEditor()); // <3>
 
-        addForm = new TicketAddForm(service.findAllWebsites());
+        addForm = new TicketAddForm(websiteService.getAllWebsites());
         addForm.setWidth("70em");
         addForm.addSaveListener(this::saveAddTicket); // <1>
         addForm.addCloseListener(e -> closeEditor()); // <3>
 
-        viewDetailsForm = new TicketDetailsForm(service.findAllWebsites(), service.findAllTUsers("Support-Member"), true);
+        viewDetailsForm = new TicketDetailsForm(websiteService.getAllWebsites(), tUserService.findAllTUsersByRole("Support-Member"), true);
         viewDetailsForm.setWidth("70em");
         viewDetailsForm.addEditListener(e -> editTicket(grid.getSelectedItems().iterator().next()));
         viewDetailsForm.addCloseListener(e -> closeEditor()); // <3>
@@ -262,10 +262,12 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         websiteFilterText.setValueChangeMode(ValueChangeMode.LAZY);
         websiteFilterText.addValueChangeListener(e -> updateListByWebsite());
 
+        /*
         statusFilterText.setPlaceholder("Filter by status...");
         statusFilterText.setClearButtonVisible(true);
         statusFilterText.setValueChangeMode(ValueChangeMode.LAZY);
         statusFilterText.addValueChangeListener(e -> updateListByStatus());
+         */
 
         descriptionFilterText.setPlaceholder("Filter by description...");
         descriptionFilterText.setTooltipText("Please type what the description should contain...");
@@ -277,7 +279,7 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         statusComboBox.setTooltipText("Please choose the status of the tickets you want to look for...");
         statusComboBox.addValueChangeListener(e -> updateListByStatus());
 
-        List<TUser> users = service.findAllTUsersByRole("Support-Member");
+        List<TUser> users = tUserService.findAllTUsersByRole("Support-Member");
         assignedToComboBox.setTooltipText("Please choose the assigned users you want to look for...");
         assignedToComboBox.setItems(users);
         assignedToComboBox.setItemLabelGenerator(TUser::getUsername);
@@ -335,9 +337,9 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         columnToggleContextMenu.addColumnToggleItem("Closed Date", closedDateColumn);
         columnToggleContextMenu.addColumnToggleItem("Closed By", closedByColumn);
 
-        HorizontalLayout headerLayout = new HorizontalLayout(clearFieldsButton, descriptionFilterText, statusFilterText, websiteFilterText, assignedToComboBox, addTicketButton, menuButton);
+        HorizontalLayout headerLayout = new HorizontalLayout(clearFieldsButton, descriptionFilterText, statusComboBox, websiteFilterText, assignedToComboBox, addTicketButton, menuButton);
         headerLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
-        headerLayout.addClassName("seerch-row");
+        headerLayout.addClassName("search-row");
 
         HorizontalLayout toolbar;
         if (String.valueOf(MainLayout.userRole).equals("System-Admin")) {

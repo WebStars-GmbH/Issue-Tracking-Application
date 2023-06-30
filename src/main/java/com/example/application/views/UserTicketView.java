@@ -1,9 +1,9 @@
 package com.example.application.views;
 
-import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Ticket;
-import com.example.application.data.service.CrmService;
+import com.example.application.data.service.TUserService;
 import com.example.application.data.service.TicketService;
+import com.example.application.data.service.WebsiteService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -12,11 +12,14 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.function.SerializableBiConsumer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -44,8 +47,9 @@ public class UserTicketView extends VerticalLayout {
 
     TicketDetailsForm viewDetailsForm;
     TicketAddForm addForm;
-    CrmService service;
+    TUserService tUserService;
     TicketService ticketService;
+    WebsiteService websiteService;
 
     Grid.Column<Ticket> statusColumn;
     Grid.Column<Ticket> headerColumn;
@@ -60,9 +64,10 @@ public class UserTicketView extends VerticalLayout {
     Grid.Column<Ticket> closedByColumn;
 
 
-    public UserTicketView(CrmService service, TicketService ticketService) {
-        this.service = service;
+    public UserTicketView(TicketService ticketService, TUserService tUserService, WebsiteService websiteService) {
+        this.tUserService = tUserService;
         this.ticketService = ticketService;
+        this.websiteService = websiteService;
         addClassName("ticket-view");
         setSizeFull();
         configureGrid();
@@ -84,11 +89,11 @@ public class UserTicketView extends VerticalLayout {
     }
 
     private void configureForm() {
-        viewDetailsForm = new TicketDetailsForm(service.findAllWebsites(), service.findAllTUsersByRole("Support-Member"), false);
+        viewDetailsForm = new TicketDetailsForm(websiteService.getAllWebsites(), tUserService.findAllTUsersByRole("Support-Member"), false);
         viewDetailsForm.setWidth("70em");
         viewDetailsForm.addCloseListener(e -> closeEditor()); // <3>
 
-        addForm = new TicketAddForm(service.getAllWebsitesByUsername(MainLayout.username));
+        addForm = new TicketAddForm(websiteService.getAllWebsitesByUsername(MainLayout.username));
         addForm.setWidth("70em");
         addForm.addSaveListener(this::saveAddTicket); // <1>
         addForm.addCloseListener(e -> closeEditor()); // <3>
@@ -104,11 +109,9 @@ public class UserTicketView extends VerticalLayout {
         grid.addClassNames("ticket-grid");
         grid.setSizeFull();
 
-
         grid.setColumns();
 
-
-        statusColumn = grid.addColumn(Ticket::getStatus).setHeader("Status").setSortable(true).setResizable(true);
+        statusColumn = grid.addColumn(createStatusComponentRenderer()).setHeader("Status").setAutoWidth(true).setComparator(Ticket::getStatus);
         headerColumn = grid.addColumn(Ticket::getHeader).setHeader("Header").setSortable(true).setResizable(true);
         descriptionColumn = grid.addColumn(Ticket::getDescription).setHeader("Description").setSortable(true).setResizable(true);
         historyColumn = grid.addColumn(Ticket::getHistory).setHeader("History").setSortable(true).setResizable(true);
@@ -134,6 +137,23 @@ public class UserTicketView extends VerticalLayout {
         grid.setItems(ticket);
         add(grid);
     }
+
+    private static final SerializableBiConsumer<Span, Ticket> statusComponentUpdater = (span, ticket) -> {
+        String status = ticket.getStatus();
+        String theme = "";
+        if (status.equals("Solved")) theme = String.format("badge %s", "success");
+        else if (status.equals("Cancelled")) theme = String.format("badge %s", "error");
+        else if (status.equals("Registered")) theme = String.format("badge %s", "warning");
+        else if (status.equals("Assigned")) theme = String.format("badge %s", "contrast");
+        else if (status.equals("In Progress")) theme = String.format("badge");
+        span.getElement().setAttribute("theme", theme);
+        span.setText(status);
+    };
+
+    private static ComponentRenderer<Span, Ticket> createStatusComponentRenderer() {
+        return new ComponentRenderer<>(Span::new, statusComponentUpdater);
+    }
+
     private Component getToolbar() {
         descriptionFilterText.setPlaceholder("Filter by description...");
         descriptionFilterText.setTooltipText("Please type what the description should contain...");
@@ -196,7 +216,6 @@ public class UserTicketView extends VerticalLayout {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         ticket.setStatus("Registered");
         String u = MainLayout.username;
-        TUser tuser = service.getTUserByUsername(u);
         ticket.setRegistered_by(u);
         ticket.setRegister_date(timestamp);
         ticket.setLast_update(timestamp);
@@ -211,7 +230,7 @@ public class UserTicketView extends VerticalLayout {
         grid.setItems(ticketService.findAllTicketsByRegisteredBy(username));
     }
     private void updateListByDescription() {
-        grid.setItems(ticketService.findAllTicketsByDescription(descriptionFilterText.getValue()));
+        grid.setItems(ticketService.findAllTicketsByDescriptionAndRegisteredBy(descriptionFilterText.getValue(), MainLayout.username));
     }
 
     static class ColumnToggleContextMenu extends ContextMenu {

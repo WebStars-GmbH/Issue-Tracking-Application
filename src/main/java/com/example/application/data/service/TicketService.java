@@ -62,6 +62,14 @@ public class TicketService {
         }
     }
 
+    public List<Ticket> findAllTicketsByDescriptionAndRegisteredBy(String stringFilter, String registeredBy){
+        if (stringFilter == null || stringFilter.isEmpty()) {
+            return ticketRepository.searchByRegisteredBy(registeredBy);
+        } else {
+            return ticketRepository.searchByDescriptionAndRegisteredBy(stringFilter, registeredBy);
+        }
+    }
+
     public List<Ticket> findAllTicketsByAllFilters(String statusFilter, String websiteFilter, String descriptionFilter, String assignedToFilter){
         return ticketRepository.searchByAllFilters(statusFilter, websiteFilter, descriptionFilter, assignedToFilter);
     }
