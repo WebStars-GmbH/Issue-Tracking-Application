@@ -40,8 +40,9 @@ public class TeamView extends VerticalLayout {
         configureGrid();
         configureForm();
 
-        if (tUserService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("System-Admin") || tUserService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("Support-Coordinator")) add(getToolbar(), getContent());
-        else add(getContent());
+        //if (tUserService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("System-Admin") || tUserService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("Support-Coordinator")) add(getToolbar(), getContent());
+        //else add(getContent()); //UNCOMMENT AND DELETE NEXT LINE IF ONLY SYSADMIN AND COORDINATOR CAN ADD TEAMS...
+        add(getToolbar(), getContent());
         updateList();
         closeEditor();
     }
@@ -99,7 +100,8 @@ public class TeamView extends VerticalLayout {
                         .collect(Collectors.joining(", ")))
                 .setHeader("Members");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
-        if (tUserService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("System-Admin") || tUserService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("Support-Coordinator")) grid.asSingleSelect().addValueChangeListener(event -> editTeam(event.getValue()));
+        //if (tUserService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("System-Admin") || tUserService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("Support-Coordinator")) //UNCOMMENT IF ONLY SYSADMIN AND COORDINATOR CAN EDIT TEAMS...
+        grid.asSingleSelect().addValueChangeListener(event -> editTeam(event.getValue()));
     }
 
     private Component getToolbar() {

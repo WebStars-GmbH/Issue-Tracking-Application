@@ -29,10 +29,10 @@ public class DashboardSupportTeamMember extends VerticalLayout {
     private final TUserService tUserService;
     private final TeamService teamService;
 
-    List<Ticket> allTickets;
-    List<Ticket> openTickets;
-    List<Ticket> solvedTickets;
-    List<Ticket> cancelledTickets;
+    int allTicketsCount;
+    int openTicketsCount;
+    int solvedTicketsCount;
+    int cancelledTicketsCount;
 
     Long averageSolveTime = Long.valueOf(0);
 
@@ -55,24 +55,25 @@ public class DashboardSupportTeamMember extends VerticalLayout {
     }
 
     private void calculateStats(){
-        allTickets = ticketService.findAllTicketsByAssignedTo(MainLayout.username);
-        openTickets = ticketService.findAllTicketsByAssignedToAndStatus(MainLayout.username, "Registered", "Assigned", "In progress");
-        solvedTickets = ticketService.findAllTicketsByAssignedToAndStatus(MainLayout.username, "Solved", "Solved", "Solved");
-        cancelledTickets = ticketService.findAllTicketsByAssignedToAndStatus(MainLayout.username, "Cancelled", "Cancelled", "Cancelled");
-        if (solvedTickets.size() != 0) {
+
+        openTicketsCount = ticketService.openTicketCountByAssignedTo(MainLayout.username);
+        solvedTicketsCount = ticketService.ticketCountByAssignedTo(MainLayout.username, "Solved");
+        cancelledTicketsCount = ticketService.ticketCountByAssignedTo(MainLayout.username, "Cancelled");
+
+        allTicketsCount = ticketService.ticketCountByAssignedTo(MainLayout.username, "");
+
+        if (solvedTicketsCount != 0) {
+            List<Ticket> solvedTickets = ticketService.findAllTicketsByAssignedToAndStatus(MainLayout.username, "Solved", "Solved", "Solved");
             for (Ticket t : solvedTickets) averageSolveTime += t.getTimeBetweenAssignedAndSolved();
-            averageSolveTime = averageSolveTime/solvedTickets.size();
+            averageSolveTime = averageSolveTime/solvedTicketsCount;
         }
     }
 
     private Component getSupportTeamMemberStats() {
 
         String stats = ("User: " + MainLayout.username + "<br>Name: " + tUserService.findUserByUsername(MainLayout.username).getFirstname() + " " + tUserService.findUserByUsername(MainLayout.username).getLastname() + "<br><br>");
-        stats += openTickets.size() + " open tickets<br>";
-        if (solvedTickets.size() != 0) {
-            stats += solvedTickets.size() + " solved tickets<br>";
-            for (Ticket t : solvedTickets) averageSolveTime += t.getTimeBetweenAssignedAndSolved();
-            averageSolveTime = averageSolveTime/solvedTickets.size();
+        stats += openTicketsCount + " open tickets<br>";
+        if (solvedTicketsCount != 0) {
             stats += "Average solve time (since Assignment): " + TimeFormatUtility.millisecondsToTimeFormat(averageSolveTime);
         }
         Span openTicketsStats = new Span();
@@ -88,26 +89,31 @@ public class DashboardSupportTeamMember extends VerticalLayout {
         Chart chart = new Chart(ChartType.PIE);
 
         Configuration conf = chart.getConfiguration();
-        conf.setTitle("Solving Rate: " + (solvedTickets.size()*100)/allTickets.size() + "%");
 
-        PlotOptionsPie plotOptions = new PlotOptionsPie();
-        plotOptions.setDepth(45);
-        conf.setPlotOptions(plotOptions);
+        if (allTicketsCount != 0) {
+            conf.setTitle("Solving Rate: " + (solvedTicketsCount * 100) / allTicketsCount + "%");
 
-        conf.getTitle().getStyle().setColor(SolidColor.GRAY);
-        conf.getChart().setBackgroundColor(new SolidColor(255,255,255,0));
+            PlotOptionsPie plotOptions = new PlotOptionsPie();
+            plotOptions.setDepth(45);
+            conf.setPlotOptions(plotOptions);
 
-        // In 3D!
-        Options3d options3d = new Options3d();
-        options3d.setEnabled(true);
-        options3d.setAlpha(60);
+            conf.getTitle().getStyle().setColor(SolidColor.GRAY);
+            conf.getChart().setBackgroundColor(new SolidColor(255, 255, 255, 0));
 
-        conf.getChart().setOptions3d(options3d);
+            // In 3D!
+            Options3d options3d = new Options3d();
+            options3d.setEnabled(true);
+            options3d.setAlpha(60);
 
-        DataSeries series = new DataSeries();
-        series.add(new DataSeriesItem("Solved Tickets", solvedTickets.size()));
-        series.add(new DataSeriesItem("Open Tickets", openTickets.size()));
-        conf.addSeries(series);
+            conf.getChart().setOptions3d(options3d);
+
+            DataSeries series = new DataSeries();
+            series.add(new DataSeriesItem("Open Tickets", openTicketsCount));
+            series.add(new DataSeriesItem("Cancelled Tickets", cancelledTicketsCount));
+            series.add(new DataSeriesItem("Solved Tickets", solvedTicketsCount));
+
+            conf.addSeries(series);
+        }
         return chart;
     }
     private Chart getMemberChartSpeed() {

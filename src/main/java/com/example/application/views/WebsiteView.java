@@ -1,7 +1,6 @@
 package com.example.application.views;
 
 import com.example.application.data.entity.Website;
-import com.example.application.data.service.CrmService;
 import com.example.application.data.service.TUserService;
 import com.example.application.data.service.TeamService;
 import com.example.application.data.service.WebsiteService;
@@ -27,13 +26,12 @@ import org.springframework.context.annotation.Scope;
 public class WebsiteView extends VerticalLayout {
     Grid<Website> grid = new Grid<>(Website.class);
     WebsiteForm form;
-    CrmService service;
-
 
     WebsiteService websiteService;
 
     TUserService tUserService;
     TeamService teamService;
+
 
     public WebsiteView(WebsiteService websiteService, TUserService tUserService, TeamService teamService) {
         this.teamService = teamService;
@@ -44,8 +42,7 @@ public class WebsiteView extends VerticalLayout {
         configureGrid();
         configureForm();
 
-        if (tUserService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("System-Admin")) add(getToolbar(), getContent());
-        else add(getContent());
+        add(getToolbar(), getContent());
         updateList();
         closeEditor();
     }
@@ -62,9 +59,9 @@ public class WebsiteView extends VerticalLayout {
     private void configureForm() {
         form = new WebsiteForm(teamService.findAllTeams(""), tUserService.findAllUsers());
         form.setWidth("70em");
-        form.addSaveListener(this::saveWebsite); // <1>
-        form.addDeleteListener(this::deleteWebsite); // <2>
-        form.addCloseListener(e -> closeEditor()); // <3>
+        form.addSaveListener(this::saveWebsite);
+        form.addDeleteListener(this::deleteWebsite);
+        form.addCloseListener(e -> closeEditor());
     }
 
     private void saveWebsite(WebsiteForm.SaveEvent event) {
@@ -99,7 +96,6 @@ public class WebsiteView extends VerticalLayout {
         grid.setSizeFull();
         grid.setColumns("website_name");
 
-
         grid.addColumn(website -> website.getTeam().getName()).setHeader("Team").setSortable(true);
         grid.addColumn(website -> website.getUser() == null ? "" : website.getUser().getUsername()).setHeader("Owner").setSortable(true);
         grid.addColumn(
@@ -119,7 +115,7 @@ public class WebsiteView extends VerticalLayout {
         */
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
-        if (tUserService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("System-Admin")) grid.asSingleSelect().addValueChangeListener(event -> editWebsite(event.getValue()));
+        grid.asSingleSelect().addValueChangeListener(event -> editWebsite(event.getValue()));
     }
 
     private static final String LIT_TEMPLATE_HTML = """
@@ -133,7 +129,9 @@ public class WebsiteView extends VerticalLayout {
         Button addWebsiteButton = new Button("Add Website");
         addWebsiteButton.addClickListener(click -> addWebsite());
 
-        var toolbar = new HorizontalLayout(addWebsiteButton);
+        var toolbar = new HorizontalLayout();
+
+        toolbar.add(addWebsiteButton);
         toolbar.addClassName("toolbar");
         return toolbar;
     }

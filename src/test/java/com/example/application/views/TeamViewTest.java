@@ -10,7 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class TeamViewTest {
+public class TeamViewTest {
+
+    static {
+        // Prevent Vaadin Development mode to launch browser window
+        System.setProperty("vaadin.launch-browser", "false");
+    }
     @Autowired
     private TeamView teamView;
 

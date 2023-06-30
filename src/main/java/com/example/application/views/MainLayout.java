@@ -111,44 +111,34 @@ public class MainLayout extends AppLayout {
                     //new RouterLink("Dashboard", DashboardView.class),
                     new RouterLink("My Tickets", UserTicketView.class)
             ));
-
- /* alternative if other internal roles than System-Admin should not see the list of users > if used line new RouterLink("Users", CreateUserView.class), in following else-block has to be deleted
-        } else if (userRoleEntity.getRole_name().equals("System-Admin")) {
-            addToDrawer(new VerticalLayout(
-                    new RouterLink("Dashboard", DashboardView.class),
-                    new RouterLink("Tickets", CompanyTicketView.class),
-                    new RouterLink("Users", CreateUserView.class),
-                    new RouterLink("Teams", TeamView.class),
-                    new RouterLink("Websites", WebsiteView.class)
-            ));
-*/
         }
         else if (userRoleEntity.getRole_name().equals("Support-Member")) {
             addToDrawer(new VerticalLayout(
                     new RouterLink("My Statistics", DashboardSupportTeamMember.class),
-                    new RouterLink("My Tickets", CompanyTicketView.class),
-                    new RouterLink("View Users", CreateUserView.class),
-                    new RouterLink("View Teams", TeamView.class),
-                    new RouterLink("View Websites", WebsiteView.class)
+                    new RouterLink("My Tickets", CompanyTicketView.class)
+            ));
+        }
+        else if (userRoleEntity.getRole_name().equals("Support-Coordinator")) {
+            addToDrawer(new VerticalLayout(
+                    new RouterLink("Team Statistics", DashboardSupportCoordinator.class),
+                    new RouterLink("Manage Teams", TeamView.class),
+                    new RouterLink("Tickets", CompanyTicketView.class)
+            ));
+        }
+        else if (userRoleEntity.getRole_name().equals("Management")) {
+            addToDrawer(new VerticalLayout(
+                    new RouterLink("Company Statistics", DashboardView.class),
+                    new RouterLink("Tickets", CompanyTicketView.class)
             ));
         }
         else  {
             addToDrawer(new VerticalLayout(
                     new RouterLink("Dashboard", DashboardView.class),
-                    new RouterLink("Tickets", CompanyTicketView.class),
                     new RouterLink("Users", CreateUserView.class),
                     new RouterLink("Teams", TeamView.class),
-                    new RouterLink("Websites", WebsiteView.class)
+                    new RouterLink("Websites", WebsiteView.class),
+                    new RouterLink("Tickets", CompanyTicketView.class)
             ));
         }
     }
-
-/*    //or like this with a new function for every role and the if in the mainlayout function
-    private void createDrawerCustomer() {
-        addToDrawer(new VerticalLayout(
-                new RouterLink("Tickets", UserTicketView.class)
-                new RouterLink("Tickets", TeamView.class)
-        ));
-    }*/
-
 }

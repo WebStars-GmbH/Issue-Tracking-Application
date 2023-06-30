@@ -205,5 +205,4 @@ public class Ticket extends AbstractEntity{
         if (!this.getStatus().equals("Cancelled")) return 0;
         return (this.last_update.getTime() - this.register_date.getTime());
     }
-
 }

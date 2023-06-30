@@ -159,4 +159,13 @@ public class TicketService {
     public List<Ticket> searchTicketsByUserAndStatus(String name, String status1, String status2, String status3) {
         return ticketRepository.searchByRegisteredByStatus(name, status1, status2, status3);
     }
+
+    public int ticketCountByAssignedTo(String assignedTo, String status){
+        if (status.equals("")) return ticketRepository.ticketCountByAssignedTo(assignedTo);
+        else return ticketRepository.ticketCountByAssignedToAndStatus(assignedTo, status);
+    }
+
+    public int openTicketCountByAssignedTo(String assignedTo){
+        return ticketRepository.openTicketCountByAssignedTo(assignedTo);
+    }
 }

@@ -77,4 +77,12 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "or lower(t.status) like lower('Assigned') " +
             "or lower(t.status) like lower('In progress') ")
     List<Ticket> searchByOpenStatus();
+
+    @Query("select count(t) from Ticket t where lower(t.assigned_to.username) like lower(:assignedToFilter)")
+    int ticketCountByAssignedTo(@Param("assignedToFilter")String assignedToFilter);
+    @Query("select count(t) from Ticket t where lower(t.assigned_to.username) like lower(:assignedToFilter) and lower(t.status) like lower(:statusFilter)")
+    int ticketCountByAssignedToAndStatus(@Param("assignedToFilter")String assignedToFilter, @Param("statusFilter")String statusFilter);
+
+    @Query("select count(t) from Ticket t where lower(t.assigned_to.username) like lower(:assignedToFilter) and t.status not like ('Solved') and t.status not like ('Cancelled')")
+    int openTicketCountByAssignedTo(@Param("assignedToFilter")String assignedToFilter);
 }

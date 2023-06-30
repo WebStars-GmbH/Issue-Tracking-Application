@@ -61,24 +61,24 @@ public class WebsiteForm extends FormLayout {
         save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
 
-        save.addClickListener(event -> validateAndSave()); // <1>
+        save.addClickListener(event -> validateAndSave());
         delete.addClickListener(event -> ConfirmAndDelete());
-        close.addClickListener(event -> fireEvent(new CloseEvent(this))); // <3>
+        close.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
-        binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid())); // <4>
-        //return new HorizontalLayout(save, delete, close);
+        binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
+        //return new HorizontalLayout(save, delete, close); //TODO UNCOMMENT IF IT SHOULD BE POSSIBLE THAT WEBSITES CAN BE DELETED
         return new HorizontalLayout(save, close);
     }
 
     private void validateAndSave() {
         if(binder.isValid()) {
-            fireEvent(new SaveEvent(this, binder.getBean())); // <6>
+            fireEvent(new SaveEvent(this, binder.getBean()));
         }
     }
 
 
     public void setWebsite(Website website) {
-        binder.setBean(website); // <1>
+        binder.setBean(website);
     }
 
     // Events

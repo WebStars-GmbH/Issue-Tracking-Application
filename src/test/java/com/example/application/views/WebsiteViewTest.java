@@ -10,25 +10,30 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class WebsiteViewTest {
+public class WebsiteViewTest {
+
+    static {
+        // Prevent Vaadin Development mode to launch browser window
+        System.setProperty("vaadin.launch-browser", "false");
+    }
+
     @Autowired
     private WebsiteView websiteView;
 
     @Test
-    public void formShownWhenWebsiteSelected() {
+    public void formShownWhenContactSelected() {
         Grid<Website> grid = websiteView.grid;
-        Website firstWebsite = getFirstItem(grid);
+        Website firstTicket = getFirstItem(grid);
 
         WebsiteForm form = websiteView.form;
 
         assertFalse(form.isVisible());
-        grid.asSingleSelect().setValue(firstWebsite);
+        grid.asSingleSelect().setValue(firstTicket);
         assertTrue(form.isVisible());
-        assertEquals(firstWebsite.getWebsite_name(), form.website_name.getValue());
+        assertEquals(firstTicket.getWebsite_name(), form.website_name.getValue());
     }
 
     private Website getFirstItem(Grid<Website> grid) {
-        return((ListDataProvider<Website>) grid.getDataProvider()).getItems().iterator().next();
+        return( (ListDataProvider<Website>) grid.getDataProvider()).getItems().iterator().next();
     }
-
 }
