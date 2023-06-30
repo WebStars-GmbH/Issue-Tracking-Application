@@ -9,6 +9,12 @@ a[highlight] {
     text-decoration: underline;
 }
 
+html {
+    --lumo-primary-color: #009696;
+    --lumo-primary-text-color: #3dc517;
+
+}
+
 [theme~="dark"] {
     --lumo-base-color: #272d2d;
 
