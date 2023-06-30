@@ -21,7 +21,6 @@ import java.util.List;
 @PageTitle("Dashboard | Webst@rs Ticketing Application")
 public class DashboardView extends VerticalLayout {
 
-    private final CrmService service;
     private final TicketService ticketService;
     private final TUserService tUserService;
     private final WebsiteService websiteService;
@@ -30,14 +29,11 @@ public class DashboardView extends VerticalLayout {
     Grid<Website> grid = new Grid<>(Website.class);
 
 
-    public DashboardView(CrmService service, TicketService ticketService, TUserService tUserService, WebsiteService websiteService, TeamService teamService) {
-        this.service = service;
+    public DashboardView(TicketService ticketService, TUserService tUserService, WebsiteService websiteService, TeamService teamService) {
         this.ticketService = ticketService;
         this.tUserService = tUserService;
         this.teamService = teamService;
         this.websiteService = websiteService;
-
-
 
         addClassName("dashboard-view");
         //setDefaultHorizontalComponentAlignment(Alignment.CENTER);

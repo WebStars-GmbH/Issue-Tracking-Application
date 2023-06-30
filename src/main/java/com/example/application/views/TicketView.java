@@ -2,7 +2,6 @@ package com.example.application.views;
 
 import com.example.application.data.entity.TUser;
 import com.example.application.data.entity.Ticket;
-import com.example.application.data.service.CrmService;
 import com.example.application.data.service.TUserService;
 import com.example.application.data.service.TicketService;
 import com.example.application.data.service.WebsiteService;
@@ -50,7 +49,6 @@ public class TicketView extends VerticalLayout {
 
     TicketForm form;
     TicketAddForm addForm;
-    CrmService service;
     TicketService ticketService;
     TUserService tUserService;
 
@@ -70,8 +68,7 @@ public class TicketView extends VerticalLayout {
     Grid.Column<Ticket> closedDateColumn = grid.addColumn(Ticket::getClose_date).setHeader("Closed Date").setSortable(true).setResizable(true);
     Grid.Column<Ticket> closedByColumn = grid.addColumn(Ticket::getClosed_by).setHeader("Closed By").setSortable(true).setResizable(true);
 
-    public TicketView(CrmService service, TicketService ticketService, TUserService tUserService, WebsiteService websiteService) {
-        this.service = service;
+    public TicketView(TicketService ticketService, TUserService tUserService, WebsiteService websiteService) {
         this.ticketService = ticketService;
         this.tUserService = tUserService;
         this.websiteService = websiteService;
@@ -215,7 +212,7 @@ public class TicketView extends VerticalLayout {
         statusComboBox.setTooltipText("Please choose the status of the tickets you want to look for...");
         statusComboBox.addValueChangeListener(e -> updateListByStatus());
 
-        List<TUser> users = service.findAllTUsersByRole("Support-Member");
+        List<TUser> users = tUserService.findAllTUsersByRole("Support-Member");
         assignedToComboBox.setTooltipText("Please choose the assigned users you want to look for...");
         assignedToComboBox.setItems(users);
         assignedToComboBox.setItemLabelGenerator(TUser::getUsername);
@@ -283,7 +280,6 @@ public class TicketView extends VerticalLayout {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         ticket.setStatus("Registered");
         String u = MainLayout.username;
-        TUser tuser = service.getTUserByUsername(u);//TODO
         ticket.setRegistered_by(u);
         ticket.setRegister_date(timestamp);
         ticket.setLast_update(timestamp);

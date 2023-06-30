@@ -68,6 +68,12 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
                                             @Param("statusFilter2") String statusFilter2,
                                             @Param("statusFilter3") String statusFilter3);
 
+    @Query("SELECT t FROM Ticket t " +
+            "WHERE lower(t.registered_by) = lower(:registeredFilter) " +
+            "and lower(t.description) like lower(concat('%', :descriptionFilter, '%'))")
+    List<Ticket> searchByDescriptionAndRegisteredBy(@Param("descriptionFilter") String descriptionFilter,
+                                            @Param("registeredFilter") String registeredFilter);
+
     @Query("select t from Ticket t " +
             "where t.id = :searchTerm")
     Ticket getTicketById(@Param("searchTerm") Long searchTerm);
