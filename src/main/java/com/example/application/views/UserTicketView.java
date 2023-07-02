@@ -162,21 +162,17 @@ public class UserTicketView extends VerticalLayout {
         descriptionFilterText.setValueChangeMode(ValueChangeMode.LAZY);
         descriptionFilterText.addValueChangeListener(e -> updateListByDescription());
 
-        Button myOpenTicketsButton = new Button("My Open Tickets");
+        Button myOpenTicketsButton = new Button("My open tickets");
         myOpenTicketsButton.addClickListener(click -> updateListByRegisteredByAndStatus(MainLayout.username, "Registered", "Assigned", "In progress"));
 
-        Button myClosedTicketsButton = new Button("My Closed Tickets");
-        myClosedTicketsButton.addClickListener(click -> updateListByRegisteredByAndStatus(MainLayout.username, "Closed", "Cancelled", "NULL"));
+        Button myClosedTicketsButton = new Button("My closed tickets");
+        myClosedTicketsButton.addClickListener(click -> updateListByRegisteredByAndStatus(MainLayout.username, "Solved", "Cancelled", "NULL"));
 
-        Button allTicketsButton = new Button("All My Tickets");
+        Button allTicketsButton = new Button("All my tickets");
         allTicketsButton.addClickListener(click -> updateListByRegistered(MainLayout.username));
 
-        Button addTicketButton = new Button("Add ticket");
-        //<theme-editor-local-classname>
-        addTicketButton.addClassName("UserTicketView-button-1");
-        addTicketButton.addClickListener(click -> addTicket());
 
-        Button menuButton = new Button("Show/Hide");
+        Button menuButton = new Button("Show/Hide columns");
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         ColumnToggleContextMenu columnToggleContextMenu = new ColumnToggleContextMenu(menuButton);
         columnToggleContextMenu.addColumnToggleItem("Status", statusColumn);
@@ -192,7 +188,12 @@ public class UserTicketView extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("Closed Date", closedDateColumn);
         columnToggleContextMenu.addColumnToggleItem("Closed By", closedByColumn);
 
-        var toolbar = new HorizontalLayout(descriptionFilterText, myOpenTicketsButton, myClosedTicketsButton, allTicketsButton, addTicketButton, menuButton);
+        Button addTicketButton = new Button("Add ticket");
+        //<theme-editor-local-classname>
+        addTicketButton.addClassName("UserTicketView-button-1");
+        addTicketButton.addClickListener(click -> addTicket());
+
+        var toolbar = new HorizontalLayout(descriptionFilterText, myOpenTicketsButton, myClosedTicketsButton, allTicketsButton, menuButton, addTicketButton);
         toolbar.setAlignItems(Alignment.BASELINE);
         toolbar.addClassName("toolbar");
         return toolbar;

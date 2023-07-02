@@ -10,6 +10,16 @@ import java.util.List;
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     @Query("select t from Ticket t " +
+            "order by t.register_date ")
+    List<Ticket> findAllOrderByRegisterDate();
+
+    @Query ("select t from Ticket t " +
+            "where lower(t.registered_by) = lower(concat(:registeredFilter)) " +
+            "order by t.register_date ")
+    List<Ticket> findAllByRegisteredBy(@Param("registeredFilter") String registeredFilter);
+
+
+    @Query("select t from Ticket t " +
             "where lower(t.website.website_name) like lower(concat('%', :searchTerm, '%'))")
     List<Ticket> search(@Param("searchTerm") String searchTerm);
 
@@ -39,7 +49,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> searchByStatusWebsiteDescription(@Param("statusFilter") String statusFilter, @Param("websiteFilter") String websiteFilter, @Param("descriptionFilter") String descriptionFilter);
 
     @Query ("select t from Ticket t " +
-            "where lower(t.registered_by) like lower(concat('%', :registeredFilter, '%'))")
+            "where lower(t.registered_by) like lower(concat('%', :registeredFilter, '%'))" +
+            "order by t.register_date ")
     List<Ticket> searchByRegisteredBy(@Param("registeredFilter") String registeredFilter);
 
     @Query("SELECT t FROM Ticket t " +
@@ -62,7 +73,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     @Query("SELECT t FROM Ticket t " +
             "WHERE lower(t.registered_by) = lower(:registeredFilter) " +
-            "AND lower(t.status) IN (lower(:statusFilter1), lower(:statusFilter2), lower(:statusFilter3))")
+            "AND lower(t.status) IN (lower(:statusFilter1), lower(:statusFilter2), lower(:statusFilter3))" +
+            "ORDER BY t.register_date ")
     List<Ticket> searchByRegisteredByStatus(@Param("registeredFilter") String registeredFilter,
                                             @Param("statusFilter1") String statusFilter1,
                                             @Param("statusFilter2") String statusFilter2,

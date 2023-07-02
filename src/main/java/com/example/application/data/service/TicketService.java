@@ -24,7 +24,7 @@ public class TicketService {
 
     public List<Ticket> findAllTickets(String stringFilter){
         if (stringFilter == null || stringFilter.isEmpty()) {
-            return ticketRepository.findAll();
+            return ticketRepository.findAllOrderByRegisterDate();
         } else {
             return ticketRepository.search(stringFilter);
         }
@@ -40,7 +40,7 @@ public class TicketService {
 
     public List<Ticket> findAllTicketsByAssignedTo(String stringFilter){
         if (stringFilter == null || stringFilter.isEmpty()) {
-            return ticketRepository.findAll();
+            return ticketRepository.findAllOrderByRegisterDate();
         } else {
             return ticketRepository.searchByAssignedTo(stringFilter);
         }
@@ -48,15 +48,16 @@ public class TicketService {
 
     public List<Ticket> findAllTicketsByRegisteredBy(String stringFilter){
         if (stringFilter == null || stringFilter.isEmpty()) {
-            return ticketRepository.findAll();
+            return ticketRepository.findAllOrderByRegisterDate();
         } else {
-            return ticketRepository.searchByRegisteredBy(stringFilter);
+ //           return ticketRepository.searchByRegisteredBy(stringFilter);
+            return ticketRepository.findAllByRegisteredBy(stringFilter);
         }
     }
 
     public List<Ticket> findAllTicketsByDescription(String stringFilter){
         if (stringFilter == null || stringFilter.isEmpty()) {
-            return ticketRepository.findAll();
+            return ticketRepository.findAllOrderByRegisterDate();
         } else {
             return ticketRepository.searchByDescription(stringFilter);
         }

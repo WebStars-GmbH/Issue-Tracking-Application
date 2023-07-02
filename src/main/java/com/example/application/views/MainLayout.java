@@ -24,7 +24,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 public class MainLayout extends AppLayout {
     // Dark Theme
-    Button darkThemetoggleButton = new Button("Toggle theme variant", click -> {
+    Button darkThemetoggleButton = new Button("Change display mode", click -> {
         ThemeList themeList = UI.getCurrent().getElement().getThemeList();
 
         if (themeList.contains(Lumo.DARK)) {
@@ -159,25 +159,25 @@ public class MainLayout extends AppLayout {
 
         if (userRoleEntity.getRole_name().equals("Customer")) {
             addToDrawer(new VerticalLayout(
-                    createDrawerLink("My Tickets", VaadinIcon.TICKET, UserTicketView.class)
+                    createDrawerLink("My tickets", VaadinIcon.TICKET, UserTicketView.class)
             ));
         }
         else if (userRoleEntity.getRole_name().equals("Support-Member")) {
             addToDrawer(new VerticalLayout(
                     createDrawerLink("My Statistics", VaadinIcon.CHART, DashboardSupportTeamMember.class),
-                    createDrawerLink("My Tickets", VaadinIcon.TICKET, CompanyTicketView.class)
+                    createDrawerLink("My tickets", VaadinIcon.TICKET, CompanyTicketView.class)
             ));
         }
         else if (userRoleEntity.getRole_name().equals("Support-Coordinator")) {
             addToDrawer(new VerticalLayout(
-                    createDrawerLink("Team Statistics", VaadinIcon.CHART, DashboardSupportCoordinator.class),
-                    createDrawerLink("Manage Teams", VaadinIcon.USER, TeamView.class),
+                    createDrawerLink("Team statistics", VaadinIcon.CHART, DashboardSupportCoordinator.class),
+                    createDrawerLink("Manage teams", VaadinIcon.USER, TeamView.class),
                     createDrawerLink("Tickets", VaadinIcon.TICKET, CompanyTicketView.class)
             ));
         }
         else if (userRoleEntity.getRole_name().equals("Management")) {
             addToDrawer(new VerticalLayout(
-                    createDrawerLink("Company Statistics", VaadinIcon.CHART, DashboardView.class),
+                    createDrawerLink("Company statistics", VaadinIcon.CHART, DashboardView.class),
                     createDrawerLink("Tickets", VaadinIcon.TICKET, CompanyTicketView.class)
             ));
         }
