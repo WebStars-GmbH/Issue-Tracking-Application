@@ -12,6 +12,8 @@ a[highlight] {
 html {
     --lumo-primary-color: #009696;
     --lumo-primary-text-color: #3dc517;
+    --lumo-font-size-m: 1.23rem;
+    --lumo-line-height-s: 1.5;
 
 }
 
@@ -38,6 +40,6 @@ html {
 
 .background-image{
     width: 100%;
-    height: 82vh;
+    height: 100%;
     object-fit: fill;
 }

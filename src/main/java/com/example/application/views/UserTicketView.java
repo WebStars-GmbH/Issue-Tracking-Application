@@ -54,7 +54,7 @@ public class UserTicketView extends VerticalLayout {
     Grid.Column<Ticket> statusColumn;
     Grid.Column<Ticket> headerColumn;
     Grid.Column<Ticket> descriptionColumn;
-    Grid.Column<Ticket> historyColumn;
+//    Grid.Column<Ticket> historyColumn;
     Grid.Column<Ticket> solutionColumn;
     Grid.Column<Ticket> websiteColumn;
     Grid.Column<Ticket> registeredByColumn;
@@ -114,7 +114,8 @@ public class UserTicketView extends VerticalLayout {
         statusColumn = grid.addColumn(createStatusComponentRenderer()).setHeader("Status").setAutoWidth(true).setComparator(Ticket::getStatus);
         headerColumn = grid.addColumn(Ticket::getHeader).setHeader("Header").setSortable(true).setResizable(true);
         descriptionColumn = grid.addColumn(Ticket::getDescription).setHeader("Description").setSortable(true).setResizable(true);
-        historyColumn = grid.addColumn(Ticket::getHistory).setHeader("History").setSortable(true).setResizable(true);
+//      History not displayed in grid, only in details
+//      historyColumn = grid.addColumn(Ticket::getHistory).setHeader("History").setSortable(true).setResizable(true);
         solutionColumn = grid.addColumn(Ticket::getSolution).setHeader("Solution").setSortable(true).setResizable(true);
         websiteColumn = grid.addColumn(Ticket::getWebsite).setHeader("Website").setSortable(true).setResizable(true);
         registeredByColumn = grid.addColumn(Ticket::getRegistered_by).setHeader("Ticket Owner").setSortable(true).setResizable(true);
@@ -181,7 +182,8 @@ public class UserTicketView extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("Status", statusColumn);
         columnToggleContextMenu.addColumnToggleItem("Header", headerColumn);
         columnToggleContextMenu.addColumnToggleItem("Description", descriptionColumn);
-        columnToggleContextMenu.addColumnToggleItem("History", historyColumn);
+//      History not displayed in grid, only in details
+//      columnToggleContextMenu.addColumnToggleItem("History", historyColumn);
         columnToggleContextMenu.addColumnToggleItem("Solution", solutionColumn);
         columnToggleContextMenu.addColumnToggleItem("Website", websiteColumn);
         columnToggleContextMenu.addColumnToggleItem("Registered By", registeredByColumn);

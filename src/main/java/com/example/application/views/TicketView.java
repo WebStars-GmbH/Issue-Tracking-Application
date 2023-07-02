@@ -58,7 +58,7 @@ public class TicketView extends VerticalLayout {
     Grid.Column<Ticket> statusColumn = grid.addColumn(Ticket::getStatus).setHeader("Status").setSortable(true).setResizable(true);
     Grid.Column<Ticket> headerColumn = grid.addColumn(Ticket::getHeader).setHeader("Header").setSortable(true).setResizable(true);
     Grid.Column<Ticket> descriptionColumn = grid.addColumn(Ticket::getDescription).setHeader("Description").setSortable(true).setResizable(true);
-    Grid.Column<Ticket> historyColumn = grid.addColumn(Ticket::getHistory).setHeader("History").setSortable(true).setResizable(true);
+//  Grid.Column<Ticket> historyColumn = grid.addColumn(Ticket::getHistory).setHeader("History").setSortable(true).setResizable(true);
     Grid.Column<Ticket> solutionColumn = grid.addColumn(Ticket::getSolution).setHeader("Solution").setSortable(true).setResizable(true);
     Grid.Column<Ticket> websiteColumn = grid.addColumn(Ticket::getWebsite).setHeader("Website").setSortable(true).setResizable(true);
     Grid.Column<Ticket> registeredByColumn = grid.addColumn(Ticket::getRegistered_by).setHeader("Registered By").setSortable(true).setResizable(true);
@@ -142,7 +142,11 @@ public class TicketView extends VerticalLayout {
         grid.setSizeFull();
 
 
-        grid.setColumns("priority", "status", "header", "description", "history", "solution", "website", "registered_by", "assigned_to", "register_date", "last_update", "close_date", "closed_by");
+//      with History
+//      grid.setColumns("priorities", "status", "header", "description", "history", "solution", "website", "registered_by", "assigned_to", "register_date", "last_update", "close_date", "closed_by");
+//      without History
+        grid.setColumns("priority", "status", "header", "description", "solution", "website", "registered_by", "assigned_to", "register_date", "last_update", "close_date", "closed_by");
+
         grid.addColumn(ticket -> ticket.getWebsite().getURL()).setHeader("Website").setSortable(true);
 
         grid.addColumn(ticket -> ticket.getWebsite().getTeam().getName()).setHeader("Support-Team").setSortable(true);
@@ -159,7 +163,8 @@ public class TicketView extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("Status", statusColumn);
         columnToggleContextMenu.addColumnToggleItem("Header", headerColumn);
         columnToggleContextMenu.addColumnToggleItem("Description", descriptionColumn);
-        columnToggleContextMenu.addColumnToggleItem("History", historyColumn);
+//      History not displayed > can be viewed in ticket details
+//      columnToggleContextMenu.addColumnToggleItem("History", historyColumn);
         columnToggleContextMenu.addColumnToggleItem("Solution", solutionColumn);
         columnToggleContextMenu.addColumnToggleItem("Website", websiteColumn);
         columnToggleContextMenu.addColumnToggleItem("Registered By", registeredByColumn);
