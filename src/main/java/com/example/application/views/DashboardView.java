@@ -47,12 +47,12 @@ public class DashboardView extends VerticalLayout {
         ticketStatsLayout.add(getTicketStats(), getOpenSolvedTicketStats(), getCancelledTicketStats());
         ticketStatsLayout.setWidth("100%");
 
-        // Create a vertical layout to hold the ratios and website/ticket stats components
+      
         VerticalLayout statsLayout = new VerticalLayout();
         statsLayout.add(getRatiosSolvedCancelledinClosed(), getWebsiteAndTicketStats());
         statsLayout.setWidth("100%");
 
-        // Create a horizontal layout to hold the charts and stats layouts
+
         HorizontalLayout contentLayout = new HorizontalLayout();
         contentLayout.add(getAdminChartPie(), ticketStatsLayout, statsLayout);
         contentLayout.setSizeFull();
