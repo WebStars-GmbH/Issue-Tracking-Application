@@ -4,6 +4,9 @@ import com.example.application.data.entity.Ticket;
 import com.example.application.data.entity.Website;
 import com.example.application.data.service.*;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.charts.Chart;
+import com.vaadin.flow.component.charts.model.*;
+import com.vaadin.flow.component.charts.model.style.SolidColor;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -38,9 +41,30 @@ public class DashboardView extends VerticalLayout {
         addClassName("dashboard-view");
         //setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         setSizeFull();
-        add(getTicketStats(), getOpenSolvedTicketStats(), getCancelledTicketStats(), getRatiosSolvedCancelledinClosed(), getWebsiteAndTicketStats());
-        grid.setItems(websiteService.getAllWebsites());
 
+
+        VerticalLayout ticketStatsLayout = new VerticalLayout();
+        ticketStatsLayout.add(getTicketStats(), getOpenSolvedTicketStats(), getCancelledTicketStats());
+        ticketStatsLayout.setWidth("100%");
+
+      
+        VerticalLayout statsLayout = new VerticalLayout();
+        statsLayout.add(getRatiosSolvedCancelledinClosed(), getWebsiteAndTicketStats());
+        statsLayout.setWidth("100%");
+
+
+        HorizontalLayout contentLayout = new HorizontalLayout();
+        contentLayout.add(getAdminChartPie(), ticketStatsLayout, statsLayout);
+        contentLayout.setSizeFull();
+
+        add(contentLayout);
+        grid.setItems(websiteService.getAllWebsites());
+        /*HorizontalLayout charts = new HorizontalLayout();
+        charts.add(getAdminChartPie());
+
+        add(charts, getTicketStats(), );
+        grid.setItems(websiteService.getAllWebsites());
+        */
         //TODO: chart components need a Vaadin Pro server license
         //add(getWebsitesAllTicketsChart(), getWebsitesOpenTicketsChart(), getWebsitesSolvedTicketsChart());
     }
@@ -64,9 +88,49 @@ public class DashboardView extends VerticalLayout {
         TimeFormatUtility tu = new TimeFormatUtility();
         Span openTicketsStats = new Span(openTickets.size() + " open tickets. " + solvedTickets.size() + " solved tickets. Average solve time: " + tu.millisecondsToTimeFormat(averageSolveTime/solvedTickets.size()));
         openTicketsStats.addClassNames(
-                LumoUtility.FontSize.XLARGE,
+                LumoUtility.FontSize.SMALL,
                 LumoUtility.Margin.Top.MEDIUM);
         return openTicketsStats;
+
+    }
+
+
+
+    private Chart getAdminChartPie() {
+        int allTicketsCount= (int) ticketService.countTickets();
+        int openTicketsCount=ticketService.findAllOpenTickets().size();
+        int solvedTicketsCount=ticketService.findAllTicketsByStatus("Solved").size();
+        int cancelledTicketsCount=ticketService.findAllTicketsByStatus("Cancelled").size();
+
+        Chart chart = new Chart(ChartType.PIE);
+
+        Configuration conf = chart.getConfiguration();
+
+        if (allTicketsCount != 0) {
+            conf.setTitle("Solving Rate: " + (solvedTicketsCount * 100) / allTicketsCount + "%");
+
+            PlotOptionsPie plotOptions = new PlotOptionsPie();
+            plotOptions.setDepth(45);
+            conf.setPlotOptions(plotOptions);
+
+            conf.getTitle().getStyle().setColor(SolidColor.GRAY);
+            conf.getChart().setBackgroundColor(new SolidColor(255, 255, 255, 0));
+
+            // In 3D!
+            Options3d options3d = new Options3d();
+            options3d.setEnabled(true);
+            options3d.setAlpha(60);
+
+            conf.getChart().setOptions3d(options3d);
+
+            DataSeries series = new DataSeries();
+            series.add(new DataSeriesItem("Open Tickets", openTicketsCount));
+            series.add(new DataSeriesItem("Cancelled Tickets", cancelledTicketsCount));
+            series.add(new DataSeriesItem("Solved Tickets", solvedTicketsCount));
+
+            conf.addSeries(series);
+        }
+        return chart;
     }
 
     private Component getCancelledTicketStats() {
@@ -80,7 +144,7 @@ public class DashboardView extends VerticalLayout {
 
         Span cancelledTicketsStats = new Span(cancelledTickets.size() + " cancelled tickets. Average cancel time: " + tu.millisecondsToTimeFormat(averageCancelTime/cancelledTickets.size()));
         cancelledTicketsStats.addClassNames(
-                LumoUtility.FontSize.XLARGE,
+                LumoUtility.FontSize.SMALL,
                 LumoUtility.Margin.Top.MEDIUM);
         return cancelledTicketsStats;
     }
@@ -90,9 +154,9 @@ public class DashboardView extends VerticalLayout {
         List<Ticket> cancelledTickets = ticketService.findAllTicketsByStatus("Cancelled");
         var ratioSolvedInClosed = (float) solvedTickets.size() / ((float) solvedTickets.size() + (float) cancelledTickets.size());
         var ratioCancelledInClosed = (float) cancelledTickets.size() / ((float) solvedTickets.size() + (float) cancelledTickets.size());
-        Span ratioSolvedVsCancelledTickets = new Span(ratioSolvedInClosed + "% of the closed tickets are solved. " + ratioCancelledInClosed + "% of the closed tickets are cancelled.");
+        Span ratioSolvedVsCancelledTickets = new Span(ratioSolvedInClosed*100 + "% of the closed tickets are solved. " + ratioCancelledInClosed*100 + "% of the closed tickets are cancelled.");
         ratioSolvedVsCancelledTickets.addClassNames(
-                LumoUtility.FontSize.XLARGE,
+                LumoUtility.FontSize.SMALL,
                 LumoUtility.Margin.Top.MEDIUM);
         return ratioSolvedVsCancelledTickets;
     }
