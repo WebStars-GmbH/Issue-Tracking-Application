@@ -242,12 +242,14 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
 
     private static final SerializableBiConsumer<Span, Ticket> statusComponentUpdater = (span, ticket) -> {
         String status = ticket.getStatus();
-        String theme = "";
-        if (status.equals("Solved")) theme = String.format("badge %s", "success");
-        else if (status.equals("Cancelled")) theme = String.format("badge %s", "error");
-        else if (status.equals("Registered")) theme = String.format("badge %s", "warning");
-        else if (status.equals("Assigned")) theme = String.format("badge %s", "contrast");
-        else if (status.equals("In Progress")) theme = String.format("badge");
+        String theme = switch (status) {
+            case "Solved" -> String.format("badge %s", "success");
+            case "Cancelled" -> String.format("badge %s", "error");
+            case "Registered" -> String.format("badge %s", "warning");
+            case "Assigned" -> String.format("badge %s", "contrast");
+            case "In Progress" -> "badge";
+            default -> "";
+        };
         span.getElement().setAttribute("theme", theme);
         span.setText(status);
     };
@@ -286,11 +288,8 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         assignedToComboBox.setItemLabelGenerator(TUser::getUsername);
         assignedToComboBox.addValueChangeListener(e -> updateListByAssignedTo());
 
-
         Button myAssignedTicketsButton = new Button("My Assigned Tickets");
-        myAssignedTicketsButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_PRIMARY);
         myAssignedTicketsButton.addClickListener(click -> updateListAssignedToAndByStatus(MainLayout.username, "Registered", "NULL", "NULL"));
-
 
         Button myToDoTicketsButton = new Button("My To-Do Tickets");
         myToDoTicketsButton.addClickListener(click -> updateListAssignedToAndByStatus(MainLayout.username, "Assigned", "In progress", "Registered"));
@@ -302,6 +301,7 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         allTicketsButton.addClickListener(click -> updateList());
 
         Button addTicketButton = new Button("Add ticket");
+        addTicketButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addTicketButton.addClickListener(click -> addTicket());
 
         Button clearFieldsButton = new Button("Clear filters");
@@ -320,7 +320,7 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         allOpenTicketsButton.addClickListener(click -> updateListByStatus("Assigned", "In progress", "Registered"));
 
         Button menuButton = new Button("Show/Hide");
-        menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+//        menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
 
         CompanyTicketView.ColumnToggleContextMenu columnToggleContextMenu = new CompanyTicketView.ColumnToggleContextMenu(menuButton);
@@ -339,22 +339,19 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         columnToggleContextMenu.addColumnToggleItem("Closed Date", closedDateColumn);
         columnToggleContextMenu.addColumnToggleItem("Closed By", closedByColumn);
 
-        HorizontalLayout headerLayout = new HorizontalLayout(clearFieldsButton, descriptionFilterText, statusComboBox, websiteFilterText, assignedToComboBox, addTicketButton, menuButton);
+        HorizontalLayout headerLayout = new HorizontalLayout(menuButton, clearFieldsButton, descriptionFilterText, statusComboBox, websiteFilterText, assignedToComboBox, addTicketButton);
         headerLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
         headerLayout.addClassName("search-row");
 
-        HorizontalLayout toolbar;
-        if (String.valueOf(MainLayout.userRole).equals("System-Admin")) {
-            toolbar = new HorizontalLayout(myAssignedTicketsButton, myToDoTicketsButton, allMyTicketsButton, allTicketsButton, registeredButton, allAssignedButton, allOpenTicketsButton);
-        } else if (String.valueOf(MainLayout.userRole).equals("Support-Member")) {
-            toolbar = new HorizontalLayout(myAssignedTicketsButton, myToDoTicketsButton, allMyTicketsButton, allOpenTicketsButton, allTicketsButton);
-        } else if (String.valueOf(MainLayout.userRole).equals("Support-Coordinator")) {
-            toolbar = new HorizontalLayout(registeredButton, allOpenTicketsButton);
-        } else if (String.valueOf(MainLayout.userRole).equals("Manager")) {
-            toolbar = new HorizontalLayout(descriptionFilterText, allTicketsButton, addTicketButton);
-        } else {
-            toolbar = new HorizontalLayout(menuButton);
-        }
+        HorizontalLayout toolbar = switch (String.valueOf(MainLayout.userRole)) {
+            case "System-Admin" ->
+                    new HorizontalLayout(myAssignedTicketsButton, myToDoTicketsButton, allMyTicketsButton, allTicketsButton, registeredButton, allAssignedButton, allOpenTicketsButton);
+            case "Support-Member" ->
+                    new HorizontalLayout(myAssignedTicketsButton, myToDoTicketsButton, allMyTicketsButton, allOpenTicketsButton, allTicketsButton);
+            case "Support-Coordinator" -> new HorizontalLayout(registeredButton, allOpenTicketsButton);
+            case "Manager" -> new HorizontalLayout(descriptionFilterText, allTicketsButton, addTicketButton);
+            default -> new HorizontalLayout(menuButton);
+        };
         toolbar.addClassName("toolbar");
 
         VerticalLayout verticalToolbar = new VerticalLayout(headerLayout, toolbar);

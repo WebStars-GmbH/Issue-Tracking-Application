@@ -9,6 +9,7 @@ import com.example.application.data.service.TUserService;
 import com.example.application.data.service.WebsiteService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
@@ -29,6 +30,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Component
@@ -88,9 +90,9 @@ public class CreateUserView extends VerticalLayout {
         grid.addColumn(createUsernameComponentRenderer()).setHeader("Username").setAutoWidth(true).setComparator(TUser::getUsername);
 
         grid.addColumn(user -> user.getRole().getRole_name()).setHeader("Role").setAutoWidth(true).setSortable(true);
-        grid.addColumn(user -> user.getFirstname()).setHeader("First Name").setAutoWidth(true);
-        grid.addColumn(user -> user.getLastname()).setHeader("Last Name").setAutoWidth(true);
-        grid.addColumn(user -> user.getEmail()).setHeader("E-mail Address").setAutoWidth(true);
+        grid.addColumn(TUser::getFirstname).setHeader("First Name").setAutoWidth(true);
+        grid.addColumn(TUser::getLastname).setHeader("Last Name").setAutoWidth(true);
+        grid.addColumn(TUser::getEmail).setHeader("E-mail Address").setAutoWidth(true);
 
         grid.addColumn(user -> user.getTeams().stream()
                         .map(Team::getName)
@@ -125,7 +127,7 @@ public class CreateUserView extends VerticalLayout {
     }
 
     private static final SerializableBiConsumer<Span, TUser> usernameComponentUpdater = (span, tUser) -> {
-        String theme = String.format("badge");
+        String theme = "badge";
         if (tUser.getUsername().equals(MainLayout.username)) theme = String.format("badge %s", "primary");
         span.getElement().setAttribute("theme", theme);
         span.setText(tUser.getUsername());
@@ -214,7 +216,7 @@ public class CreateUserView extends VerticalLayout {
         //Check if user already exits and if password has been changed
         String oldPassword = "";
         if (user.getId() != null) oldPassword = userService.findUserById(user.getId()).getPassword();
-        if (user.getPassword() != oldPassword) {    //if so, encrypt the new password and update the DB
+        if (!Objects.equals(user.getPassword(), oldPassword)) {    //if so, encrypt the new password and update the DB
             String newPassword = bCryptPasswordEncoder.encode(user.getPassword());
             user.setPassword(newPassword);
             user.setPasswordConfirm(newPassword);
@@ -274,6 +276,7 @@ public class CreateUserView extends VerticalLayout {
         //only System-Admin can create new users, other internal roles can only search the user list
         if (userService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("System-Admin")) {
             Button addTicketButton = new Button("Create User");
+            addTicketButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             addTicketButton.addClickListener(click -> addUser());
 
             var toolbar = new HorizontalLayout(filterText, addTicketButton);
@@ -284,7 +287,6 @@ public class CreateUserView extends VerticalLayout {
             toolbar.addClassName("toolbar");
             return toolbar;
         }
-
     }
 
     private void addUser() {
@@ -292,6 +294,4 @@ public class CreateUserView extends VerticalLayout {
         TUser user = new TUser();
         editUser(user);
     }
-
-
 }

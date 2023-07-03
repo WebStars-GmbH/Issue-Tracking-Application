@@ -6,6 +6,7 @@ import com.example.application.data.service.TeamService;
 import com.example.application.data.service.WebsiteService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -26,9 +27,7 @@ import org.springframework.context.annotation.Scope;
 public class WebsiteView extends VerticalLayout {
     Grid<Website> grid = new Grid<>(Website.class);
     WebsiteForm form;
-
     WebsiteService websiteService;
-
     TUserService tUserService;
     TeamService teamService;
 
@@ -127,6 +126,7 @@ public class WebsiteView extends VerticalLayout {
 
     private Component getToolbar() {
         Button addWebsiteButton = new Button("Add Website");
+        addWebsiteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addWebsiteButton.addClickListener(click -> addWebsite());
 
         var toolbar = new HorizontalLayout();
