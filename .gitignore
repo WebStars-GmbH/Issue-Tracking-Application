@@ -45,5 +45,5 @@ target/
 
 node_modules/
 
-#Passwort-config
-src/main/resources/password.txt
+#Passwort-local-config
+src/main/resources/password.properties
