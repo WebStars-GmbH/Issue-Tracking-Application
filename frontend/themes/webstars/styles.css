@@ -11,10 +11,17 @@ a[highlight] {
 
 html {
     --lumo-primary-color: #009696;
-    --lumo-primary-text-color: #3dc517;
+    --lumo-primary-text-color: #009696;
     --lumo-font-size-m: 1.23rem;
     --lumo-line-height-s: 1.5;
+    --lumo-icon-size-s: 1.5em;
+    --lumo-header-text-color: #009696;
 
+}
+
+
+vaadin-icon {
+    color: var(--lumo-primary-color);
 }
 
 [theme~="dark"] {
@@ -26,12 +33,15 @@ html {
 
     --lumo-contrast-5pct: hsla(214, 65%, 85%, 0.06);
     --lumo-error-color: hsl(3, 69%, 47%);
+
     --lumo-header-text-color: #01cff9;
     --lumo-body-text-color: hsla(0, 0%, 100%, 0.9);
     --lumo-secondary-text-color: #c1dee5;
     --lumo-tertiary-text-color: #ffffff;
 
-    --lumo-error-text-color: hsl(3, 79%, 49%)
+    --lumo-error-text-color: hsl(3, 79%, 49%);
+    --lumo-error-contrast-color: hsl(0, 100%, 100%);
+    --lumo-error-base-color: hsl(0, 100%, 100%);
 }
 
 

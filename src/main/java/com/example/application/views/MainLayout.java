@@ -53,7 +53,7 @@ public class MainLayout extends AppLayout {
     private Image logo;
     public MainLayout(SecurityService securityService, TUserService tUserService, TeamService teamService) {
         this.securityService = securityService;
-        this.tUserService = tUserService;
+        MainLayout.tUserService = tUserService;
         this.teamService = teamService;
 
         username = securityService.getAuthenticatedUser().getUsername();
@@ -157,32 +157,24 @@ public class MainLayout extends AppLayout {
     private void createDrawer() {
         Role userRoleEntity = tUserService.findUserByUsername(username).getRole();
 
-        if (userRoleEntity.getRole_name().equals("Customer")) {
-            addToDrawer(new VerticalLayout(
+        switch (userRoleEntity.getRole_name()) {
+            case "Customer" -> addToDrawer(new VerticalLayout(
                     createDrawerLink("My tickets", VaadinIcon.TICKET, UserTicketView.class)
             ));
-        }
-        else if (userRoleEntity.getRole_name().equals("Support-Member")) {
-            addToDrawer(new VerticalLayout(
+            case "Support-Member" -> addToDrawer(new VerticalLayout(
                     createDrawerLink("My Statistics", VaadinIcon.CHART, DashboardSupportTeamMember.class),
                     createDrawerLink("My tickets", VaadinIcon.TICKET, CompanyTicketView.class)
             ));
-        }
-        else if (userRoleEntity.getRole_name().equals("Support-Coordinator")) {
-            addToDrawer(new VerticalLayout(
+            case "Support-Coordinator" -> addToDrawer(new VerticalLayout(
                     createDrawerLink("Team statistics", VaadinIcon.CHART, DashboardSupportCoordinator.class),
                     createDrawerLink("Manage teams", VaadinIcon.USER, TeamView.class),
                     createDrawerLink("Tickets", VaadinIcon.TICKET, CompanyTicketView.class)
             ));
-        }
-        else if (userRoleEntity.getRole_name().equals("Management")) {
-            addToDrawer(new VerticalLayout(
+            case "Management" -> addToDrawer(new VerticalLayout(
                     createDrawerLink("Company statistics", VaadinIcon.CHART, DashboardView.class),
                     createDrawerLink("Tickets", VaadinIcon.TICKET, CompanyTicketView.class)
             ));
-        }
-        else {
-            addToDrawer(new VerticalLayout(
+            default -> addToDrawer(new VerticalLayout(
                     createDrawerLink("Dashboard", VaadinIcon.DASHBOARD, DashboardView.class),
                     createDrawerLink("Users", VaadinIcon.USER, CreateUserView.class),
                     createDrawerLink("Teams", VaadinIcon.USERS, TeamView.class),
@@ -204,6 +196,4 @@ public class MainLayout extends AppLayout {
 
         return layout;
     }
-
-
 }
