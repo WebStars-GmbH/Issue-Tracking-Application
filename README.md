@@ -125,13 +125,13 @@ For contributing, you will need:
    `mvn install`
 
 
-4. Create a .env file in the root directory of the project and add your Cloud SQL connection string:  
+4.  In the application.properites change the  Cloud SQL connection string:  
    `DB_CONNECTION_STRING=postgres://<username>:<password>@<host>:<port>/<database>`  
 We will provide you with the connection string on request
 
 
-5. Start the application with npm:
-    `mvn start`   
+5. Start the application with your IDE:
+    `mvn Application start`   
    The application should now be running on http://localhost:3000
 
 
