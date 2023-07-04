@@ -20,8 +20,9 @@ import org.springframework.context.annotation.ComponentScan;
 @PWA(
         name = "Vaadin CRM",
         shortName = "CRM",
-        offlinePath="offline.html",
-        offlineResources = { "images/offline.png" }
+        //iconPath = "/icons/logo.png",
+        offlinePath="src/main/resources/META-INF/resources/offline.html",
+        offlineResources = { "gelb.png" }
 )
 @ComponentScan(basePackages = {"com.example.application.views", "com.example.application.data", "com.example.application.security"})
 public class Application implements AppShellConfigurator {
