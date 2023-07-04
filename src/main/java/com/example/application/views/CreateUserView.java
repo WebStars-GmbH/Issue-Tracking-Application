@@ -264,11 +264,11 @@ public class CreateUserView extends VerticalLayout {
         }
     }
     private Component getToolbar() {
-        showInactiveUsers.setLabel("show inactive users");
+        showInactiveUsers.setLabel("Show Inactive Users");
         add(showInactiveUsers);
         showInactiveUsers.addValueChangeListener(e -> updateList());
 
-        filterText.setPlaceholder("search...");
+        filterText.setPlaceholder("Search...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());

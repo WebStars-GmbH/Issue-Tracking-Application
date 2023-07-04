@@ -36,7 +36,7 @@ public class TicketForm extends FormLayout {
     IntegerField priority = new IntegerField("Priority");
 
     ComboBox<Website> website = new ComboBox<>("Website");
-    ComboBox<TUser> assigned_to = new ComboBox<>("Assigned to");
+    ComboBox<TUser> assigned_to = new ComboBox<>("Assigned To");
 
     TextArea solution = new TextArea("Solution");
 
@@ -92,7 +92,7 @@ public class TicketForm extends FormLayout {
 
         assigned_to.setItems(users);
         assigned_to.setItemLabelGenerator(TUser::getUsername);
-        assigned_to.setHelperText("Available Support-Team members");
+        assigned_to.setHelperText("Available Support-Team Members");
         status.setHelperText("Choose new status");
         assigned_to.addThemeVariants(ComboBoxVariant.LUMO_HELPER_ABOVE_FIELD);
         assigned_to.setClearButtonVisible(true);
@@ -148,7 +148,7 @@ public class TicketForm extends FormLayout {
 
     private void ConfirmAndSave(){
         ConfirmDialog dialog = new ConfirmDialog();
-        dialog.setHeader("Save ticket?");
+        dialog.setHeader("Save Ticket?");
         dialog.setText("Are you sure you want to save this ticket?");
         dialog.setCancelable(true);
         dialog.setConfirmText("Yes");

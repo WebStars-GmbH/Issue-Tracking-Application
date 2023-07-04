@@ -151,7 +151,7 @@ public class TicketView extends VerticalLayout {
 
         grid.addColumn(ticket -> ticket.getWebsite().getTeam().getName()).setHeader("Support-Team").setSortable(true);
 
-        grid.addColumn(ticket -> ticket.getAssigned_to() == null ? "" : ticket.getAssigned_to().getUsername()).setHeader("Assigned to").setSortable(true);
+        grid.addColumn(ticket -> ticket.getAssigned_to() == null ? "" : ticket.getAssigned_to().getUsername()).setHeader("Assigned To").setSortable(true);
 
 
         grid.setColumnReorderingAllowed(true);
@@ -202,18 +202,18 @@ public class TicketView extends VerticalLayout {
         websiteFilterText.setValueChangeMode(ValueChangeMode.LAZY);
         websiteFilterText.addValueChangeListener(e -> updateListByWebsite());
 
-        statusFilterText.setPlaceholder("Filter by status...");
+        statusFilterText.setPlaceholder("Filter by Status...");
         statusFilterText.setClearButtonVisible(true);
         statusFilterText.setValueChangeMode(ValueChangeMode.LAZY);
         statusFilterText.addValueChangeListener(e -> updateListByStatus());
 
-        descriptionFilterText.setPlaceholder("Filter by description...");
+        descriptionFilterText.setPlaceholder("Filter by Description...");
         descriptionFilterText.setTooltipText("Please type what the description should contain...");
         descriptionFilterText.setClearButtonVisible(true);
         descriptionFilterText.setValueChangeMode(ValueChangeMode.LAZY);
         descriptionFilterText.addValueChangeListener(e -> updateListByDescription());
 
-        statusComboBox.setItems("Registered", "Assigned", "In progress", "Cancelled", "Solved");
+        statusComboBox.setItems("Registered", "Assigned", "In Progress", "Cancelled", "Solved");
         statusComboBox.setTooltipText("Please choose the status of the tickets you want to look for...");
         statusComboBox.addValueChangeListener(e -> updateListByStatus());
 
@@ -223,14 +223,15 @@ public class TicketView extends VerticalLayout {
         assignedToComboBox.setItemLabelGenerator(TUser::getUsername);
         assignedToComboBox.addValueChangeListener(e -> updateListByAssignedTo());
 
-        Button addTicketButton = new Button("Add ticket");
+        Button addTicketButton = new Button("Add Ticket");
+        addTicketButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addTicketButton.addClickListener(click -> addTicket());
 
-        Button clearFieldsButton = new Button("Clear filters");
+        Button clearFieldsButton = new Button("Clear Filters");
         clearFieldsButton.addClickListener(click -> clearFields());
 
 
-        Button applyAllFiltersButton = new Button("Apply all filters");
+        Button applyAllFiltersButton = new Button("Apply all Filters");
         applyAllFiltersButton.addClickListener(click -> updateListByAllFilters());
 
 
