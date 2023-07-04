@@ -131,12 +131,12 @@ We will provide you with the connection string on request
 
 
 5. Start the application with your IDE:
-    `mvn Application start`   
+    `run Application.java`   
    The application should now be running on http://localhost:3000
 
 
-6. Make sure all tests pass:  
-   `mvn test`
+6. Make sure all tests pass.  
+   
 
 
 7. Start making your changes in a new branch:
