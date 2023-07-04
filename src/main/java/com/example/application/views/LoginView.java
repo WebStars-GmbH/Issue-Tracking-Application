@@ -3,6 +3,8 @@ package com.example.application.views;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.login.LoginForm;
+import com.vaadin.flow.component.login.LoginI18n;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.dom.ThemeList;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -28,6 +30,13 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 		setJustifyContentMode(JustifyContentMode.CENTER);
 
 		login.setAction("login");
+
+		LoginI18n i18n = LoginI18n.createDefault();
+		i18n.setAdditionalInformation(
+				"Contact admin@webstars.com if you're experiencing issues logging into your account");
+
+		login.setI18n(i18n);
+		login.addForgotPasswordListener(click -> Notification.show("Please contact admin@webstars.com"));
 
 		add(new H1("Webst@rs Ticketing Application: Login"), login);
 	}

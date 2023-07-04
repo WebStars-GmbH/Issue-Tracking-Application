@@ -7,7 +7,6 @@ import org.openqa.selenium.By;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.concurrent.TimeUnit;
 
 @Attribute(name = "class", contains = "login-view")
 public class LoginViewElement extends VerticalLayoutElement {
