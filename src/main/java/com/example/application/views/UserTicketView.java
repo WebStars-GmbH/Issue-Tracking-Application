@@ -156,23 +156,23 @@ public class UserTicketView extends VerticalLayout {
     }
 
     private Component getToolbar() {
-        descriptionFilterText.setPlaceholder("Filter by description...");
+        descriptionFilterText.setPlaceholder("Filter by Description...");
         descriptionFilterText.setTooltipText("Please type what the description should contain...");
         descriptionFilterText.setClearButtonVisible(true);
         descriptionFilterText.setValueChangeMode(ValueChangeMode.LAZY);
         descriptionFilterText.addValueChangeListener(e -> updateListByDescription());
 
-        Button myOpenTicketsButton = new Button("My open tickets");
-        myOpenTicketsButton.addClickListener(click -> updateListByRegisteredByAndStatus(MainLayout.username, "Registered", "Assigned", "In progress"));
+        Button myOpenTicketsButton = new Button("My Open Tickets");
+        myOpenTicketsButton.addClickListener(click -> updateListByRegisteredByAndStatus(MainLayout.username, "Registered", "Assigned", "In Progress"));
 
-        Button myClosedTicketsButton = new Button("My closed tickets");
+        Button myClosedTicketsButton = new Button("My Closed Tickets");
         myClosedTicketsButton.addClickListener(click -> updateListByRegisteredByAndStatus(MainLayout.username, "Solved", "Cancelled", "NULL"));
 
-        Button allTicketsButton = new Button("All my tickets");
+        Button allTicketsButton = new Button("All My Tickets");
         allTicketsButton.addClickListener(click -> updateListByRegistered(MainLayout.username));
 
 
-        Button menuButton = new Button("Show/Hide columns");
+        Button menuButton = new Button("Show/Hide Columns");
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         ColumnToggleContextMenu columnToggleContextMenu = new ColumnToggleContextMenu(menuButton);
         columnToggleContextMenu.addColumnToggleItem("Status", statusColumn);
@@ -191,6 +191,7 @@ public class UserTicketView extends VerticalLayout {
         Button addTicketButton = new Button("Add ticket");
         //<theme-editor-local-classname>
         addTicketButton.addClassName("UserTicketView-button-1");
+        addTicketButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addTicketButton.addClickListener(click -> addTicket());
 
         var toolbar = new HorizontalLayout(descriptionFilterText, myOpenTicketsButton, myClosedTicketsButton, allTicketsButton, menuButton, addTicketButton);

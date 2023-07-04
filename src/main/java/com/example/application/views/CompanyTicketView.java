@@ -194,7 +194,7 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         solutionColumn = grid.addColumn(Ticket::getSolution).setHeader("Solution").setResizable(true);
         websiteColumn = grid.addColumn(Ticket::getWebsite).setHeader("Website").setSortable(true).setResizable(true);
         registeredByColumn = grid.addColumn(Ticket::getRegistered_by).setHeader("Ticket Owner").setSortable(true).setResizable(true);
-        assignedToColumn = grid.addColumn(ticket -> ticket.getAssigned_to() == null ? "" : ticket.getAssigned_to().getUsername()).setHeader("Assigned to").setSortable(true).setResizable(true);
+        assignedToColumn = grid.addColumn(ticket -> ticket.getAssigned_to() == null ? "" : ticket.getAssigned_to().getUsername()).setHeader("Assigned To").setSortable(true).setResizable(true);
         registerDateColumn = grid.addColumn(new LocalDateRenderer<>(Ticket::getRegister_date, () -> DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))).setHeader("Register Date").setSortable(true).setResizable(true);
         lastUpdateColumn = grid.addColumn(new LocalDateRenderer<>(Ticket::getLast_update, () -> DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))).setHeader("Last Update").setSortable(true).setResizable(true);
         closedDateColumn = grid.addColumn(new LocalDateRenderer<>(Ticket::getClose_date, () -> DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))).setHeader("Closed Date").setSortable(true).setResizable(true);
@@ -259,7 +259,7 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
     }
 
     private Component getToolbar() {
-        websiteFilterText.setPlaceholder("Filter by website...");
+        websiteFilterText.setPlaceholder("Filter by Website...");
         websiteFilterText.setTooltipText("Please type what the website name should contain...");
         websiteFilterText.setClearButtonVisible(true);
         websiteFilterText.setValueChangeMode(ValueChangeMode.LAZY);
@@ -272,13 +272,13 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         statusFilterText.addValueChangeListener(e -> updateListByStatus());
          */
 
-        descriptionFilterText.setPlaceholder("Filter by description...");
+        descriptionFilterText.setPlaceholder("Filter by Description...");
         descriptionFilterText.setTooltipText("Please type what the description should contain...");
         descriptionFilterText.setClearButtonVisible(true);
         descriptionFilterText.setValueChangeMode(ValueChangeMode.LAZY);
         descriptionFilterText.addValueChangeListener(e -> updateListByDescription());
 
-        statusComboBox.setItems("Registered", "Assigned", "In progress", "Cancelled", "Solved");
+        statusComboBox.setItems("Registered", "Assigned", "In Progress", "Cancelled", "Solved");
         statusComboBox.setTooltipText("Please choose the status of the tickets you want to look for...");
         statusComboBox.addValueChangeListener(e -> updateListByStatus());
 
@@ -300,14 +300,14 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         Button allTicketsButton = new Button("All Tickets");
         allTicketsButton.addClickListener(click -> updateList());
 
-        Button addTicketButton = new Button("Add ticket");
+        Button addTicketButton = new Button("Add Ticket");
         addTicketButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addTicketButton.addClickListener(click -> addTicket());
 
-        Button clearFieldsButton = new Button("Clear filters");
+        Button clearFieldsButton = new Button("Clear Filters");
         clearFieldsButton.addClickListener(click -> clearFields());
 
-        Button applyAllFiltersButton = new Button("Apply all filters");
+        Button applyAllFiltersButton = new Button("Apply all Filters");
         applyAllFiltersButton.addClickListener(click -> updateListByAllFilters());
 
         Button registeredButton = new Button("Registered Tickets");
@@ -319,9 +319,7 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         Button allOpenTicketsButton = new Button("All Open Tickets");
         allOpenTicketsButton.addClickListener(click -> updateListByStatus("Assigned", "In progress", "Registered"));
 
-        Button menuButton = new Button("Show/Hide");
-//        menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
+        Button menuButton = new Button("Show/Hide Columns");
 
         CompanyTicketView.ColumnToggleContextMenu columnToggleContextMenu = new CompanyTicketView.ColumnToggleContextMenu(menuButton);
         columnToggleContextMenu.addColumnToggleItem("Priority", priorityColumn);

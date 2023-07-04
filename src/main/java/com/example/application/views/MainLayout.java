@@ -24,7 +24,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 public class MainLayout extends AppLayout {
     // Dark Theme
-    Button darkThemetoggleButton = new Button("Change display mode", click -> {
+    Button darkThemetoggleButton = new Button("Change Display Mode", click -> {
         ThemeList themeList = UI.getCurrent().getElement().getThemeList();
 
         if (themeList.contains(Lumo.DARK)) {
@@ -76,7 +76,7 @@ public class MainLayout extends AppLayout {
 
 
         String u = securityService.getAuthenticatedUser().getUsername();
-        Button logout = new Button("Log out " + u, e -> securityService.logout());
+        Button logout = new Button("Log Out " + u, e -> securityService.logout());
 
         // Pfade zu den Logo-Bildern
         String logoLightPath = "images/logo.png";
@@ -159,19 +159,19 @@ public class MainLayout extends AppLayout {
 
         switch (userRoleEntity.getRole_name()) {
             case "Customer" -> addToDrawer(new VerticalLayout(
-                    createDrawerLink("My tickets", VaadinIcon.TICKET, UserTicketView.class)
+                    createDrawerLink("My Tickets", VaadinIcon.TICKET, UserTicketView.class)
             ));
             case "Support-Member" -> addToDrawer(new VerticalLayout(
                     createDrawerLink("My Statistics", VaadinIcon.CHART, DashboardSupportTeamMember.class),
-                    createDrawerLink("My tickets", VaadinIcon.TICKET, CompanyTicketView.class)
+                    createDrawerLink("My Tickets", VaadinIcon.TICKET, CompanyTicketView.class)
             ));
             case "Support-Coordinator" -> addToDrawer(new VerticalLayout(
-                    createDrawerLink("Team statistics", VaadinIcon.CHART, DashboardSupportCoordinator.class),
-                    createDrawerLink("Manage teams", VaadinIcon.USER, TeamView.class),
+                    createDrawerLink("Team Statistics", VaadinIcon.CHART, DashboardSupportCoordinator.class),
+                    createDrawerLink("Manage Teams", VaadinIcon.USER, TeamView.class),
                     createDrawerLink("Tickets", VaadinIcon.TICKET, CompanyTicketView.class)
             ));
             case "Management" -> addToDrawer(new VerticalLayout(
-                    createDrawerLink("Company statistics", VaadinIcon.CHART, DashboardView.class),
+                    createDrawerLink("Company Statistics", VaadinIcon.CHART, DashboardView.class),
                     createDrawerLink("Tickets", VaadinIcon.TICKET, CompanyTicketView.class)
             ));
             default -> addToDrawer(new VerticalLayout(

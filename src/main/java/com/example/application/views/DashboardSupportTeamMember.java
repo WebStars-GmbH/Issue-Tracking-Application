@@ -63,7 +63,7 @@ public class DashboardSupportTeamMember extends VerticalLayout {
         allTicketsCount = ticketService.ticketCountByAssignedTo(MainLayout.username, "");
 
         if (solvedTicketsCount != 0) {
-            List<Ticket> solvedTickets = ticketService.findAllTicketsByAssignedToAndStatus(MainLayout.username, "Solved", "Solved", "Solved");
+            List<Ticket> solvedTickets = ticketService.findAllTicketsByAssignedToAndStatus(MainLayout.username, "Solved", "NULL", "NULL");
             for (Ticket t : solvedTickets) averageSolveTime += t.getTimeBetweenAssignedAndSolved();
             averageSolveTime = averageSolveTime/solvedTicketsCount;
         }

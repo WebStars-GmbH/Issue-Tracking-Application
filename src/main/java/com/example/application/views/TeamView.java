@@ -106,7 +106,7 @@ public class TeamView extends VerticalLayout {
     }
 
     private Component getToolbar() {
-        Button addTeamButton = new Button("Add team");
+        Button addTeamButton = new Button("Add Team");
         addTeamButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addTeamButton.addClickListener(click -> addTeam());
 

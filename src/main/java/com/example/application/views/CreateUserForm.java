@@ -35,12 +35,12 @@ import java.util.List;
 @Component
 public class CreateUserForm extends FormLayout {
 
-    TextField firstName = new TextField("First name");
-    TextField lastName = new TextField("Last name");
-    TextField username = new TextField("User name");
-    EmailField email = new EmailField("Email");
+    TextField firstName = new TextField("First Name");
+    TextField lastName = new TextField("Last Name");
+    TextField username = new TextField("User Name");
+    EmailField email = new EmailField("E-mail Address");
     PasswordField password = new PasswordField("Password");
-    PasswordField passwordConfirm = new PasswordField("Confirm password");
+    PasswordField passwordConfirm = new PasswordField("Confirm Password");
     ComboBox<Role> role = new ComboBox<>("Role");
     MultiSelectComboBox<Website> websitesNew = new MultiSelectComboBox<>("Websites");
 
