@@ -47,7 +47,7 @@ public class DashboardView extends VerticalLayout {
         ticketStatsLayout.add(getTicketStats(), getOpenSolvedTicketStats(), getCancelledTicketStats());
         ticketStatsLayout.setWidth("100%");
 
-      
+
         VerticalLayout statsLayout = new VerticalLayout();
         statsLayout.add(getRatiosSolvedCancelledinClosed(), getWebsiteAndTicketStats());
         statsLayout.setWidth("100%");

@@ -25,13 +25,13 @@ public class TicketDetailsForm extends FormLayout {
 
     boolean showEditButton = false;
     TextField header = new TextField("Header");
-    TextField registered_by = new TextField("Registered by");
+    TextField registered_by = new TextField("Registered By");
     TextField register_date_String = new TextField("Register Date");
     TextField last_update_String = new TextField("Last Update");
     TextArea description = new TextArea("Description");
     IntegerField priority = new IntegerField("Priority");
     TextField website_name = new TextField("Website");
-    TextField assigned_to_username = new TextField("Assigned to");
+    TextField assigned_to_username = new TextField("Assigned To");
     TextArea solution = new TextArea("Solution");
     TextField close_date_String = new TextField("Close Date");
     TextField status = new TextField("Status");

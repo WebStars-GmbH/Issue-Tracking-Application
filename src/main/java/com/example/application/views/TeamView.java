@@ -6,6 +6,7 @@ import com.example.application.data.service.TUserService;
 import com.example.application.data.service.TeamService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -105,7 +106,8 @@ public class TeamView extends VerticalLayout {
     }
 
     private Component getToolbar() {
-        Button addTeamButton = new Button("Add team");
+        Button addTeamButton = new Button("Add Team");
+        addTeamButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addTeamButton.addClickListener(click -> addTeam());
 
         var toolbar = new HorizontalLayout(addTeamButton);
