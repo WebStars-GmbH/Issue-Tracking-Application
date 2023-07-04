@@ -121,8 +121,8 @@ For contributing, you will need:
    `cd Issue-Tracking-Application`
 
 
-3. Install the dependencies with npm:  
-   `npm install`
+3. Install the dependencies with maven:  
+   `mvn install`
 
 
 4. Create a .env file in the root directory of the project and add your Cloud SQL connection string:  
@@ -131,12 +131,12 @@ We will provide you with the connection string on request
 
 
 5. Start the application with npm:
-    `npm start`   
+    `mvn start`   
    The application should now be running on http://localhost:3000
 
 
 6. Make sure all tests pass:  
-   `npm test`
+   `mvn test`
 
 
 7. Start making your changes in a new branch:
