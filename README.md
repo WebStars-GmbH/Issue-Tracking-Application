@@ -27,6 +27,8 @@ in the web browser of your choice.
 From there, you can login with one of the following credentials. The web app provides
 a role-specific set of views and features for each role.  
 
+PLEASE NOTE: If there are any troubles with connecting to the database after 10th July 2023, it is possible that the Cloud Postgresql Server is down (Google Cloud Credits). We can not guarantee a running database after the 10th July 2023. The issue with the Google Cloud Credits was communicated via e-mail by Robert & Suganthi. If there are problems or you need more time to evaluate our portfolio, please contact r.gollner@mci4me.at
+
 ![Web App Screenshot](src/main/resources/META-INF/resources/images/screenshots/sh_login.png)
 ### System Admin:  
   - Username: admin
