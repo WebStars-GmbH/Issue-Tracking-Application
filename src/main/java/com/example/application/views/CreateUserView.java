@@ -213,11 +213,17 @@ public class CreateUserView extends VerticalLayout {
 
         //Check if user already exits and if password has been changed
         String oldPassword = "";
-        if (user.getId() != null) oldPassword = userService.findUserById(user.getId()).getPassword();
-        if (user.getPassword() != oldPassword) {    //if so, encrypt the new password and update the DB
-            String newPassword = bCryptPasswordEncoder.encode(user.getPassword());
-            user.setPassword(newPassword);
-            user.setPasswordConfirm(newPassword);
+        if (user.getId() != null) {
+            oldPassword = userService.findUserById(user.getId()).getPassword();
+
+            if (!oldPassword.equals(user.getPassword())) {    //if so, encrypt the new password and update the DB
+                //!bCryptPasswordEncoder.matches(user.getPassword(), oldPassword)
+
+                String newPassword = bCryptPasswordEncoder.encode(user.getPassword());
+                Notification.show("Password has been changed. old: " + oldPassword + "; new: " + user.getPassword() + "; " + newPassword);
+                user.setPassword(newPassword);
+                user.setPasswordConfirm(newPassword);
+            }
         }
         userService.saveUser(user);
 
