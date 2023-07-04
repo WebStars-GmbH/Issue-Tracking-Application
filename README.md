@@ -1,8 +1,12 @@
-# WebStars Vaadin Issue Tracking Web-Application
+![Web App Screenshot](src/main/resources/META-INF/resources/images/logo-white.png)
+
+
+
+# Vaadin Issue Tracking Web-Application
 
 
 The Issue Tracking Application is a tool designed to manage and track issues and tasks
-in software development, and maintenance projects for the imagined company Webstars.
+in software development, and maintenance projects for our webdevelopement company Webstars GmbH.
 This application is built to be robust, user-friendly, and efficient in managing the
 workflow of issues.
 
@@ -15,11 +19,15 @@ Safari, or Microsoft Edge and an internet connection.
 
 ## Usage
 -[Our Webapp](https://vaadin-ui-service-fdx3dx7jqa-oa.a.run.app/)   
+
+
+
 Once you've installed a modern Webbrowser and connected to the internet, you can open this [link](https://vaadin-ui-service-fdx3dx7jqa-oa.a.run.app/)  
 in the web browser of your choice.
 From there, you can login with one of the following credentials. The web app provides
 a role-specific set of views and features for each role.  
 
+![Web App Screenshot](src/main/resources/META-INF/resources/images/screenshots/sh_login.png)
 ### System Admin:  
   - Username: admin
   - Password: password  
@@ -32,6 +40,8 @@ a role-specific set of views and features for each role.
 - List of users
 - Add/manage user
 
+![Web App Screenshot](src/main/resources/META-INF/resources/images/screenshots/sh_user.png)
+
 ### Support-Coordinator:
 - Username: coordinator0
 - Password: password
@@ -42,6 +52,9 @@ a role-specific set of views and features for each role.
 - Detailed ticket view
 - Dashboard statistics
 - Alerts
+
+![Web App Screenshot](src/main/resources/META-INF/resources/images/screenshots/sh_supportcoordinator.png)
+
 
 ### Support-Member:
 - Username: member0
@@ -54,12 +67,18 @@ a role-specific set of views and features for each role.
 - Dashboard statistics  
 - Alerts  
 
+![Web App Screenshot](src/main/resources/META-INF/resources/images/screenshots/sh_memberStatistik.png)
+
+
 ### Project Management:  
 - Username: manager  
 - Password: password  
 #### Views/Features for Management:
 - Dashboard statistics
 - Create new ticket
+
+![Web App Screenshot](src/main/resources/META-INF/resources/images/screenshots/sh_dashboard.png)
+
 
 ### Customer:
 - Username: user2
@@ -69,8 +88,8 @@ a role-specific set of views and features for each role.
 - List of own tickets (+ Filter/Sort/Search)
 - Detailed ticket view  
 
+![Web App Screenshot](src/main/resources/META-INF/resources/images/screenshots/sh_customer.png)
 
-You can create new issues, view existing issues, edit issues, and change the status of issues.
 
 
 ## Contributing
