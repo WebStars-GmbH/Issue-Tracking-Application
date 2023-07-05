@@ -8,7 +8,7 @@
 The Issue Tracking Application is a tool designed to manage and track issues and tasks
 in software development, and maintenance projects for our webdevelopement company Webstars GmbH.
 This application is built to be robust, user-friendly, and efficient in managing the
-workflow of issues.
+workflow of issues. (https://vaadin-ui-service-fdx3dx7jqa-oa.a.run.app)
 
 ### Requirements
 
@@ -18,7 +18,7 @@ Safari, or Microsoft Edge and an internet connection.
 
 
 ## Usage
--[Our Webapp](https://vaadin-ui-service-fdx3dx7jqa-oa.a.run.app/)   
+[Our Webapp in Google CloudRun](https://vaadin-ui-service-fdx3dx7jqa-oa.a.run.app/)   
 
 
 
@@ -94,9 +94,9 @@ PLEASE NOTE: If there are any troubles with connecting to the database after 10t
 
 
 
-## Contributing
+## Developing
 
-Contributions are always welcome! Please read the following instructions before making any changes:
+If you want to modify the application in a codeeditor, you can do so by following these steps:
 
 1. Make sure you have a GitHub account.
 2. Fork the repository on GitHub.
@@ -107,7 +107,7 @@ Contributions are always welcome! Please read the following instructions before 
 7. Commit your changes in your branch, then push your branch to your fork on GitHub.
 8. Create a pull request from your branch to the main repository.
 
-For contributing, you will need:
+For editing the code you will need:
 
 - A modern operating system (Windows 10, MacOS X, Linux)
 - [Node.js](https://nodejs.org) (Version 14.0 or higher)
@@ -129,7 +129,7 @@ For contributing, you will need:
 
 4.  In the application.properites change the  Cloud SQL connection string:  
    `DB_CONNECTION_STRING=postgres://<username>:<password>@<host>:<port>/<database>`  
-We will provide you with the connection string on request
+We will provide you the connection string on request
 
 
 5. Start the application with your IDE:
@@ -146,9 +146,9 @@ We will provide you with the connection string on request
 
 
 
-## Contributors
+## Creators
 
-We would like to thank the following people who have founded, conceptualized, and fully implemented this project:
+We would like to thank the following team members who have founded, conceptualized, and fully implemented this project:
 
 - [Boden Johanna](https://github.com/orgs/WebStars-GmbH/people/HonigUndErde) 20%
 - [Goller Robert](https://github.com/orgs/WebStars-GmbH/people/the-official-robert) 20%
@@ -156,8 +156,5 @@ We would like to thank the following people who have founded, conceptualized, an
 - [Seppi Martin](https://github.com/orgs/WebStars-GmbH/people/Zetamasevt) 20%
 - [Wagner Christine](https://github.com/orgs/WebStars-GmbH/people/HoepfnerUndMalz) 20%
 
+The workload was evenly distributed among the team members. 
 
-
-## License
-
-This project is licensed under the terms of the GNU General Public License v3.0. For the terms of this license, refer to the [LICENSE](LICENSE.txt) file.
