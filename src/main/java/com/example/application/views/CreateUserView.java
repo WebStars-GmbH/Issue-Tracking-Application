@@ -201,7 +201,7 @@ public class CreateUserView extends VerticalLayout {
 
         //When creating user, check if username is unique
         if (user.getId() == null && userService.findUserByUsername(user.getUsername()) != null){
-            Notification notification = Notification.show("ERROR. Cannot create user. There already exists a user with this username.");
+            Notification notification = Notification.show("ERROR. Cannot add user. There already exists a user with this username.");
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             return;
         }
@@ -275,7 +275,7 @@ public class CreateUserView extends VerticalLayout {
 
         //only System-Admin can create new users, other internal roles can only search the user list
         if (userService.findUserByUsername(MainLayout.username).getRole().getRole_name().equals("System-Admin")) {
-            Button addTicketButton = new Button("Create User");
+            Button addTicketButton = new Button("Add User");
             addTicketButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             addTicketButton.addClickListener(click -> addUser());
 

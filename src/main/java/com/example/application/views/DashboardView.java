@@ -88,7 +88,7 @@ public class DashboardView extends VerticalLayout {
         TimeFormatUtility tu = new TimeFormatUtility();
         Span openTicketsStats = new Span(openTickets.size() + " open tickets. " + solvedTickets.size() + " solved tickets. Average solve time: " + tu.millisecondsToTimeFormat(averageSolveTime/solvedTickets.size()));
         openTicketsStats.addClassNames(
-                LumoUtility.FontSize.SMALL,
+                LumoUtility.FontSize.MEDIUM,
                 LumoUtility.Margin.Top.MEDIUM);
         return openTicketsStats;
 
@@ -144,7 +144,7 @@ public class DashboardView extends VerticalLayout {
 
         Span cancelledTicketsStats = new Span(cancelledTickets.size() + " cancelled tickets. Average cancel time: " + tu.millisecondsToTimeFormat(averageCancelTime/cancelledTickets.size()));
         cancelledTicketsStats.addClassNames(
-                LumoUtility.FontSize.SMALL,
+                LumoUtility.FontSize.MEDIUM,
                 LumoUtility.Margin.Top.MEDIUM);
         return cancelledTicketsStats;
     }
@@ -152,11 +152,13 @@ public class DashboardView extends VerticalLayout {
     private Component getRatiosSolvedCancelledinClosed() {
         List<Ticket> solvedTickets = ticketService.findAllTicketsByStatus("Solved");
         List<Ticket> cancelledTickets = ticketService.findAllTicketsByStatus("Cancelled");
-        var ratioSolvedInClosed = (float) solvedTickets.size() / ((float) solvedTickets.size() + (float) cancelledTickets.size());
-        var ratioCancelledInClosed = (float) cancelledTickets.size() / ((float) solvedTickets.size() + (float) cancelledTickets.size());
-        Span ratioSolvedVsCancelledTickets = new Span(ratioSolvedInClosed*100 + "% of the closed tickets are solved. " + ratioCancelledInClosed*100 + "% of the closed tickets are cancelled.");
+        var ratioSolvedInClosed = ((float) solvedTickets.size() / ((float) solvedTickets.size() + (float) cancelledTickets.size()))*100;
+        var ratioCancelledInClosed = ((float) cancelledTickets.size() / ((float) solvedTickets.size() + (float) cancelledTickets.size()))*100;
+
+
+        Span ratioSolvedVsCancelledTickets = new Span(String.format("%.2f", ratioSolvedInClosed) + "% of the closed tickets are solved. " + String.format("%.2f", ratioCancelledInClosed) + "% of the closed tickets are cancelled.");
         ratioSolvedVsCancelledTickets.addClassNames(
-                LumoUtility.FontSize.SMALL,
+                LumoUtility.FontSize.MEDIUM,
                 LumoUtility.Margin.Top.MEDIUM);
         return ratioSolvedVsCancelledTickets;
     }

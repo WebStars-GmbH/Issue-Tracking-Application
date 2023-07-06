@@ -16,7 +16,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.Lumo;
 
 @Route("login")
-@PageTitle("Login | Webst@rs Ticketing Application")
+@PageTitle("Log in | Webst@rs Ticketing Application")
 @AnonymousAllowed
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
@@ -38,7 +38,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 		login.setI18n(i18n);
 		login.addForgotPasswordListener(click -> Notification.show("Please contact admin@webstars.com"));
 
-		add(new H1("Webst@rs Ticketing Application: Login"), login);
+		add(new H1("Webst@rs Ticketing Application: Log in"), login);
 	}
 	private void setDarkTheme(){
 		ThemeList themeList = UI.getCurrent().getElement().getThemeList();
