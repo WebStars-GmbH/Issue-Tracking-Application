@@ -82,7 +82,7 @@ public class TicketForm extends FormLayout {
         binder.forField(website).bind(Ticket::getWebsite, null);
         binder.forField(history).bind(Ticket::getHistory, null);
 
-        status.setItems("Registered", "Assigned", "In Progress", "Cancelled", "Solved");
+        status.setItems("Registered", "Assigned", "In Progress", "Solved");
         status.setHelperText("Choose new status");
         status.addThemeVariants(RadioGroupVariant.LUMO_HELPER_ABOVE_FIELD);
         status.getStyle().set("--vaadin-input-field-border-width", "1px");

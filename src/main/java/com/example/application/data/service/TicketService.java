@@ -127,11 +127,11 @@ public class TicketService {
                 addToHistory(ticket, "\nNotes: '" + DescrStr + "'");}
 
             //If ticket is solved, add line with solution to history
-            if (!oldTicket.getSolution().equals(ticket.getSolution()) && ticket.getSolution().length() > 1) {
+        /*    if (!oldTicket.getSolution().equals(ticket.getSolution()) && ticket.getSolution().length() > 1) {
                 String SolutStr = ticket.getSolution().replaceAll("(\\r|\\n)", "\t");
                 addToHistory(ticket, "\nSolution: '" + SolutStr + "'");}
             addToHistory(ticket, "\n\n");
-
+*/
             //Check if status has changed to assigned or solved, and update the timestamps accordingly
             if (!oldTicket.getStatus().equals("Assigned") && ticket.getStatus().equals("Assigned")) {ticket.setAssign_date(timestamp);}
             if (!oldTicket.getStatus().equals("Solved") && ticket.getStatus().equals("Solved")) {
