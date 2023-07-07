@@ -289,7 +289,7 @@ public class CompanyTicketView extends VerticalLayout implements HasUrlParameter
         assignedToComboBox.addValueChangeListener(e -> updateListByAssignedTo());
 
         Button myAssignedTicketsButton = new Button("My Assigned Tickets");
-        myAssignedTicketsButton.addClickListener(click -> updateListAssignedToAndByStatus(MainLayout.username, "Registered", "NULL", "NULL"));
+        myAssignedTicketsButton.addClickListener(click -> updateListAssignedToAndByStatus(MainLayout.username, "Assigned", "NULL", "NULL"));
 
         Button myToDoTicketsButton = new Button("My To-Do Tickets");
         myToDoTicketsButton.addClickListener(click -> updateListAssignedToAndByStatus(MainLayout.username, "Assigned", "In progress", "Registered"));
