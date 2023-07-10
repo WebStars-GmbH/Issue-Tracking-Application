@@ -63,7 +63,7 @@ jobs:
       - cloudrun/deploy:
           platform: managed
           image: gcr.io/$GOOGLE_PROJECT_ID/$CIRCLE_WORKFLOW_ID
-          service-name: vaadin-ui-service-00017-yik
+          service-name: vaadin-ui-service
           region: europe-west6
           unauthenticated: true
 workflows:
