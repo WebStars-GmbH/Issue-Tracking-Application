@@ -9,6 +9,7 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.context.annotation.Scope;
 
 
+
 @SpringComponent
 @Scope("prototype")
 @PermitAll
