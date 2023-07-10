@@ -8,7 +8,7 @@
 The Issue Tracking Application is a tool designed to manage and track issues and tasks
 in software development, and maintenance projects for our webdevelopement company Webstars GmbH.
 This application is built to be robust, user-friendly, and efficient in managing the
-workflow of issues. (https://vaadin-ui-service-fdx3dx7jqa-oa.a.run.app)
+workflow of issues. (https://vaadin-ui-service-fdx3dx7jqa-oa.a.run.app) (altenative link: https://vaadin-ui-service-00017-yik-fdx3dx7jqa-oa.a.run.app)
 
 ### Requirements
 
