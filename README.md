@@ -123,25 +123,26 @@ For editing the code you will need:
    `cd Issue-Tracking-Application`
 
 
-3. Install the dependencies with maven:  
+3. Install the dependencies:
+   `npm install`    
    `mvn install`
 
 
-4.  In the application.properites change the  Cloud SQL connection string:  
+5.  In the application.properites change the  Cloud SQL connection string:  
    `DB_CONNECTION_STRING=postgres://<username>:<password>@<host>:<port>/<database>`  
 We will provide you the connection string on request
 
 
-5. Start the application with your IDE:
+6. Start the application with your IDE:
     `run Application.java`   
    The application should now be running on http://localhost:3000
 
 
-6. Make sure all tests pass.  
+7. Make sure all tests pass.  
    
 
 
-7. Start making your changes in a new branch:
+8. Start making your changes in a new branch:
    `git checkout -b your-branch-name`
 
 
